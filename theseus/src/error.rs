@@ -97,7 +97,7 @@ pub enum ErrorKind {
     #[error("Error stripping prefix: {0}")]
     StripPrefixError(#[from] std::path::StripPrefixError),
 
-    #[error("[AR] Ошибка: {0}")]
+    #[error("AstralRinth Ошибка: {0}")]
     OtherError(String),
 
     #[cfg(feature = "tauri")]

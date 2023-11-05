@@ -1,30 +1,30 @@
 <template>
   <div
-    v-if="mode !== 'isolated'"
-    ref="button"
-    v-tooltip.right="'Minecraft accounts'"
-    class="button-base avatar-button"
-    :class="{ expanded: mode === 'expanded' }"
-    @click="showCard = !showCard"
+      v-if="mode !== 'isolated'"
+      ref="button"
+      v-tooltip="'Minecraft accounts'"
+      class="button-base avatar-button"
+      :class="{ expanded: mode === 'expanded' }"
+      @click="showCard = !showCard"
   >
     <Avatar
-      :size="mode === 'expanded' ? 'xs' : 'sm'"
-      :src="
+        :size="mode === 'expanded' ? 'xs' : 'sm'"
+        :src="
         selectedAccount
-          ? `https://crafatar.com/avatars/${selectedAccount.id}?size=128&overlay`
+          ? `https://mc-heads.net/avatar/${selectedAccount.id}/128`
           : 'https://launcher-files.modrinth.com/assets/steve_head.png'
       "
     />
   </div>
   <transition name="fade">
     <Card
-      v-if="showCard || mode === 'isolated'"
-      ref="card"
-      class="account-card"
-      :class="{ expanded: mode === 'expanded', isolated: mode === 'isolated' }"
+        v-if="showCard || mode === 'isolated'"
+        ref="card"
+        class="account-card"
+        :class="{ expanded: mode === 'expanded', isolated: mode === 'isolated' }"
     >
       <div v-if="selectedAccount" class="selected account">
-        <Avatar size="xs" :src="`https://crafatar.com/avatars/${selectedAccount.id}?size=128&overlay`" />
+        <Avatar size="xs" :src="`https://mc-heads.net/avatar/${selectedAccount.id}/128`"/>
         <div>
           <h4>{{ selectedAccount.username }}</h4>
           <p>Активен</p>
@@ -42,10 +42,11 @@
           <PlusIcon/>
         </Button>
       </div>
+
       <div v-if="displayAccounts.length > 0" class="account-group">
         <div v-for="account in displayAccounts" :key="account.id" class="account-row">
           <Button class="option account" @click="setAccount(account)">
-            <Avatar :src="`https://crafatar.com/avatars/${account.id}?size=128&overlay`" class="icon"/>
+            <Avatar :src="`https://mc-heads.net/avatar/${account.name}/128`" class="icon"/>
             <p>{{ account.username }}</p>
           </Button>
           <Button v-tooltip="'Выйти из аккаунта'" icon-only @click="logout(account.id)">
@@ -94,7 +95,7 @@
               color="raised"
               @click="() => clipboardWrite(loginUrl)"
           >
-            <GlobeIcon />
+            <GlobeIcon/>
           </Button>
         </div>
       </div>
@@ -125,6 +126,7 @@
   </Modal>
 </template>
 
+
 <script setup>
 import {
   Avatar,
@@ -137,16 +139,16 @@ import {
   GlobeIcon,
   ClipboardCopyIcon,
 } from 'omorphia'
-import { ref, computed, onMounted, onBeforeUnmount, onUnmounted } from 'vue'
+import {ref, computed, onMounted, onBeforeUnmount, onUnmounted} from 'vue'
 import {
   users,
   remove_user,
   authenticate_begin_flow,
   authenticate_await_completion, offline_authenticate_await_completion,
 } from '@/helpers/auth'
-import { get, set } from '@/helpers/settings'
-import { handleError } from '@/store/state.js'
-import { mixpanel_track } from '@/helpers/mixpanel'
+import {get, set} from '@/helpers/settings'
+import {handleError} from '@/store/state.js'
+import {mixpanel_track} from '@/helpers/mixpanel'
 import QrcodeVue from 'qrcode.vue'
 import {process_listener} from '@/helpers/events'
 // import {invoke} from '@tauri-apps/api/tauri'
@@ -184,11 +186,11 @@ defineExpose({
 await refreshValues()
 
 const displayAccounts = computed(() =>
-  accounts.value.filter((account) => settings.value.default_user !== account.id)
+    accounts.value.filter((account) => settings.value.default_user !== account.id)
 )
 
 const selectedAccount = computed(() =>
-  accounts.value.find((account) => account.id === settings.value.default_user)
+    accounts.value.find((account) => account.id === settings.value.default_user)
 )
 
 async function setAccount(account) {
@@ -277,10 +279,10 @@ let button = ref(null)
 const handleClickOutside = (event) => {
   const elements = document.elementsFromPoint(event.clientX, event.clientY)
   if (
-    card.value &&
-    card.value.$el !== event.target &&
-    !elements.includes(card.value.$el) &&
-    !button.value.contains(event.target)
+      card.value &&
+      card.value.$el !== event.target &&
+      !elements.includes(card.value.$el) &&
+      !button.value.contains(event.target)
   ) {
     showCard.value = false
   }
