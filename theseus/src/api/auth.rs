@@ -4,7 +4,6 @@ use crate::{
     launcher::auth as inner,
     State,
 };
-use chrono::Utc;
 
 use crate::state::AuthTask;
 pub use inner::Credentials;
@@ -41,11 +40,11 @@ pub async fn refresh(user: uuid::Uuid) -> crate::Result<Credentials> {
     let state = State::get().await?;
     let mut users = state.users.write().await;
 
-    let mut credentials = users.get(user).ok_or_else(|| {
+    let credentials = users.get(user).ok_or_else(|| {
         crate::ErrorKind::OtherError(
-            "You are not logged in with a Minecraft account!".to_string(),
+            "У вас нет аккаунта, пожалуйста добавьте его. Подробнее о добавлении оффлайн аккаунта можно узнать из статьи автора".to_string(),
         )
-        .as_error()
+            .as_error()
     })?;
 
     Ok(credentials)
@@ -93,7 +92,7 @@ pub async fn get_user(user: uuid::Uuid) -> crate::Result<Credentials> {
         crate::ErrorKind::OtherError(format!(
             "Tried to get nonexistent user with ID {user}"
         ))
-        .as_error()
+            .as_error()
     })?;
     Ok(user)
 }
