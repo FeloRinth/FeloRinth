@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "Modrinth App",
-    "version": "0.6.1.03"
+    "version": "0.6.103"
   },
   "tauri": {
     "allowlist": {
