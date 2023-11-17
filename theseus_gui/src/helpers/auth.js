@@ -30,6 +30,10 @@ export async function authenticate_await_completion() {
   return await invoke('plugin:auth|auth_authenticate_await_completion')
 }
 
+export async function offline_authenticate_await_completion(name) {
+  return await invoke('plugin:auth|offline_auth_authenticate_begin', {name: name})
+}
+
 export async function cancel_flow() {
   return await invoke('plugin:auth|auth_cancel_flow')
 }

@@ -1,6 +1,7 @@
 //! Main authentication flow for Hydra
 
-use serde::Deserialize;
+use serde::{Deserialize};
+use uuid::Uuid;
 
 use crate::prelude::Credentials;
 
@@ -83,3 +84,34 @@ pub async fn wait_finish(device_code: String) -> crate::Result<Credentials> {
         }
     }
 }
+
+
+
+pub async fn wait_offline_finish(name: &str) -> crate::Result<Credentials> {
+    let random_uuid = Uuid::new_v4();
+    let access_token = "null".to_string();
+    let refresh_token = "null".to_string();
+
+    let credentials = Credentials::new (
+        random_uuid,
+        name.to_string(),
+        access_token,
+        refresh_token,
+        chrono::Utc::now(),
+    );
+
+    // Put credentials into state
+    let state = crate::State::get().await?;
+    {
+        let mut users = state.users.write().await;
+        users.insert(&credentials).await?;
+    }
+
+    if state.settings.read().await.default_user.is_none() {
+        let mut settings = state.settings.write().await;
+        settings.default_user = Some(credentials.id);
+    }
+
+    Ok(credentials)
+}
+

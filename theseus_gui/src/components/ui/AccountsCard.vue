@@ -27,71 +27,100 @@
         <Avatar size="xs" :src="`https://crafatar.com/avatars/${selectedAccount.id}?size=128&overlay`" />
         <div>
           <h4>{{ selectedAccount.username }}</h4>
-          <p>Selected</p>
+          <p>Активен</p>
         </div>
-        <Button v-tooltip="'Log out'" icon-only color="raised" @click="logout(selectedAccount.id)">
-          <TrashIcon />
+        <Button v-tooltip="'Выйти (Удалить)'" icon-only color="raised" @click="logout(selectedAccount.id)">
+          <TrashIcon/>
         </Button>
       </div>
       <div v-else class="logged-out account">
-        <h4>Not signed in</h4>
-        <Button v-tooltip="'Log in'" icon-only color="primary" @click="login()">
-          <LogInIcon />
+        <h4>У вас нет аккаунта</h4>
+        <Button v-tooltip="'Войти (Лицензия)'" icon-only color="primary" @click="login()">
+          <LogInIcon/>
+        </Button>
+        <Button v-tooltip="'Войти (Оффлайн)'" icon-only color="secondary" @click="loginOffline()">
+          <PlusIcon/>
         </Button>
       </div>
       <div v-if="displayAccounts.length > 0" class="account-group">
         <div v-for="account in displayAccounts" :key="account.id" class="account-row">
           <Button class="option account" @click="setAccount(account)">
-            <Avatar
-              :src="`https://crafatar.com/avatars/${selectedAccount.id}?size=128&overlay`"
-              class="icon"
-            />
+            <Avatar :src="`https://crafatar.com/avatars/${account.id}?size=128&overlay`" class="icon"/>
             <p>{{ account.username }}</p>
           </Button>
-          <Button v-tooltip="'Log out'" icon-only @click="logout(account.id)">
-            <TrashIcon />
+          <Button v-tooltip="'Выйти из аккаунта'" icon-only @click="logout(account.id)">
+            <TrashIcon/>
           </Button>
         </div>
       </div>
-      <Button v-if="accounts.length > 0" @click="login()">
-        <PlusIcon />
-        Add account
-      </Button>
+      <div v-if="accounts.length > 0" class="logged-out account">
+        <Button @click="login()">
+          <LogInIcon/>
+          Лицензия
+        </Button>
+        <Button @click="loginOffline()">
+          <PlusIcon/>
+          Пиратский
+        </Button>
+      </div>
     </Card>
   </transition>
-  <Modal ref="loginModal" class="modal" header="Signing in">
+  <Modal ref="loginModal" class="modal" header="Авторизация через лицензионный аккаунт">
     <div class="modal-body">
-      <QrcodeVue :value="loginUrl" class="qr-code" margin="3" size="160" />
+      <QrcodeVue :value="loginUrl" class="qr-code" margin="3" size="160"/>
       <div class="modal-text">
-        <div class="label">Copy this code</div>
+        <div class="label">Скопируйте этот код</div>
         <div class="code-text">
           <div class="code">
             {{ loginCode }}
           </div>
           <Button
-            v-tooltip="'Copy code'"
-            icon-only
-            large
-            color="raised"
-            @click="() => clipboardWrite(loginCode)"
+              v-tooltip="'Скопировать код'"
+              icon-only
+              large
+              color="raised"
+              @click="() => clipboardWrite(loginCode)"
           >
-            <ClipboardCopyIcon />
+            <ClipboardCopyIcon/>
           </Button>
         </div>
-        <div>And enter it on Microsoft's website to sign in.</div>
+        <div>Вставьте скопированный код в браузере на странице Microsoft.</div>
         <div class="iconified-input">
-          <LogInIcon />
-          <input type="text" :value="loginUrl" readonly />
+          <LogInIcon/>
+          <input type="text" :value="loginUrl" readonly/>
           <Button
-            v-tooltip="'Open link'"
-            icon-only
-            color="raised"
-            @click="() => clipboardWrite(loginUrl)"
+              v-tooltip="'Скопировать ссылку'"
+              icon-only
+              color="raised"
+              @click="() => clipboardWrite(loginUrl)"
           >
             <GlobeIcon />
           </Button>
         </div>
       </div>
+    </div>
+  </Modal>
+  <Modal ref="loginOfflineModal" class="modal" header="Авторизация через автономный аккаунт">
+    <div class="modal-body">
+      <div class="label">Введите игровое имя:</div>
+      <input type="text" v-model="playerName" placeholder="Укажите игровое имя"/>
+      <Button v-tooltip="'Добавить'" icon-only color="secondary" @click="tryLoginOffline()">
+        <PlusIcon/>
+      </Button>
+
+    </div>
+  </Modal>
+  <Modal ref="loginErrorModal" class="modal" header="Проверка на ввод не пройдена">
+    <div class="modal-body">
+      <div class="label">К сожалению мы не можем принять такое имя пользователя, повторите попытку!</div>
+      <Button color="primary" @click="tryAgainLoginOffline()">
+        Повторить попытку
+      </Button>
+    </div>
+  </Modal>
+  <Modal ref="unexpectedErrorModal" class="modal" header="Ошибка">
+    <div class="modal-body">
+      <div class="label">Произошла неизвестная ошибка! Повторите попытку.</div>
     </div>
   </Modal>
 </template>
@@ -113,13 +142,14 @@ import {
   users,
   remove_user,
   authenticate_begin_flow,
-  authenticate_await_completion,
+  authenticate_await_completion, offline_authenticate_await_completion,
 } from '@/helpers/auth'
 import { get, set } from '@/helpers/settings'
 import { handleError } from '@/store/state.js'
 import { mixpanel_track } from '@/helpers/mixpanel'
 import QrcodeVue from 'qrcode.vue'
-import { process_listener } from '@/helpers/events'
+import {process_listener} from '@/helpers/events'
+// import {invoke} from '@tauri-apps/api/tauri'
 
 defineProps({
   mode: {
@@ -129,6 +159,7 @@ defineProps({
   },
 })
 
+
 const emit = defineEmits(['change'])
 
 const loginCode = ref(null)
@@ -137,11 +168,16 @@ const settings = ref({})
 const accounts = ref([])
 const loginUrl = ref('')
 const loginModal = ref(null)
+const loginOfflineModal = ref(null)
+const loginErrorModal = ref(null)
+const unexpectedErrorModal = ref(null)
+const playerName = ref('')
 
 async function refreshValues() {
   settings.value = await get().catch(handleError)
   accounts.value = await users().catch(handleError)
 }
+
 defineExpose({
   refreshValues,
 })
@@ -190,6 +226,38 @@ async function login() {
   loginModal.value.hide()
   mixpanel_track('AccountLogIn')
 }
+
+
+async function loginOffline() {
+  loginOfflineModal.value.show();
+}
+
+
+async function tryLoginOffline() { // By AstralRinth
+  let name = playerName.value;
+  if (name.length > 1 && name.length < 32 && name !== "") {
+    const loggedIn = await offline_authenticate_await_completion(name).catch(handleError)
+    loginOfflineModal.value.hide();
+    if (loggedIn) {
+      await setAccount(loggedIn);
+      await refreshValues();
+    } else {
+      unexpectedErrorModal.value.show()
+    }
+    playerName.value = "";
+    mixpanel_track('AccountLogIn')
+  } else {
+    playerName.value = "";
+    loginOfflineModal.value.hide();
+    loginErrorModal.value.show();
+  }
+}
+
+function tryAgainLoginOffline() {
+  loginErrorModal.value.hide();
+  loginOffline();
+}
+
 
 const logout = async (id) => {
   await remove_user(id).catch(handleError)
