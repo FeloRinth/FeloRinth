@@ -1,4 +1,4 @@
-use crate::api::Result;
+use crate::api::{Result,};
 use tauri::plugin::TauriPlugin;
 use theseus::{hydra, hydra::init::DeviceLoginSuccess, prelude::*};
 pub fn init<R: tauri::Runtime>() -> TauriPlugin<R> {

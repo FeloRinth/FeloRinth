@@ -4,7 +4,6 @@ use crate::{
     launcher::auth as inner,
     State,
 };
-use chrono::Utc;
 
 use crate::state::AuthTask;
 pub use inner::Credentials;
@@ -45,7 +44,7 @@ pub async fn refresh(user: uuid::Uuid) -> crate::Result<Credentials> {
         crate::ErrorKind::OtherError(
             "У вас нет аккаунта, пожалуйста добавьте его. Подробнее о добавлении оффлайн аккаунта можно узнать из статьи автора".to_string(),
         )
-        .as_error()
+            .as_error()
     })?;
 
     Ok(credentials)
@@ -93,7 +92,7 @@ pub async fn get_user(user: uuid::Uuid) -> crate::Result<Credentials> {
         crate::ErrorKind::OtherError(format!(
             "Tried to get nonexistent user with ID {user}"
         ))
-        .as_error()
+            .as_error()
     })?;
     Ok(user)
 }

@@ -38,7 +38,7 @@ pub async fn wait_finish(device_code: String) -> crate::Result<Credentials> {
                 "Error getting XBox Live token: {}",
                 err
             ))
-            .as_error())
+                .as_error())
         }
         xsts_token::XSTSResponse::Success { token: xsts_token } => {
             // Get xsts bearer token from xsts token
@@ -55,7 +55,7 @@ pub async fn wait_finish(device_code: String) -> crate::Result<Credentials> {
             // Get player info from bearer token
             let player_info = player_info::fetch_info(&bearer_token).await.map_err(|_err| {
                 crate::ErrorKind::HydraError("No Minecraft account for profile. Make sure you own the game and have set a username through the official Minecraft launcher."
-            .to_string())
+                    .to_string())
             })?;
 
             // Create credentials
