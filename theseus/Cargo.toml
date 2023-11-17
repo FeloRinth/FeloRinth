@@ -1,6 +1,6 @@
 [package]
 name = "theseus"
-version = "0.6.3"
+version = "0.6.1-astralrinthfixed"
 authors = ["Jai A <jaiagr+gpg@pm.me>"]
 edition = "2018"
 
@@ -60,7 +60,6 @@ dunce = "1.0.3"
 whoami = "1.4.0"
 
 discord-rich-presence = "0.2.3"
-rand = { version = "0.8.5", features = [] }
 
 [target.'cfg(windows)'.dependencies] 
 winreg = "0.50.0"
