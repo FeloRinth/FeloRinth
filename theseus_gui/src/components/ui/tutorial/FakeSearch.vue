@@ -18,7 +18,7 @@ import {
   HeartIcon,
   NavRow,
   Pagination,
-  Promotion,
+  // Promotion,
   SearchFilter,
   SearchIcon,
   ServerIcon,
@@ -176,7 +176,7 @@ defineProps({
       </Card>
     </aside>
     <div ref="searchWrapper" class="search">
-      <Promotion class="promotion" :external="false" query-param="?r=launcher" />
+<!--      <Promotion class="promotion" :external="false" query-param="?r=launcher" />-->
       <Card class="project-type-container">
         <NavRow :links="selectableProjectTypes" />
       </Card>
