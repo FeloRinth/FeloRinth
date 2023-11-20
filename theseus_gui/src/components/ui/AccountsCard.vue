@@ -1,27 +1,23 @@
 <template>
   <div
-    v-if="mode !== 'isolated'"
-    ref="button"
-    v-tooltip.right="'Minecraft accounts'"
-    class="button-base avatar-button"
-    :class="{ expanded: mode === 'expanded' }"
-    @click="showCard = !showCard"
+      v-if="mode !== 'isolated'"
+      ref="button"
+      v-tooltip="'Minecraft accounts'"
+      class="button-base avatar-button"
+      :class="{ expanded: mode === 'expanded' }"
+      @click="showCard = !showCard"
   >
     <Avatar
-      :size="mode === 'expanded' ? 'xs' : 'sm'"
-      :src="
-        selectedAccount
-          ? `https://mc-heads.net/avatar/${selectedAccount.id}/128`
-          : 'https://launcher-files.modrinth.com/assets/steve_head.png'
-      "
+        :size="mode === 'expanded' ? 'xs' : 'sm'"
+        :src="`https://mc-heads.net/avatar/${selectedAccount.id}/128`"
     />
   </div>
   <transition name="fade">
     <Card
-      v-if="showCard || mode === 'isolated'"
-      ref="card"
-      class="account-card"
-      :class="{ expanded: mode === 'expanded', isolated: mode === 'isolated' }"
+        v-if="showCard || mode === 'isolated'"
+        ref="card"
+        class="account-card"
+        :class="{ expanded: mode === 'expanded', isolated: mode === 'isolated' }"
     >
       <div v-if="selectedAccount" class="selected account">
         <Avatar size="xs" :src="`https://mc-heads.net/avatar/${selectedAccount.id}/128`"/>
