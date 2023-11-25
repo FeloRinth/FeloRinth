@@ -1,15 +1,15 @@
 <template>
   <div
-      v-if="mode !== 'isolated'"
-      ref="button"
-      v-tooltip="'Minecraft accounts'"
-      class="button-base avatar-button"
-      :class="{ expanded: mode === 'expanded' }"
-      @click="showCard = !showCard"
+    v-if="mode !== 'isolated'"
+    ref="button"
+    v-tooltip.right="'Minecraft accounts'"
+    class="button-base avatar-button"
+    :class="{ expanded: mode === 'expanded' }"
+    @click="showCard = !showCard"
   >
     <Avatar
-        :size="mode === 'expanded' ? 'xs' : 'sm'"
-        :src="
+      :size="mode === 'expanded' ? 'xs' : 'sm'"
+      :src="
         selectedAccount
           ? `https://mc-heads.net/avatar/${selectedAccount.id}/128`
           : 'https://launcher-files.modrinth.com/assets/steve_head.png'
@@ -18,10 +18,10 @@
   </div>
   <transition name="fade">
     <Card
-        v-if="showCard || mode === 'isolated'"
-        ref="card"
-        class="account-card"
-        :class="{ expanded: mode === 'expanded', isolated: mode === 'isolated' }"
+      v-if="showCard || mode === 'isolated'"
+      ref="card"
+      class="account-card"
+      :class="{ expanded: mode === 'expanded', isolated: mode === 'isolated' }"
     >
       <div v-if="selectedAccount" class="selected account">
         <Avatar size="xs" :src="`https://mc-heads.net/avatar/${selectedAccount.id}/128`"/>
@@ -46,7 +46,7 @@
       <div v-if="displayAccounts.length > 0" class="account-group">
         <div v-for="account in displayAccounts" :key="account.id" class="account-row">
           <Button class="option account" @click="setAccount(account)">
-            <Avatar :src="`https://mc-heads.net/avatar/${account.name}/128`" class="icon"/>
+            <Avatar :src="`https://mc-heads.net/avatar/${account.id}/128`" class="icon"/>
             <p>{{ account.username }}</p>
           </Button>
           <Button v-tooltip="'Выйти из аккаунта'" icon-only @click="logout(account.id)">
@@ -66,7 +66,7 @@
       </div>
     </Card>
   </transition>
-  <Modal ref="loginModal" class="modal" header="Авторизация через лицензионный аккаунт" :noblur="!themeStore.advancedRendering">
+  <Modal ref="loginModal" class="modal" header="Авторизация через лицензионный аккаунт">
     <div class="modal-body">
       <QrcodeVue :value="loginUrl" class="qr-code" margin="3" size="160"/>
       <div class="modal-text">
@@ -139,19 +139,19 @@ import {
   GlobeIcon,
   ClipboardCopyIcon,
 } from 'omorphia'
-import { ref, computed, onMounted, onBeforeUnmount, onUnmounted } from 'vue'
+import {ref, computed, onMounted, onBeforeUnmount, onUnmounted} from 'vue'
 import {
   users,
   remove_user,
   authenticate_begin_flow,
   authenticate_await_completion, offline_authenticate_await_completion,
 } from '@/helpers/auth'
-import { get, set } from '@/helpers/settings'
-import { handleError } from '@/store/state.js'
-import { useTheming } from '@/store/theme.js'
-import { mixpanel_track } from '@/helpers/mixpanel'
+import {get, set} from '@/helpers/settings'
+import {handleError} from '@/store/state.js'
+import {mixpanel_track} from '@/helpers/mixpanel'
 import QrcodeVue from 'qrcode.vue'
-import { process_listener } from '@/helpers/events'
+import {process_listener} from '@/helpers/events'
+// import {invoke} from '@tauri-apps/api/tauri'
 
 defineProps({
   mode: {
@@ -166,7 +166,6 @@ const emit = defineEmits(['change'])
 
 const loginCode = ref(null)
 
-const themeStore = useTheming()
 const settings = ref({})
 const accounts = ref([])
 const loginUrl = ref('')
