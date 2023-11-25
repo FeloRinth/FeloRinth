@@ -1,10 +1,10 @@
-use crate::api::Result;
+use crate::api::{Result,};
 use tauri::plugin::TauriPlugin;
-use theseus::{hydra::init::DeviceLoginSuccess, prelude::*};
-
+use theseus::{hydra, hydra::init::DeviceLoginSuccess, prelude::*};
 pub fn init<R: tauri::Runtime>() -> TauriPlugin<R> {
     tauri::plugin::Builder::new("auth")
         .invoke_handler(tauri::generate_handler![
+            offline_auth_authenticate_begin,
             auth_authenticate_begin_flow,
             auth_authenticate_await_completion,
             auth_cancel_flow,
@@ -15,6 +15,14 @@ pub fn init<R: tauri::Runtime>() -> TauriPlugin<R> {
             auth_get_user,
         ])
         .build()
+}
+
+/// Create new offline user
+/// This is custom function from Astralium Org.
+#[tauri::command]
+pub async fn offline_auth_authenticate_begin(name: &str) -> Result<Credentials> {
+    let credentials = hydra::complete::wait_offline_finish(name).await?;
+    Ok(credentials)
 }
 
 /// Authenticate a user with Hydra - part 1

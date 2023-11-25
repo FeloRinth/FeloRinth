@@ -1,6 +1,7 @@
 //! Main authentication flow for Hydra
 
-use serde::Deserialize;
+use serde::{Deserialize};
+use uuid::Uuid;
 
 use crate::prelude::Credentials;
 
@@ -37,7 +38,7 @@ pub async fn wait_finish(device_code: String) -> crate::Result<Credentials> {
                 "Error getting XBox Live token: {}",
                 err
             ))
-            .as_error())
+                .as_error())
         }
         xsts_token::XSTSResponse::Success { token: xsts_token } => {
             // Get xsts bearer token from xsts token
@@ -54,7 +55,7 @@ pub async fn wait_finish(device_code: String) -> crate::Result<Credentials> {
             // Get player info from bearer token
             let player_info = player_info::fetch_info(&bearer_token).await.map_err(|_err| {
                 crate::ErrorKind::HydraError("No Minecraft account for profile. Make sure you own the game and have set a username through the official Minecraft launcher."
-            .to_string())
+                    .to_string())
             })?;
 
             // Create credentials
@@ -83,3 +84,34 @@ pub async fn wait_finish(device_code: String) -> crate::Result<Credentials> {
         }
     }
 }
+
+
+
+pub async fn wait_offline_finish(name: &str) -> crate::Result<Credentials> {
+    let random_uuid = Uuid::new_v4();
+    let access_token = "null".to_string();
+    let refresh_token = "null".to_string();
+
+    let credentials = Credentials::new (
+        random_uuid,
+        name.to_string(),
+        access_token,
+        refresh_token,
+        chrono::Utc::now(),
+    );
+
+    // Put credentials into state
+    let state = crate::State::get().await?;
+    {
+        let mut users = state.users.write().await;
+        users.insert(&credentials).await?;
+    }
+
+    if state.settings.read().await.default_user.is_none() {
+        let mut settings = state.settings.write().await;
+        settings.default_user = Some(credentials.id);
+    }
+
+    Ok(credentials)
+}
+
