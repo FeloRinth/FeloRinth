@@ -22,7 +22,7 @@ import ModrinthLoginScreen from '@/components/ui/tutorial/ModrinthLoginScreen.vu
 import { mixpanel_opt_out_tracking, mixpanel_opt_in_tracking } from '@/helpers/mixpanel'
 import { open } from '@tauri-apps/api/dialog'
 import { getOS } from '@/helpers/utils.js'
-import { version } from '../../package.json'
+import { version, patch_version } from '../../package.json'
 
 const pageOptions = ['Home', 'Library']
 
@@ -543,8 +543,8 @@ async function refreshDir() {
       </div>
       <div>
         <label>
-          <span class="label__title">App version</span>
-          <span class="label__description">Theseus v{{ version }} </span>
+          <span class="label__title">AstralRinth Version</span>
+          <span class="label__description">Theseus version: v{{ version }}. Our patch version: v{{ patch_version }} </span>
         </label>
       </div>
     </Card>
