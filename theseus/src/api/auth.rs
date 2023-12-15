@@ -4,7 +4,6 @@ use crate::{
     launcher::auth as inner,
     State,
 };
-use chrono::Utc;
 
 use crate::state::AuthTask;
 pub use inner::Credentials;
@@ -41,45 +40,12 @@ pub async fn refresh(user: uuid::Uuid) -> crate::Result<Credentials> {
     let state = State::get().await?;
     let mut users = state.users.write().await;
 
-    let mut credentials = users.get(user).ok_or_else(|| {
+    let credentials = users.get(user).ok_or_else(|| {
         crate::ErrorKind::OtherError(
-            "You are not logged in with a Minecraft account!".to_string(),
+            "У вас нет аккаунта, пожалуйста добавьте его. Подробнее о добавлении оффлайн аккаунта можно узнать из статьи автора".to_string(),
         )
-        .as_error()
+            .as_error()
     })?;
-
-    let offline = *state.offline.read().await;
-
-    if !offline {
-        let fetch_semaphore: &crate::util::fetch::FetchSemaphore =
-            &state.fetch_semaphore;
-        if Utc::now() > credentials.expires
-            && inner::refresh_credentials(&mut credentials, fetch_semaphore)
-                .await
-                .is_err()
-        {
-            users.remove(credentials.id).await?;
-
-            return Err(crate::ErrorKind::OtherError(
-                "Please re-authenticate with your Minecraft account!"
-                    .to_string(),
-            )
-            .as_error());
-        }
-
-        // Update player info from bearer token
-        let player_info =
-            hydra::stages::player_info::fetch_info(&credentials.access_token)
-                .await
-                .map_err(|_err| {
-                    crate::ErrorKind::HydraError(
-                        "No Minecraft account for your profile. Please try again or contact support in our Discord for help!".to_string(),
-                    )
-                })?;
-
-        credentials.username = player_info.name;
-        users.insert(&credentials).await?;
-    }
 
     Ok(credentials)
 }
@@ -126,7 +92,7 @@ pub async fn get_user(user: uuid::Uuid) -> crate::Result<Credentials> {
         crate::ErrorKind::OtherError(format!(
             "Tried to get nonexistent user with ID {user}"
         ))
-        .as_error()
+            .as_error()
     })?;
     Ok(user)
 }
