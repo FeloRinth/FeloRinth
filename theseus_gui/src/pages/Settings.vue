@@ -23,13 +23,10 @@ import { mixpanel_opt_out_tracking, mixpanel_opt_in_tracking } from '@/helpers/m
 import { open } from '@tauri-apps/api/dialog'
 import { getOS } from '@/helpers/utils.js'
 import { version, patch_version } from '../../package.json'
-import { useLanguage } from '@/store/language.js'
-import { i18n } from '@/main.js';
-const t = i18n.global.t;
+
 const pageOptions = ['Home', 'Library']
 
 const themeStore = useTheming()
-const languageStore = useLanguage()
 
 const accessSettings = async () => {
   const settings = await get()
@@ -125,7 +122,7 @@ async function findLauncherDir() {
   const newDir = await open({
     multiple: false,
     directory: true,
-    title: t('Settings.SelectANewAppDirectory'),
+    title: 'Select a new app directory',
   })
 
   const writeable = await is_dir_writeable(newDir)
@@ -153,7 +150,7 @@ async function refreshDir() {
     <Card>
       <div class="label">
         <h3>
-          <span class="label__title size-card-header">{{t('Settings.GeneralSettings')}}</span>
+          <span class="label__title size-card-header">General settings</span>
         </h3>
       </div>
       <Modal
@@ -165,26 +162,25 @@ async function refreshDir() {
       </Modal>
       <div class="adjacent-input">
         <label for="theme">
-          <span class="label__title">{{t('Settings.ManageAccount')}}</span>
+          <span class="label__title">Manage account</span>
           <span v-if="credentials" class="label__description">
-            {{t('Settings.YouAreCurrentlyLoggedInAs')}} {{ credentials.user.username }}.
+            You are currently logged in as {{ credentials.user.username }}.
           </span>
-          <span v-else> {{t('Settings.SignInToYourModrinthAccount')}} </span>
+          <span v-else> Sign in to your Modrinth account. </span>
         </label>
         <button v-if="credentials" class="btn" @click="logOut">
           <LogOutIcon />
-          {{t('Settings.SignOut')}}
+          Sign out
         </button>
         <button v-else class="btn" @click="$refs.loginScreenModal.show()">
           <LogInIcon />
-          {{t('Settings.SignIn')}}
+          Sign in
         </button>
       </div>
       <label for="theme">
-        <span class="label__title">{{t('Settings.AppDirectory')}}</span>
+        <span class="label__title">App directory</span>
         <span class="label__description">
-          {{t('Settings.TheDirectoryWhereTheLauncherStoresAllOfItsFiles')}}
-
+          The directory where the launcher stores all of its files.
         </span>
       </label>
       <div class="app-directory">
@@ -197,20 +193,20 @@ async function refreshDir() {
         </div>
         <Button large @click="refreshDir">
           <UpdatedIcon />
-          {{t('Settings.Refresh')}}
+          Refresh
         </Button>
       </div>
     </Card>
     <Card>
       <div class="label">
         <h3>
-          <span class="label__title size-card-header">{{t('Settings.Display')}}</span>
+          <span class="label__title size-card-header">Display</span>
         </h3>
       </div>
       <div class="adjacent-input">
         <label for="theme">
-          <span class="label__title">{{t('Settings.ColorTheme')}}</span>
-          <span class="label__description">{{t('Settings.ChangeColor')}}</span>
+          <span class="label__title">Color theme</span>
+          <span class="label__description">Change the global launcher color theme.</span>
         </label>
         <DropdownSelect
           id="theme"
@@ -227,33 +223,12 @@ async function refreshDir() {
           "
         />
       </div>
-
-      <div class="adjacent-input">
-        <label for="language">
-          <span class="label__title">[⚑ RUS 20% COMPLETED] {{t('Settings.Language')}}</span>
-          <span class="label__description">{{t('Settings.ChangeTheGlobalLauncherLanguages')}}</span>
-        </label>
-        <DropdownSelect
-          id="language"
-          name="Language dropdown"
-          :options="languageStore.languageOptions"
-          :default-value="settings.language"
-          :model-value="settings.language"
-          class="language-dropdown"
-          @change="
-            (e) => {
-              languageStore.setLanguageState(e.option.toLowerCase())
-              settings.language = languageStore.selectedLanguage
-            }
-          "
-        />
-      </div>
-
       <div class="adjacent-input">
         <label for="advanced-rendering">
-          <span class="label__title">{{t('Settings.AdvancedRendering')}}</span>
+          <span class="label__title">Advanced rendering</span>
           <span class="label__description">
-            {{t('Settings.EnablesAdvancedRendering')}}
+            Enables advanced rendering such as blur effects that may cause performance issues
+            without hardware-accelerated rendering.
           </span>
         </label>
         <Toggle
@@ -270,9 +245,9 @@ async function refreshDir() {
       </div>
       <div class="adjacent-input">
         <label for="minimize-launcher">
-          <span class="label__title">{{t('Settings.MinimizeLauncher')}}</span>
+          <span class="label__title">Minimize launcher</span>
           <span class="label__description"
-            >{{t('Settings.MinimizeTheLauncher')}}</span
+            >Minimize the launcher when a Minecraft process starts.</span
           >
         </label>
         <Toggle
@@ -288,8 +263,8 @@ async function refreshDir() {
       </div>
       <div v-if="getOS() != 'MacOS'" class="adjacent-input">
         <label for="native-decorations">
-          <span class="label__title">{{t('Settings.NativeDecorations')}}</span>
-          <span class="label__description">{{t('Settings.UseSystemWindowFrame')}}</span>
+          <span class="label__title">Native decorations</span>
+          <span class="label__description">Use system window frame (app restart required).</span>
         </label>
         <Toggle
           id="native-decorations"
@@ -304,8 +279,8 @@ async function refreshDir() {
       </div>
       <div class="adjacent-input">
         <label for="opening-page">
-          <span class="label__title">{{t('Settings.DefaultLandingPage')}}</span>
-          <span class="label__description">{{t('Settings.ChangeThePageToWhichTheLauncherOpensOn')}}</span>
+          <span class="label__title">Default landing page</span>
+          <span class="label__description">Change the page to which the launcher opens on.</span>
         </label>
         <DropdownSelect
           id="opening-page"
@@ -325,15 +300,16 @@ async function refreshDir() {
     <Card>
       <div class="label">
         <h3>
-          <span class="label__title size-card-header">{{t('Settings.ResourceManagement')}}</span>
+          <span class="label__title size-card-header">Resource management</span>
         </h3>
       </div>
 
       <div class="adjacent-input">
         <label for="max-downloads">
-          <span class="label__title">{{t('Settings.Mcd')}}</span>
+          <span class="label__title">Maximum concurrent downloads</span>
           <span class="label__description"
-            >{{t('Settings.McdDesc')}}</span
+            >The maximum amount of files the launcher can download at the same time. Set this to a
+            lower value if you have a poor internet connection.</span
           >
         </label>
         <Slider
@@ -347,9 +323,10 @@ async function refreshDir() {
 
       <div class="adjacent-input">
         <label for="max-writes">
-          <span class="label__title">{{t('Settings.Mcw')}}</span>
+          <span class="label__title">Maximum concurrent writes</span>
           <span class="label__description"
-            >{{t('Settings.McwDesc')}}</span
+            >The maximum amount of files the launcher can write to the disk at once. Set this to a
+            lower value if you are frequently getting I/O errors.</span
           >
         </label>
         <Slider
@@ -364,19 +341,20 @@ async function refreshDir() {
     <Card>
       <div class="label">
         <h3>
-          <span class="label__title size-card-header">{{t('Settings.Privacy')}}</span>
+          <span class="label__title size-card-header">Privacy</span>
         </h3>
       </div>
       <div class="adjacent-input">
         <label for="opt-out-analytics">
-          <span class="label__title">{{t('Settings.DisableAnalytics')}}</span>
+          <span class="label__title">Disable analytics</span>
           <span class="label__description">
-            {{t('Settings.AnalyticsDesc')}}
+            Modrinth collects anonymized analytics and usage data to improve our user experience and
+            customize your experience. By enabling this option, you opt out and your data will no
+            longer be collected.
           </span>
         </label>
         <Toggle
           id="opt-out-analytics"
-          :disabled="settings.opt_out_analytics"
           :model-value="settings.opt_out_analytics"
           :checked="settings.opt_out_analytics"
           @update:model-value="
@@ -388,9 +366,11 @@ async function refreshDir() {
       </div>
       <div class="adjacent-input">
         <label for="disable-discord-rpc">
-          <span class="label__title">{{t('Settings.DisableRPC')}}</span>
+          <span class="label__title">Disable Discord RPC</span>
           <span class="label__description">
-            {{t('Settings.DisableRPCDesc')}}
+            Disables the Discord Rich Presence integration. 'Modrinth' will no longer show up as a
+            game or app you are using on your Discord profile. This does not disable any
+            instance-specific Discord Rich Presence integrations, such as those added by mods.
           </span>
         </label>
         <Toggle
@@ -403,20 +383,20 @@ async function refreshDir() {
     <Card>
       <div class="label">
         <h3>
-          <span class="label__title size-card-header">{{t('Settings.JavaSet')}}</span>
+          <span class="label__title size-card-header">Java settings</span>
         </h3>
       </div>
       <label for="java-17">
-        <span class="label__title">{{t('Settings.Java17Location')}}</span>
+        <span class="label__title">Java 17 location</span>
       </label>
       <JavaSelector id="java-17" v-model="settings.java_globals.JAVA_17" :version="17" />
       <label for="java-8">
-        <span class="label__title">{{t('Settings.Java8Location')}}</span>
+        <span class="label__title">Java 8 location</span>
       </label>
       <JavaSelector id="java-8" v-model="settings.java_globals.JAVA_8" :version="8" />
       <hr class="card-divider" />
       <label for="java-args">
-        <span class="label__title">{{t('Settings.JavaArgs')}}</span>
+        <span class="label__title">Java arguments</span>
       </label>
       <input
         id="java-args"
@@ -424,10 +404,10 @@ async function refreshDir() {
         autocomplete="off"
         type="text"
         class="installation-input"
-        :placeholder="t('Settings.EnterJavaArgs')"
+        placeholder="Enter java arguments..."
       />
       <label for="env-vars">
-        <span class="label__title">{{t('Settings.EnvVars')}}</span>
+        <span class="label__title">Environmental variables</span>
       </label>
       <input
         id="env-vars"
@@ -435,14 +415,14 @@ async function refreshDir() {
         autocomplete="off"
         type="text"
         class="installation-input"
-        :placeholder="t('Settings.EnterEnvVars')"
+        placeholder="Enter environmental variables..."
       />
       <hr class="card-divider" />
       <div class="adjacent-input">
         <label for="max-memory">
-          <span class="label__title">{{t('Settings.JavaMem')}}</span>
+          <span class="label__title">Java memory</span>
           <span class="label__description">
-            {{t('Settings.JavaMemDesc')}}
+            The memory allocated to each instance when it is ran.
           </span>
         </label>
         <Slider
@@ -458,60 +438,60 @@ async function refreshDir() {
     <Card>
       <div class="label">
         <h3>
-          <span class="label__title size-card-header">{{t('Settings.Hooks')}}</span>
+          <span class="label__title size-card-header">Hooks</span>
         </h3>
       </div>
       <div class="adjacent-input">
         <label for="pre-launch">
-          <span class="label__title">{{t('Settings.PreLaunch')}}</span>
-          <span class="label__description">{{t('Settings.PreLaunchDesc')}}</span>
+          <span class="label__title">Pre launch</span>
+          <span class="label__description"> Ran before the instance is launched. </span>
         </label>
         <input
           id="pre-launch"
           v-model="settings.hooks.pre_launch"
           autocomplete="off"
           type="text"
-          :placeholder="t('Settings.EnterPreLaunch')"
+          placeholder="Enter pre-launch command..."
         />
       </div>
       <div class="adjacent-input">
         <label for="wrapper">
-          <span class="label__title">{{t('Settings.Wrapper')}}</span>
-          <span class="label__description">{{t('Settings.WrapperDesc')}}</span>
+          <span class="label__title">Wrapper</span>
+          <span class="label__description"> Wrapper command for launching Minecraft. </span>
         </label>
         <input
           id="wrapper"
           v-model="settings.hooks.wrapper"
           autocomplete="off"
           type="text"
-          :placeholder="t('Settings.EnterWrapper')"
+          placeholder="Enter wrapper command..."
         />
       </div>
       <div class="adjacent-input">
         <label for="post-exit">
-          <span class="label__title">{{t('Settings.PostExit')}}</span>
-          <span class="label__description">{{t('Settings.PostExitDesc')}}</span>
+          <span class="label__title">Post exit</span>
+          <span class="label__description"> Ran after the game closes. </span>
         </label>
         <input
           id="post-exit"
           v-model="settings.hooks.post_exit"
           autocomplete="off"
           type="text"
-          :placeholder="t('Settings.EnterPostExit')"
+          placeholder="Enter post-exit command..."
         />
       </div>
     </Card>
     <Card>
       <div class="label">
         <h3>
-          <span class="label__title size-card-header">{{t('Settings.WindowSize')}}</span>
+          <span class="label__title size-card-header">Window size</span>
         </h3>
       </div>
       <div class="adjacent-input">
         <label for="fullscreen">
-          <span class="label__title">{{t('Settings.FullScreen')}}</span>
+          <span class="label__title">Fullscreen</span>
           <span class="label__description">
-            {{t('Settings.FullScreenDesc')}}
+            Overwrites the options.txt file to start in full screen when launched.
           </span>
         </label>
         <Toggle
@@ -527,8 +507,8 @@ async function refreshDir() {
       </div>
       <div class="adjacent-input">
         <label for="width">
-          <span class="label__title">{{t('Settings.Width')}}</span>
-          <span class="label__description">{{t('Settings.WidthDesc')}}</span>
+          <span class="label__title">Width</span>
+          <span class="label__description"> The width of the game window when launched. </span>
         </label>
         <input
           id="width"
@@ -536,13 +516,13 @@ async function refreshDir() {
           :disabled="settings.force_fullscreen"
           autocomplete="off"
           type="number"
-          :placeholder="t('Settings.EnterWidth')"
+          placeholder="Enter width..."
         />
       </div>
       <div class="adjacent-input">
         <label for="height">
-          <span class="label__title">{{t('Settings.Height')}}</span>
-          <span class="label__description">{{t('Settings.HeightDesc')}}</span>
+          <span class="label__title">Height</span>
+          <span class="label__description"> The height of the game window when launched. </span>
         </label>
         <input
           id="height"
@@ -551,14 +531,14 @@ async function refreshDir() {
           autocomplete="off"
           type="number"
           class="input"
-          :placeholder="t('Settings.EnterHeight')"
+          placeholder="Enter height..."
         />
       </div>
     </Card>
     <Card>
       <div class="label">
         <h3>
-          <span class="label__title size-card-header">{{t('Settings.About')}}</span>
+          <span class="label__title size-card-header">About</span>
         </h3>
       </div>
       <div>
@@ -582,10 +562,6 @@ async function refreshDir() {
 }
 
 .theme-dropdown {
-  text-transform: capitalize;
-}
-
-.language-dropdown {
   text-transform: capitalize;
 }
 

@@ -1,7 +1,4 @@
 <script setup>
-import { i18n } from '@/main.js';
-const t = i18n.global.t;
-
 import { computed, ref, watch } from 'vue'
 import { RouterView, RouterLink, useRouter, useRoute } from 'vue-router'
 import {
@@ -46,11 +43,8 @@ import URLConfirmModal from '@/components/ui/URLConfirmModal.vue'
 import StickyTitleBar from '@/components/ui/tutorial/StickyTitleBar.vue'
 import OnboardingScreen from '@/components/ui/tutorial/OnboardingScreen.vue'
 import { install_from_file } from './helpers/pack'
-import { useLanguage } from '@/store/language.js'
 
 const themeStore = useTheming()
-const languageStore = useLanguage()
-
 const urlModal = ref(null)
 const isLoading = ref(true)
 
@@ -67,7 +61,7 @@ const os = ref('')
 defineExpose({
   initialize: async () => {
     isLoading.value = false
-    const { native_decorations, theme, language, opt_out_analytics, collapsed_navigation, advanced_rendering, fully_onboarded } =
+    const { native_decorations, theme, opt_out_analytics, collapsed_navigation, advanced_rendering, fully_onboarded } =
       await get()
     // video should play if the user is not on linux, and has not onboarded
     os.value = await getOS()
@@ -80,7 +74,6 @@ defineExpose({
     if (os.value !== "MacOS") appWindow.setDecorations(native_decorations)
 
     themeStore.setThemeState(theme)
-    languageStore.setLanguageState(language)
     themeStore.collapsedNavigation = collapsed_navigation
     themeStore.advancedRendering = advanced_rendering
 
@@ -304,11 +297,11 @@ command_listener(async (e) => {
           <AccountsCard ref="accounts" mode="small" />
         </suspense>
         <div class="pages-list">
-          <RouterLink v-tooltip="t('Application.Home')" to="/" class="btn icon-only collapsed-button">
+          <RouterLink v-tooltip="'Home'" to="/" class="btn icon-only collapsed-button">
             <HomeIcon />
           </RouterLink>
           <RouterLink
-            v-tooltip="t('Application.Browse')"
+            v-tooltip="'Browse'"
             to="/browse/modpack"
             class="btn icon-only collapsed-button"
             :class="{
@@ -317,7 +310,7 @@ command_listener(async (e) => {
           >
             <SearchIcon />
           </RouterLink>
-          <RouterLink v-tooltip="t('Application.Library')" to="/library" class="btn icon-only collapsed-button">
+          <RouterLink v-tooltip="'Library'" to="/library" class="btn icon-only collapsed-button">
             <LibraryIcon />
           </RouterLink>
           <Suspense>
@@ -327,7 +320,7 @@ command_listener(async (e) => {
       </div>
       <div class="settings pages-list">
         <Button
-          v-tooltip="t('Application.CreateProfile')"
+          v-tooltip="'Create profile'"
           class="sleek-primary collapsed-button"
           icon-only
           :disabled="offline"
@@ -335,7 +328,7 @@ command_listener(async (e) => {
         >
           <PlusIcon />
         </Button>
-        <RouterLink v-tooltip="t('Application.Settings')" to="/settings" class="btn icon-only collapsed-button">
+        <RouterLink v-tooltip="'Settings'" to="/settings" class="btn icon-only collapsed-button">
           <SettingsIcon />
         </RouterLink>
       </div>
@@ -666,5 +659,4 @@ command_listener(async (e) => {
     padding: var(--gap-sm) 0;
   }
 }
-
 </style>
