@@ -1,15 +1,15 @@
 <template>
   <div
-      v-if="mode !== 'isolated'"
-      ref="button"
-      v-tooltip="'Minecraft accounts'"
-      class="button-base avatar-button"
-      :class="{ expanded: mode === 'expanded' }"
-      @click="showCard = !showCard"
+    v-if="mode !== 'isolated'"
+    ref="button"
+    v-tooltip="t('AccountsCard.MinecraftAccounts')"
+    class="button-base avatar-button"
+    :class="{ expanded: mode === 'expanded' }"
+    @click="showCard = !showCard"
   >
     <Avatar
-        :size="mode === 'expanded' ? 'xs' : 'sm'"
-        :src="
+      :size="mode === 'expanded' ? 'xs' : 'sm'"
+      :src="
         selectedAccount
           ? `https://mc-heads.net/avatar/${selectedAccount.id}/128`
           : 'https://launcher-files.modrinth.com/assets/steve_head.png'
@@ -18,116 +18,120 @@
   </div>
   <transition name="fade">
     <Card
-        v-if="showCard || mode === 'isolated'"
-        ref="card"
-        class="account-card"
-        :class="{ expanded: mode === 'expanded', isolated: mode === 'isolated' }"
+      v-if="showCard || mode === 'isolated'"
+      ref="card"
+      class="account-card"
+      :class="{ expanded: mode === 'expanded', isolated: mode === 'isolated' }"
     >
       <div v-if="selectedAccount" class="selected account">
-        <Avatar size="xs" :src="`https://mc-heads.net/avatar/${selectedAccount.id}/128`"/>
+        <Avatar size="xs" :src="`https://mc-heads.net/avatar/${selectedAccount.id}/128`" />
         <div>
           <h4>{{ selectedAccount.username }}</h4>
-          <p>Активен</p>
+          <p>{{ t('AccountsCard.Active') }}</p>
         </div>
-        <Button v-tooltip="'Выйти (Удалить)'" icon-only color="raised" @click="logout(selectedAccount.id)">
-          <TrashIcon/>
+        <Button v-tooltip="t('AccountsCard.Logout')" icon-only color="raised" @click="logout(selectedAccount.id)">
+          <TrashIcon />
         </Button>
       </div>
       <div v-else class="logged-out account">
-        <h4>У вас нет аккаунта</h4>
-        <Button v-tooltip="'Войти (Лицензия)'" icon-only color="primary" @click="login()">
-          <LogInIcon/>
+        <h4>{{ t('AccountsCard.NoAccount') }}</h4>
+        <Button v-tooltip="t('AccountsCard.LoginLicense')" icon-only color="primary" @click="login()">
+          <LogInIcon />
         </Button>
-        <Button v-tooltip="'Войти (Оффлайн)'" icon-only color="secondary" @click="loginOffline()">
-          <PlusIcon/>
+        <Button v-tooltip="t('AccountsCard.LoginOffline')" icon-only color="secondary" @click="loginOffline()">
+          <PlusIcon />
         </Button>
       </div>
 
       <div v-if="displayAccounts.length > 0" class="account-group">
         <div v-for="account in displayAccounts" :key="account.id" class="account-row">
           <Button class="option account" @click="setAccount(account)">
-            <Avatar :src="`https://mc-heads.net/avatar/${account.name}/128`" class="icon"/>
+            <Avatar :src="`https://mc-heads.net/avatar/${account.name}/128`" class="icon" />
             <p>{{ account.username }}</p>
           </Button>
-          <Button v-tooltip="'Выйти из аккаунта'" icon-only @click="logout(account.id)">
-            <TrashIcon/>
+          <Button v-tooltip="t('AccountsCard.Logout')" icon-only @click="logout(account.id)">
+            <TrashIcon />
           </Button>
         </div>
       </div>
       <div v-if="accounts.length > 0" class="logged-out account">
         <Button @click="login()">
-          <LogInIcon/>
-          Лицензия
+          <LogInIcon />
+          {{ t('AccountsCard.License') }}
         </Button>
         <Button @click="loginOffline()">
-          <PlusIcon/>
-          Пиратский
+          <PlusIcon />
+          {{ t('AccountsCard.Pirate') }}
         </Button>
       </div>
     </Card>
   </transition>
-  <Modal ref="loginModal" class="modal" header="Авторизация через лицензионный аккаунт">
+  <Modal ref="loginModal" class="modal" :header="t('AccountsCard.AuthOnline')" :noblur="!themeStore.advancedRendering">
     <div class="modal-body">
-      <QrcodeVue :value="loginUrl" class="qr-code" margin="3" size="160"/>
+      <QrcodeVue :value="loginUrl" class="qr-code" margin="3" size="160" />
       <div class="modal-text">
-        <div class="label">Скопируйте этот код</div>
+        <div class="label">{{ t('AccountsCard.CopyThis') }}</div>
         <div class="code-text">
           <div class="code">
             {{ loginCode }}
           </div>
           <Button
-              v-tooltip="'Скопировать код'"
-              icon-only
-              large
-              color="raised"
-              @click="() => clipboardWrite(loginCode)"
+            v-tooltip="t('AccountsCard.CopyCode')"
+            icon-only
+            large
+            color="raised"
+            @click="() => clipboardWrite(loginCode)"
           >
-            <ClipboardCopyIcon/>
+            <ClipboardCopyIcon />
           </Button>
         </div>
-        <div>Вставьте скопированный код в браузере на странице Microsoft.</div>
+        <div>{{ t('AccountsCard.PasteMS') }}</div>
         <div class="iconified-input">
-          <LogInIcon/>
-          <input type="text" :value="loginUrl" readonly/>
+          <LogInIcon />
+          <input type="text" :value="loginUrl" readonly />
           <Button
-              v-tooltip="'Скопировать ссылку'"
-              icon-only
-              color="raised"
-              @click="() => clipboardWrite(loginUrl)"
+            v-tooltip="t('AccountsCard.CopyLink')"
+            icon-only
+            color="raised"
+            @click="() => clipboardWrite(loginUrl)"
           >
-            <GlobeIcon/>
+            <GlobeIcon />
           </Button>
         </div>
       </div>
     </div>
   </Modal>
-  <Modal ref="loginOfflineModal" class="modal" header="Авторизация через автономный аккаунт">
+  <Modal ref="loginOfflineModal" class="modal" :header="t('AccountsCard.AuthOffline')">
     <div class="modal-body">
-      <div class="label">Введите игровое имя:</div>
-      <input type="text" v-model="playerName" placeholder="Укажите игровое имя"/>
-      <Button v-tooltip="'Добавить'" icon-only color="secondary" @click="tryLoginOffline()">
-        <PlusIcon/>
+      <div class="label">{{ t('AccountsCard.Username') }}</div>
+      <input type="text" v-model="playerName" :placeholder="t('AccountsCard.Username')" />
+      <Button v-tooltip="t('AccountsCard.Add')" icon-only color="secondary" @click="tryLoginOffline()">
+        <PlusIcon />
       </Button>
 
     </div>
   </Modal>
-  <Modal ref="loginErrorModal" class="modal" header="Проверка на ввод не пройдена">
+  <Modal ref="loginErrorModal" class="modal" :header="t('AccountsCard.InputError')">
     <div class="modal-body">
-      <div class="label">К сожалению мы не можем принять такое имя пользователя, повторите попытку!</div>
+      <div class="label">{{ t('AccountsCard.TryAgainError') }}</div>
       <Button color="primary" @click="tryAgainLoginOffline()">
-        Повторить попытку
+        {{ t('AccountsCard.TryAgain') }}
       </Button>
     </div>
   </Modal>
   <Modal ref="unexpectedErrorModal" class="modal" header="Ошибка">
     <div class="modal-body">
-      <div class="label">Произошла неизвестная ошибка! Повторите попытку.</div>
+      <div class="label">{{ t('AccountsCard.UnexpectedError') }}</div>
     </div>
   </Modal>
 </template>
 
 
 <script setup>
+import { i18n } from '@/main.js'
+
+const t = i18n.global.t
+
 import {
   Avatar,
   Button,
@@ -137,28 +141,28 @@ import {
   LogInIcon,
   Modal,
   GlobeIcon,
-  ClipboardCopyIcon,
+  ClipboardCopyIcon
 } from 'omorphia'
-import {ref, computed, onMounted, onBeforeUnmount, onUnmounted} from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, onUnmounted } from 'vue'
 import {
   users,
   remove_user,
   authenticate_begin_flow,
-  authenticate_await_completion, offline_authenticate_await_completion,
+  authenticate_await_completion, offline_authenticate_await_completion
 } from '@/helpers/auth'
-import {get, set} from '@/helpers/settings'
-import {handleError} from '@/store/state.js'
-import {mixpanel_track} from '@/helpers/mixpanel'
+import { get, set } from '@/helpers/settings'
+import { handleError } from '@/store/state.js'
+import { useTheming } from '@/store/theme.js'
+import { mixpanel_track } from '@/helpers/mixpanel'
 import QrcodeVue from 'qrcode.vue'
-import {process_listener} from '@/helpers/events'
-// import {invoke} from '@tauri-apps/api/tauri'
+import { process_listener } from '@/helpers/events'
 
 defineProps({
   mode: {
     type: String,
     required: true,
-    default: 'normal',
-  },
+    default: 'normal'
+  }
 })
 
 
@@ -166,6 +170,7 @@ const emit = defineEmits(['change'])
 
 const loginCode = ref(null)
 
+const themeStore = useTheming()
 const settings = ref({})
 const accounts = ref([])
 const loginUrl = ref('')
@@ -181,16 +186,16 @@ async function refreshValues() {
 }
 
 defineExpose({
-  refreshValues,
+  refreshValues
 })
 await refreshValues()
 
 const displayAccounts = computed(() =>
-    accounts.value.filter((account) => settings.value.default_user !== account.id)
+  accounts.value.filter((account) => settings.value.default_user !== account.id)
 )
 
 const selectedAccount = computed(() =>
-    accounts.value.find((account) => account.id === settings.value.default_user)
+  accounts.value.find((account) => account.id === settings.value.default_user)
 )
 
 async function setAccount(account) {
@@ -213,8 +218,8 @@ async function login() {
     __tauriModule: 'Shell',
     message: {
       cmd: 'open',
-      path: loginSuccess.verification_uri,
-    },
+      path: loginSuccess.verification_uri
+    }
   })
 
   const loggedIn = await authenticate_await_completion().catch(handleError)
@@ -231,33 +236,33 @@ async function login() {
 
 
 async function loginOffline() {
-  loginOfflineModal.value.show();
+  loginOfflineModal.value.show()
 }
 
 
 async function tryLoginOffline() { // By AstralRinth
-  let name = playerName.value;
-  if (name.length > 1 && name.length < 32 && name !== "") {
+  let name = playerName.value
+  if (name.length > 1 && name.length < 32 && name !== '') {
     const loggedIn = await offline_authenticate_await_completion(name).catch(handleError)
-    loginOfflineModal.value.hide();
+    loginOfflineModal.value.hide()
     if (loggedIn) {
-      await setAccount(loggedIn);
-      await refreshValues();
+      await setAccount(loggedIn)
+      await refreshValues()
     } else {
       unexpectedErrorModal.value.show()
     }
-    playerName.value = "";
+    playerName.value = ''
     mixpanel_track('AccountLogIn')
   } else {
-    playerName.value = "";
-    loginOfflineModal.value.hide();
-    loginErrorModal.value.show();
+    playerName.value = ''
+    loginOfflineModal.value.hide()
+    loginErrorModal.value.show()
   }
 }
 
 function tryAgainLoginOffline() {
-  loginErrorModal.value.hide();
-  loginOffline();
+  loginErrorModal.value.hide()
+  loginOffline()
 }
 
 
@@ -279,10 +284,10 @@ let button = ref(null)
 const handleClickOutside = (event) => {
   const elements = document.elementsFromPoint(event.clientX, event.clientY)
   if (
-      card.value &&
-      card.value.$el !== event.target &&
-      !elements.includes(card.value.$el) &&
-      !button.value.contains(event.target)
+    card.value &&
+    card.value.$el !== event.target &&
+    !elements.includes(card.value.$el) &&
+    !button.value.contains(event.target)
   ) {
     showCard.value = false
   }

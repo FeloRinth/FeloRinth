@@ -1,8 +1,8 @@
 {
   "name": "theseus_gui",
   "private": true,
-  "version": "0.6.2",
-  "patch_version": "01",
+  "version": "0.6.3",
+  "patch_version": "03-Cosmic",
   "type": "module",
   "scripts": {
     "dev": "vite",
