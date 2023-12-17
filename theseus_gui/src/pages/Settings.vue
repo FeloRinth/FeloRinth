@@ -23,10 +23,13 @@ import { mixpanel_opt_out_tracking, mixpanel_opt_in_tracking } from '@/helpers/m
 import { open } from '@tauri-apps/api/dialog'
 import { getOS } from '@/helpers/utils.js'
 import { version, patch_version } from '../../package.json'
-
+import { useLanguage } from '@/store/language.js'
+import { i18n } from '@/main.js';
+const t = i18n.global.t;
 const pageOptions = ['Home', 'Library']
 
 const themeStore = useTheming()
+const languageStore = useLanguage()
 
 const accessSettings = async () => {
   const settings = await get()
@@ -122,7 +125,7 @@ async function findLauncherDir() {
   const newDir = await open({
     multiple: false,
     directory: true,
-    title: 'Select a new app directory',
+    title: t('Settings.SelectANewAppDirectory'),
   })
 
   const writeable = await is_dir_writeable(newDir)
@@ -150,7 +153,7 @@ async function refreshDir() {
     <Card>
       <div class="label">
         <h3>
-          <span class="label__title size-card-header">General settings</span>
+          <span class="label__title size-card-header">{{t('Settings.GeneralSettings')}}</span>
         </h3>
       </div>
       <Modal
@@ -162,25 +165,26 @@ async function refreshDir() {
       </Modal>
       <div class="adjacent-input">
         <label for="theme">
-          <span class="label__title">Manage account</span>
+          <span class="label__title">{{t('Settings.ManageAccount')}}</span>
           <span v-if="credentials" class="label__description">
-            You are currently logged in as {{ credentials.user.username }}.
+            {{t('Settings.YouAreCurrentlyLoggedInAs')}} {{ credentials.user.username }}.
           </span>
-          <span v-else> Sign in to your Modrinth account. </span>
+          <span v-else> {{t('Settings.SignInToYourModrinthAccount')}} </span>
         </label>
         <button v-if="credentials" class="btn" @click="logOut">
           <LogOutIcon />
-          Sign out
+          {{t('Settings.SignOut')}}
         </button>
         <button v-else class="btn" @click="$refs.loginScreenModal.show()">
           <LogInIcon />
-          Sign in
+          {{t('Settings.SignIn')}}
         </button>
       </div>
       <label for="theme">
-        <span class="label__title">App directory</span>
+        <span class="label__title">{{t('Settings.AppDirectory')}}</span>
         <span class="label__description">
-          The directory where the launcher stores all of its files.
+          {{t('Settings.TheDirectoryWhereTheLauncherStoresAllOfItsFiles')}}
+
         </span>
       </label>
       <div class="app-directory">
@@ -193,7 +197,7 @@ async function refreshDir() {
         </div>
         <Button large @click="refreshDir">
           <UpdatedIcon />
-          Refresh
+          {{t('Refresh')}}
         </Button>
       </div>
     </Card>
@@ -223,12 +227,33 @@ async function refreshDir() {
           "
         />
       </div>
+
+      <div class="adjacent-input">
+        <label for="language">
+          <span class="label__title">[⚑ RUS 5% COMPLETED] {{t('Settings.Language')}}</span>
+          <span class="label__description">{{t('Settings.ChangeTheGlobalLauncherLanguages')}}</span>
+        </label>
+        <DropdownSelect
+          id="language"
+          name="Language dropdown"
+          :options="languageStore.languageOptions"
+          :default-value="settings.language"
+          :model-value="settings.language"
+          class="language-dropdown"
+          @change="
+            (e) => {
+              languageStore.setLanguageState(e.option.toLowerCase())
+              settings.language = languageStore.selectedLanguage
+            }
+          "
+        />
+      </div>
+
       <div class="adjacent-input">
         <label for="advanced-rendering">
-          <span class="label__title">Advanced rendering</span>
+          <span class="label__title">{{t('Settings.AdvancedRendering')}}</span>
           <span class="label__description">
-            Enables advanced rendering such as blur effects that may cause performance issues
-            without hardware-accelerated rendering.
+            {{t('Settings.EnablesAdvancedRendering')}}
           </span>
         </label>
         <Toggle
@@ -245,9 +270,9 @@ async function refreshDir() {
       </div>
       <div class="adjacent-input">
         <label for="minimize-launcher">
-          <span class="label__title">Minimize launcher</span>
+          <span class="label__title">{{t('Settings.MinimizeLauncher')}}</span>
           <span class="label__description"
-            >Minimize the launcher when a Minecraft process starts.</span
+            >{{t('Settings.MinimizeTheLauncher')}}</span
           >
         </label>
         <Toggle
@@ -263,8 +288,8 @@ async function refreshDir() {
       </div>
       <div v-if="getOS() != 'MacOS'" class="adjacent-input">
         <label for="native-decorations">
-          <span class="label__title">Native decorations</span>
-          <span class="label__description">Use system window frame (app restart required).</span>
+          <span class="label__title">{{t('Settings.NativeDecorations')}}</span>
+          <span class="label__description">{{t('Settings.UseSystemWindowFrame')}}</span>
         </label>
         <Toggle
           id="native-decorations"
@@ -279,8 +304,8 @@ async function refreshDir() {
       </div>
       <div class="adjacent-input">
         <label for="opening-page">
-          <span class="label__title">Default landing page</span>
-          <span class="label__description">Change the page to which the launcher opens on.</span>
+          <span class="label__title">{{t('Settings.DefaultLandingPage')}}</span>
+          <span class="label__description">{{t('Settings.ChangeThePageToWhichTheLauncherOpensOn')}}</span>
         </label>
         <DropdownSelect
           id="opening-page"
@@ -562,6 +587,10 @@ async function refreshDir() {
 }
 
 .theme-dropdown {
+  text-transform: capitalize;
+}
+
+.language-dropdown {
   text-transform: capitalize;
 }
 
