@@ -47,6 +47,9 @@ dependencies:
   vue-virtual-scroller:
     specifier: 2.0.0-beta.8
     version: 2.0.0-beta.8(vue@3.3.4)
+  vue-i18n:
+    specifier: ^9.8.0
+    version: 9.8.0(vue@3.3.12)
 
 devDependencies:
   '@rollup/plugin-alias':
