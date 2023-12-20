@@ -1,8 +1,8 @@
 <template>
   <ModalConfirm
     ref="modal_confirm"
-    title="Are you sure you want to delete this instance?"
-    description="If you proceed, all data for your instance will be removed. You will not be able to recover it."
+    :title="t('Instance.Options.DeleteQuestion')"
+    :description="t('Instance.Options.DeleteQuestionDesc')"
     :has-to-type="false"
     proceed-label="Delete"
     :noblur="!themeStore.advancedRendering"
@@ -10,24 +10,24 @@
   />
   <Modal
     ref="modalConfirmUnlock"
-    header="Are you sure you want to unlock this instance?"
+    :header="t('Instance.Options.UnlockQuestion')"
     :noblur="!themeStore.advancedRendering"
   >
     <div class="modal-delete">
       <div
         class="markdown-body"
-        v-html="
-          'If you proceed, you will not be able to re-lock it without using the `Reinstall modpack` button.'
+        :v-html="
+          t('Instance.Options.UnlockProceed')
         "
       />
       <div class="input-group push-right">
         <button class="btn" @click="$refs.modalConfirmUnlock.hide()">
           <XIcon />
-          Cancel
+          {{t('Instance.Options.UnlockCancel')}}
         </button>
         <button class="btn btn-danger" :disabled="action_disabled" @click="unlockProfile">
           <LockIcon />
-          Unlock
+          {{t('Instance.Options.UnlockReact')}}
         </button>
       </div>
     </div>
@@ -35,24 +35,24 @@
 
   <Modal
     ref="modalConfirmUnpair"
-    header="Are you sure you want to unpair this instance?"
+    :header="t('Instance.Options.UnpairQuestion')"
     :noblur="!themeStore.advancedRendering"
   >
     <div class="modal-delete">
       <div
         class="markdown-body"
-        v-html="
-          'If you proceed, you will not be able to re-pair it without creating an entirely new instance.'
+        :v-html="
+          t('Instance.Options.UnpairProceed')
         "
       />
       <div class="input-group push-right">
         <button class="btn" @click="$refs.modalConfirmUnpair.hide()">
           <XIcon />
-          Cancel
+          {{ t('Instance.Options.UnpairCancel') }}
         </button>
         <button class="btn btn-danger" :disabled="action_disabled" @click="unpairProfile">
           <XIcon />
-          Unpair
+          {{ t('Instance.Options.UnpairReact') }}
         </button>
       </div>
     </div>
@@ -60,16 +60,16 @@
 
   <Modal
     ref="changeVersionsModal"
-    header="Change instance versions"
+    :header="t('Instance.Options.ChangeVersions')"
     :noblur="!themeStore.advancedRendering"
   >
     <div class="change-versions-modal universal-body">
       <div class="input-row">
-        <p class="input-label">Loader</p>
+        <p class="input-label">{{t('Instance.Options.Loader')}}</p>
         <Chips v-model="loader" :items="loaders" :never-empty="false" />
       </div>
       <div class="input-row">
-        <p class="input-label">Game Version</p>
+        <p class="input-label">{{t('Instance.Options.GameVersion')}}</p>
         <div class="versions">
           <DropdownSelect
             v-model="gameVersion"
@@ -81,7 +81,7 @@
         </div>
       </div>
       <div v-if="loader !== 'vanilla'" class="input-row">
-        <p class="input-label">Loader Version</p>
+        <p class="input-label">{{t('Instance.Options.LoaderVersion')}}</p>
         <DropdownSelect
           :model-value="selectableLoaderVersions[loaderVersionIndex]"
           :options="selectableLoaderVersions"
@@ -94,7 +94,7 @@
       <div class="push-right input-group">
         <button class="btn" @click="$refs.changeVersionsModal.hide()">
           <XIcon />
-          Cancel
+          {{t('Instance.Options.BtnCancel')}}
         </button>
         <button
           class="btn btn-primary"
@@ -102,7 +102,7 @@
           @click="saveGvLoaderEdits()"
         >
           <SaveIcon />
-          {{ editing ? 'Saving...' : 'Save changes' }}
+          {{ editing ? t('Instance.Options.Saving') : t('Instance.Options.SaveChanges') }}
         </button>
       </div>
     </div>
@@ -110,11 +110,11 @@
   <section class="card">
     <div class="label">
       <h3>
-        <span class="label__title size-card-header">Instance</span>
+        <span class="label__title size-card-header">{{t('Instance.Options.Instance')}}</span>
       </h3>
     </div>
     <label for="instance-icon">
-      <span class="label__title">Icon</span>
+      <span class="label__title">{{t('Instance.Options.Icon')}}</span>
     </label>
     <div class="input-group">
       <Avatar
@@ -125,7 +125,7 @@
       <div class="input-stack">
         <button id="instance-icon" class="btn" @click="setIcon">
           <UploadIcon />
-          Select icon
+          {{t('Instance.Options.SelectIcon')}}
         </button>
         <button
           :disabled="!(!icon || (icon && icon.startsWith('http')) ? icon : convertFileSrc(icon))"
@@ -133,13 +133,13 @@
           @click="resetIcon"
         >
           <TrashIcon />
-          Remove icon
+          {{t('Instance.Options.RemoveIcon')}}
         </button>
       </div>
     </div>
 
     <label for="project-name">
-      <span class="label__title">Name</span>
+      <span class="label__title">{{t('Instance.Options.Name')}}</span>
     </label>
     <input
       id="profile-name"
@@ -152,9 +152,9 @@
 
     <div class="adjacent-input">
       <label for="edit-versions">
-        <span class="label__title">Edit mod loader/game versions</span>
+        <span class="label__title">{{t('Instance.Options.EditMLGV')}}</span>
         <span class="label__description">
-          Allows you to change the mod loader, loader version, or game version of the instance.
+          {{t('Instance.Options.EditMLGVDesc')}}
         </span>
       </label>
       <button
@@ -164,16 +164,15 @@
         @click="$refs.changeVersionsModal.show()"
       >
         <EditIcon />
-        Edit versions
+        {{ t('Instance.Options.EditVersions') }}
       </button>
     </div>
 
     <div class="adjacent-input">
       <label>
-        <span class="label__title">Categories</span>
+        <span class="label__title">{{t('Instance.Options.Categories')}}</span>
         <span class="label__description">
-          Set the categories of this instance, for display in the library page. This is purely
-          cosmetic.
+          {{t('Instance.Options.CategoriesDesc')}}
         </span>
       </label>
       <multiselect
@@ -186,8 +185,8 @@
         :clear-search-on-select="false"
         :show-labels="false"
         :taggable="true"
-        tag-placeholder="Add new category"
-        placeholder="Select categories..."
+        :tag-placeholder="t('Instance.Options.CategoriesAdd')"
+        :placeholder="t('Instance.Options.CategoriesSelect')"
         @tag="
           (newTag) => {
             groups.push(newTag.trim().substring(0, 32))
@@ -200,18 +199,18 @@
   <Card>
     <div class="label">
       <h3>
-        <span class="label__title size-card-header">Java</span>
+        <span class="label__title size-card-header">{{t('Instance.Options.Java')}}</span>
       </h3>
     </div>
     <div class="settings-group">
-      <h3>Installation</h3>
-      <Checkbox v-model="overrideJavaInstall" label="Override global java installations" />
+      <h3>{{t('Instance.Options.Installation')}}</h3>
+      <Checkbox v-model="overrideJavaInstall" :label="t('Instance.Options.OverrideJavaInstallation')" />
       <JavaSelector v-model="javaInstall" :disabled="!overrideJavaInstall" />
     </div>
     <hr class="card-divider" />
     <div class="settings-group">
-      <h3>Java arguments</h3>
-      <Checkbox v-model="overrideJavaArgs" label="Override global java arguments" />
+      <h3>{{t('Instance.Options.JavaArgs')}}</h3>
+      <Checkbox v-model="overrideJavaArgs" :label="t('Instance.Options.OverrideJavaArgs')" />
       <input
         id="java-args"
         v-model="javaArgs"
@@ -219,25 +218,25 @@
         :disabled="!overrideJavaArgs"
         type="text"
         class="installation-input"
-        placeholder="Enter java arguments..."
+        :placeholder="t('Instance.Options.EnterJavaArgs')"
       />
     </div>
     <div class="settings-group">
-      <h3>Environment variables</h3>
-      <Checkbox v-model="overrideEnvVars" label="Override global environment variables" />
+      <h3>{{t('Instance.Options.EnvVars')}}</h3>
+      <Checkbox v-model="overrideEnvVars" :label="t('Instance.Options.OverrideEnvVars')" />
       <input
         v-model="envVars"
         autocomplete="off"
         :disabled="!overrideEnvVars"
         type="text"
         class="installation-input"
-        placeholder="Enter environment variables..."
+        :placeholder="t('Instance.Options.EnterEnvVars')"
       />
     </div>
     <hr class="card-divider" />
     <div class="settings-group">
-      <h3>Java memory</h3>
-      <Checkbox v-model="overrideMemorySettings" label="Override global memory settings" />
+      <h3>{{t('Instance.Options.JavaMem')}}</h3>
+      <Checkbox v-model="overrideMemorySettings" :label="t('Instance.Options.OverrideJavaMem')" />
       <Slider
         v-model="memory.maximum"
         :disabled="!overrideMemorySettings"
@@ -251,17 +250,17 @@
   <Card>
     <div class="label">
       <h3>
-        <span class="label__title size-card-header">Window</span>
+        <span class="label__title size-card-header">{{t('Instance.Options.Window')}}</span>
       </h3>
     </div>
     <div class="adjacent-input">
-      <Checkbox v-model="overrideWindowSettings" label="Override global window settings" />
+      <Checkbox v-model="overrideWindowSettings" :label="t('Instance.Options.OverrideWindow')" />
     </div>
     <div class="adjacent-input">
       <label for="fullscreen">
-        <span class="label__title">Fullscreen</span>
+        <span class="label__title">{{t('Instance.Options.FullScreen')}}</span>
         <span class="label__description">
-          Make the game start in full screen when launched (using options.txt).
+          {{t('Instance.Options.FullScreenDesc')}}
         </span>
       </label>
       <Toggle
@@ -278,8 +277,8 @@
     </div>
     <div class="adjacent-input">
       <label for="width">
-        <span class="label__title">Width</span>
-        <span class="label__description"> The width of the game window when launched. </span>
+        <span class="label__title">{{t('Instance.Options.Width')}}</span>
+        <span class="label__description"> {{t('Instance.Options.WidthDesc')}} </span>
       </label>
       <input
         id="width"
@@ -287,13 +286,13 @@
         autocomplete="off"
         :disabled="!overrideWindowSettings || fullscreenSetting"
         type="number"
-        placeholder="Enter width..."
+        :placeholder="t('Instance.Options.EnterWidth')"
       />
     </div>
     <div class="adjacent-input">
       <label for="height">
-        <span class="label__title">Height</span>
-        <span class="label__description"> The height of the game window when launched. </span>
+        <span class="label__title">{{t('Instance.Options.Height')}}</span>
+        <span class="label__description"> {{t('Instance.Options.HeightDesc')}} </span>
       </label>
       <input
         id="height"
@@ -302,23 +301,23 @@
         :disabled="!overrideWindowSettings || fullscreenSetting"
         type="number"
         class="input"
-        placeholder="Enter height..."
+        :placeholder="t('Instance.Options.EnterHeight')"
       />
     </div>
   </Card>
   <Card>
     <div class="label">
       <h3>
-        <span class="label__title size-card-header">Hooks</span>
+        <span class="label__title size-card-header">{{t('Instance.Options.Hooks')}}</span>
       </h3>
     </div>
     <div class="adjacent-input">
-      <Checkbox v-model="overrideHooks" label="Override global hooks" />
+      <Checkbox v-model="overrideHooks" :label="t('Instance.Options.OverrideHooks')" />
     </div>
     <div class="adjacent-input">
       <label for="pre-launch">
-        <span class="label__title">Pre launch</span>
-        <span class="label__description"> Ran before the instance is launched. </span>
+        <span class="label__title">{{t('Instance.Options.PreLaunch')}}</span>
+        <span class="label__description">{{t('Instance.Options.PreLaunchDesc')}}</span>
       </label>
       <input
         id="pre-launch"
@@ -326,13 +325,13 @@
         autocomplete="off"
         :disabled="!overrideHooks"
         type="text"
-        placeholder="Enter pre-launch command..."
+        :placeholder="t('Instance.Options.EnterPreLaunch')"
       />
     </div>
     <div class="adjacent-input">
       <label for="wrapper">
-        <span class="label__title">Wrapper</span>
-        <span class="label__description"> Wrapper command for launching Minecraft. </span>
+        <span class="label__title">{{t('Instance.Options.Wrapper')}}</span>
+        <span class="label__description"> {{t('Instance.Options.WrapperDesc')}} </span>
       </label>
       <input
         id="wrapper"
@@ -340,13 +339,13 @@
         autocomplete="off"
         :disabled="!overrideHooks"
         type="text"
-        placeholder="Enter wrapper command..."
+        :placeholder="t('Instance.Options.EnterWrapper')"
       />
     </div>
     <div class="adjacent-input">
       <label for="post-exit">
-        <span class="label__title">Post exit</span>
-        <span class="label__description"> Ran after the game closes. </span>
+        <span class="label__title">{{t('Instance.Options.PostExit')}}</span>
+        <span class="label__description"> {{t('Instance.Options.PostExitDesc')}} </span>
       </label>
       <input
         id="post-exit"
@@ -354,7 +353,7 @@
         autocomplete="off"
         :disabled="!overrideHooks"
         type="text"
-        placeholder="Enter post-exit command..."
+        :placeholder="t('Instance.Options.EnterPostExit')"
       />
     </div>
   </Card>
@@ -563,7 +562,8 @@ import { mixpanel_track } from '@/helpers/mixpanel'
 import { useTheming } from '@/store/theme.js'
 import { useBreadcrumbs } from '@/store/breadcrumbs'
 import ModpackVersionModal from '@/components/ui/ModpackVersionModal.vue'
-
+import { i18n } from '@/main.js';
+const t = i18n.global.t;
 const breadcrumbs = useBreadcrumbs()
 
 const router = useRouter()

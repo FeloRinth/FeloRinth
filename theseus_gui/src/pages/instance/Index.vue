@@ -19,7 +19,7 @@
         </div>
         <span class="button-group">
           <Button v-if="instance.install_stage !== 'installed'" disabled class="instance-button">
-            Installing...
+            {{t('Instance.Index.Installing')}}
           </Button>
           <Button
             v-else-if="playing === true"
@@ -29,7 +29,7 @@
             @mouseover="checkProcess"
           >
             <StopCircleIcon />
-            Stop
+            {{t('Instance.Index.Stop')}}
           </Button>
           <Button
             v-else-if="playing === false && loading === false"
@@ -39,37 +39,37 @@
             @mouseover="checkProcess"
           >
             <PlayIcon />
-            Play
+            {{t('Instance.Index.Play')}}
           </Button>
           <Button
             v-else-if="loading === true && playing === false"
             disabled
             class="instance-button"
           >
-            Loading...
+            {{t('Instance.Index.Loading')}}
           </Button>
           <Button
-            v-tooltip="'Open instance folder'"
+            :v-tooltip="t('Instance.Index.OpenInstanceFolder')"
             class="instance-button"
             @click="showProfileInFolder(instance.path)"
           >
             <FolderOpenIcon />
-            Folder
+            {{t('Instance.Index.Folder')}}
           </Button>
         </span>
         <hr class="card-divider" />
         <div class="pages-list">
           <RouterLink :to="`/instance/${encodeURIComponent($route.params.id)}/`" class="btn">
             <BoxIcon />
-            Content
+            {{t('Instance.Index.Content')}}
           </RouterLink>
           <RouterLink :to="`/instance/${encodeURIComponent($route.params.id)}/logs`" class="btn">
             <FileIcon />
-            Logs
+            {{t('Instance.Index.Logs')}}
           </RouterLink>
           <RouterLink :to="`/instance/${encodeURIComponent($route.params.id)}/options`" class="btn">
             <SettingsIcon />
-            Options
+            {{t('Instance.Index.Options')}}
           </RouterLink>
         </div>
       </Card>
@@ -94,25 +94,25 @@
     </div>
   </div>
   <ContextMenu ref="options" @option-clicked="handleOptionsClick">
-    <template #play> <PlayIcon /> Play </template>
-    <template #stop> <StopCircleIcon /> Stop </template>
-    <template #add_content> <PlusIcon /> Add Content </template>
-    <template #edit> <EditIcon /> Edit </template>
-    <template #copy_path> <ClipboardCopyIcon /> Copy Path </template>
-    <template #open_folder> <ClipboardCopyIcon /> Open Folder </template>
-    <template #copy_link> <ClipboardCopyIcon /> Copy Link </template>
-    <template #open_link> <ClipboardCopyIcon /> Open In Modrinth <ExternalIcon /> </template>
-    <template #copy_names><EditIcon />Copy names</template>
-    <template #copy_slugs><HashIcon />Copy slugs</template>
-    <template #copy_links><GlobeIcon />Copy Links</template>
-    <template #toggle><EditIcon />Toggle selected</template>
-    <template #disable><XIcon />Disable selected</template>
-    <template #enable><CheckCircleIcon />Enable selected</template>
-    <template #hide_show><EyeIcon />Show/Hide unselected</template>
+    <template #play> <PlayIcon /> {{t('Instance.Index.PLay')}} </template>
+    <template #stop> <StopCircleIcon /> {{t('Instance.Index.Stop')}} </template>
+    <template #add_content> <PlusIcon /> {{t('Instance.Index.AddContent')}} </template>
+    <template #edit> <EditIcon /> {{t('Instance.Index.Edit')}} </template>
+    <template #copy_path> <ClipboardCopyIcon /> {{t('Instance.Index.CopyPath')}} </template>
+    <template #open_folder> <ClipboardCopyIcon /> {{t('Instance.Index.OpenFolder')}} </template>
+    <template #copy_link> <ClipboardCopyIcon /> {{t('Instance.Index.CopyLink')}} </template>
+    <template #open_link> <ClipboardCopyIcon /> {{t('Instance.Index.OpenInMR')}} <ExternalIcon /> </template>
+    <template #copy_names><EditIcon />{{t('Instance.Index.CopyNames')}}</template>
+    <template #copy_slugs><HashIcon />{{t('Instance.Index.CopySlugs')}}</template>
+    <template #copy_links><GlobeIcon />{{t('Instance.Index.CopyLinks')}}</template>
+    <template #toggle><EditIcon />{{t('Instance.Index.ToggleSelected')}}</template>
+    <template #disable><XIcon />{{t('Instance.Index.DisableSelected')}}</template>
+    <template #enable><CheckCircleIcon />{{t('Instance.Index.EnableSelected')}}</template>
+    <template #hide_show><EyeIcon />{{t('Instance.Index.ShowHideUnSelected')}}</template>
     <template #update_all
-      ><UpdatedIcon />Update {{ selected.length > 0 ? 'selected' : 'all' }}</template
+      ><UpdatedIcon />{{t('Instance.Index.Update')}} {{ selected.length > 0 ? 'selected' : 'all' }}</template
     >
-    <template #filter_update><UpdatedIcon />Select Updatable</template>
+    <template #filter_update><UpdatedIcon />{{t('Instance.Index.SelectUpdatable')}}</template>
   </ContextMenu>
 </template>
 <script setup>
@@ -153,7 +153,8 @@ import ContextMenu from '@/components/ui/ContextMenu.vue'
 import { mixpanel_track } from '@/helpers/mixpanel'
 import { convertFileSrc } from '@tauri-apps/api/tauri'
 import { useFetch } from '@/helpers/fetch'
-
+import { i18n } from '@/main.js';
+const t = i18n.global.t;
 const route = useRoute()
 
 const router = useRouter()
