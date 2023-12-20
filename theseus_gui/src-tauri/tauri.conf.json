@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "Modrinth App",
-    "version": "0.6.303"
+    "version": "0.6.305"
   },
   "tauri": {
     "allowlist": {
@@ -83,13 +83,11 @@
       }
     },
     "security": {
-      "csp": "default-src 'self'; connect-src https://modrinth.com https://*.modrinth.com https://mixpanel.com https://*.mixpanel.com https://*.cloudflare.com https://api.mclo.gs; font-src https://cdn-raw.modrinth.com/fonts/inter/; img-src tauri: https: data: blob: 'unsafe-inline' asset: https://asset.localhost; script-src 'unsafe-eval' https://*.cloudflare.com 'self'; frame-src https://*.cloudflare.com https://www.youtube.com 'self'; style-src 'unsafe-inline' 'self'"
+      "csp": "default-src 'self'; connect-src https://modrinth.com https://*.modrinth.com https://mixpanel.com https://*.mixpanel.com https://*.cloudflare.com https://api.mclo.gs; font-src https://cdn-raw.modrinth.com/fonts/inter/; img-src tauri: https: data: blob: asset: https://asset.localhost; script-src https://*.cloudflare.com 'self' 'unsafe-eval' 'sha256-qI6/iDpFRcrQvD88dpuloNxSy8DwdlZzYyHGlvNwjYU=' 'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='; frame-src https://*.cloudflare.com https://www.youtube.com 'self'; style-src 'self' 'unsafe-inline';"
     },
     "updater": {
       "active": true,
-      "endpoints": [
-        "https://launcher-files.modrinth.com/updates.json"
-      ],
+      "endpoints": ["https://launcher-files.modrinth.com/updates.json"],
       "dialog": true,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDIwMzM5QkE0M0FCOERBMzkKUldRNTJyZzZwSnN6SUdPRGdZREtUUGxMblZqeG9OVHYxRUlRTzJBc2U3MUNJaDMvZDQ1UytZZmYK"
     },
