@@ -230,7 +230,7 @@ async function refreshDir() {
 
       <div class="adjacent-input">
         <label for="language">
-          <span class="label__title">[⚑ RUS 10% COMPLETED] {{t('Settings.Language')}}</span>
+          <span class="label__title">[⚑ RUS 20% COMPLETED] {{t('Settings.Language')}}</span>
           <span class="label__description">{{t('Settings.ChangeTheGlobalLauncherLanguages')}}</span>
         </label>
         <DropdownSelect
