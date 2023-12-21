@@ -32,15 +32,15 @@
       @click="modpackVersionModal.show()"
     >
       <UpdatedIcon />
-      {{ installing ? 'Updating' : 'Update modpack' }}
+      {{ installing ? t('Instance.Mods.Updating') : t('Instance.Mods.UpdateModpack') }}
     </Button>
     <Button v-else-if="!isPackLocked" @click="exportModal.show()">
       <PackageIcon />
-      Export modpack
+      {{t('Instance.Mods.Export')}}
     </Button>
     <Button v-if="!isPackLocked && projects.some((m) => m.outdated)" @click="updateAll">
       <UpdatedIcon />
-      Update all
+      {{t('Instance.Mods.UpdateAll')}}
     </Button>
 
     <DropdownButton
@@ -53,11 +53,11 @@
     >
       <template #search>
         <SearchIcon />
-        <span class="no-wrap"> Add content </span>
+        <span class="no-wrap"> {{t('Instance.Mods.AddContent')}} </span>
       </template>
       <template #from_file>
         <FolderOpenIcon />
-        <span class="no-wrap"> Add from file </span>
+        <span class="no-wrap"> {{t('Instance.Mods.AddFile')}} </span>
       </template>
     </DropdownButton>
   </Card>
@@ -77,19 +77,19 @@
         </div>
         <div v-if="selected.length === 0" class="table-cell table-text name-cell actions-cell">
           <Button class="transparent" @click="sortProjects('Name')">
-            Name
+            {{t('Instance.Mods.Name')}}
             <DropdownIcon v-if="sortColumn === 'Name'" :class="{ down: ascending }" />
           </Button>
         </div>
         <div v-if="selected.length === 0" class="table-cell table-text version">
           <Button class="transparent" @click="sortProjects('Version')">
-            Version
+            {{t('Instance.Mods.Version')}}
             <DropdownIcon v-if="sortColumn === 'Version'" :class="{ down: ascending }" />
           </Button>
         </div>
         <div v-if="selected.length === 0" class="table-cell table-text actions-cell">
           <Button class="transparent" @click="sortProjects('Enabled')">
-            Actions
+            {{t('Instance.Mods.Actions')}}
             <DropdownIcon v-if="sortColumn === 'Enabled'" :class="{ down: ascending }" />
           </Button>
         </div>
@@ -109,9 +109,9 @@
             @mouseover="selectedOption = 'Share'"
           >
             <ShareIcon />
-            Share
+            {{t('Instance.Mods.Share')}}
           </Button>
-          <div v-tooltip="isPackLocked ? 'Unlock this instance to remove mods' : ''">
+          <div v-tooltip="isPackLocked ? t('Instance.Mods.UnlockThisInstanceRemove') : ''">
             <Button
               :disabled="isPackLocked"
               class="transparent trash"
@@ -119,10 +119,10 @@
               @mouseover="selectedOption = 'Delete'"
             >
               <TrashIcon />
-              Delete
+              {{t('Instance.Mods.Delete')}}
             </Button>
           </div>
-          <div v-tooltip="isPackLocked ? 'Unlock this instance to update mods' : ''">
+          <div v-tooltip="isPackLocked ? t('Instance.Mods.UnlockThisInstanceUpdate') : ''">
             <Button
               :disabled="isPackLocked || offline"
               class="transparent update"
@@ -133,7 +133,7 @@
               Update
             </Button>
           </div>
-          <div v-tooltip="isPackLocked ? 'Unlock this instance to toggle mods' : ''">
+          <div v-tooltip="isPackLocked ? t('Instance.Mods.UnlockThisInstanceToggle') : ''">
             <Button
               :disabled="isPackLocked"
               class="transparent"
@@ -141,7 +141,7 @@
               @mouseover="selectedOption = 'Toggle'"
             >
               <ToggleIcon />
-              Toggle
+              {{t('Instance.Mods.Toggle')}}
             </Button>
           </div>
         </div>
@@ -150,49 +150,49 @@
         <section v-if="selectedOption === 'Share'" class="options">
           <Button class="transparent" @click="shareNames()">
             <TextInputIcon />
-            Share names
+            {{t('Instance.Mods.ShareNames')}}
           </Button>
           <Button class="transparent" @click="shareUrls()">
             <GlobeIcon />
-            Share URLs
+            {{t('Instance.Mods.ShareURLs')}}
           </Button>
           <Button class="transparent" @click="shareFileNames()">
             <FileIcon />
-            Share file names
+            {{t('Instance.Mods.ShareFileNames')}}
           </Button>
           <Button class="transparent" @click="shareMarkdown()">
             <CodeIcon />
-            Share as markdown
+            {{t('Instance.Mods.ShareMarkdown')}}
           </Button>
         </section>
         <section v-if="selectedOption === 'Delete'" class="options">
           <Button class="transparent" @click="deleteWarning.show()">
             <TrashIcon />
-            Delete selected
+            {{t('Instance.Mods.DeleteSelected')}}
           </Button>
           <Button class="transparent" @click="deleteDisabledWarning.show()">
             <ToggleIcon />
-            Delete disabled
+            {{t('Instance.Mods.DeleteDisabled')}}
           </Button>
         </section>
         <section v-if="selectedOption === 'Update'" class="options">
           <Button class="transparent" :disabled="offline" @click="updateAll()">
             <UpdatedIcon />
-            Update all
+            {{t('Instance.Mods.UpdateAll')}}
           </Button>
           <Button class="transparent" @click="selectUpdatable()">
             <CheckIcon />
-            Select updatable
+            {{t('Instance.Mods.SelectUpdatable')}}
           </Button>
         </section>
         <section v-if="selectedOption === 'Toggle'" class="options">
           <Button class="transparent" @click="enableAll()">
             <CheckIcon />
-            Toggle on
+            {{t('Instance.Mods.TurnOn')}}
           </Button>
           <Button class="transparent" @click="disableAll()">
             <XIcon />
-            Toggle off
+            {{t('Instance.Mods.TurnOff')}}
           </Button>
           <Button class="transparent" @click="hideShowAll()">
             <EyeIcon v-if="hideNonSelected" />
@@ -236,7 +236,7 @@
           <span v-tooltip="`${mod.version}`">{{ mod.version }}</span>
         </div>
         <div class="table-cell table-text manage">
-          <div v-tooltip="isPackLocked ? 'Unlock this instance to remove mods.' : 'Remove project'">
+          <div v-tooltip="isPackLocked ? t('Instance.Mods.UnlockThisInstanceRemove') : t('Instance.Mods.RemoveProject')">
             <Button :disabled="isPackLocked" icon-only @click="removeMod(mod)">
               <TrashIcon />
             </Button>
@@ -244,7 +244,7 @@
           <AnimatedLogo v-if="mod.updating" class="btn icon-only updating-indicator"></AnimatedLogo>
           <div
             v-else
-            v-tooltip="isPackLocked ? 'Unlock this instance to update mods.' : 'Update project'"
+            v-tooltip="isPackLocked ? t('Instance.Mods.UnlockThisInstanceUpdate') : t('Instance.Mods.UpdateProject')"
           >
             <Button
               :disabled="!mod.outdated || offline || isPackLocked"
@@ -255,7 +255,7 @@
               <CheckIcon v-else />
             </Button>
           </div>
-          <div v-tooltip="isPackLocked ? 'Unlock this instance to toggle mods.' : ''">
+          <div v-tooltip="isPackLocked ? t('Instance.Mods.UnlockThisInstanceToggle') : ''">
             <input
               id="switch-1"
               :disabled="isPackLocked"
@@ -281,8 +281,8 @@
     <div class="empty-icon">
       <AddProjectImage />
     </div>
-    <h3>No projects found</h3>
-    <p class="empty-subtitle">Add a project to get started</p>
+    <h3>{{t('Instance.Mods.NoProjectsFound')}}</h3>
+    <p class="empty-subtitle">{{t('Instance.Mods.NoProjectFoundDesc')}}</p>
     <div class="empty-action">
       <DropdownButton
         :options="['search', 'from_file']"
@@ -293,11 +293,11 @@
       >
         <template #search>
           <SearchIcon />
-          <span class="no-wrap"> Add content </span>
+          <span class="no-wrap"> {{t('Instance.Mods.AddContent')}} </span>
         </template>
         <template #from_file>
           <FolderOpenIcon />
-          <span class="no-wrap"> Add from file </span>
+          <span class="no-wrap"> {{t('Instance.Mods.AddFile')}} </span>
         </template>
       </DropdownButton>
     </div>
@@ -310,30 +310,30 @@
     :link-function="(page) => `?page=${page}`"
     @switch-page="switchPage"
   />
-  <Modal ref="deleteWarning" header="Are you sure?">
+  <Modal ref="deleteWarning" :header="t('Instance.Mods.AreYouSure')">
     <div class="modal-body">
       <div class="markdown-body">
         <p>
-          Are you sure you want to remove
+          {{t('Instance.Mods.AreYouSureDesc')}}
           <strong>{{ functionValues.length }} project(s)</strong> from {{ instance.metadata.name }}?
           <br />
           This action <strong>cannot</strong> be undone.
         </p>
       </div>
       <div class="button-group push-right">
-        <Button @click="deleteWarning.hide()"> Cancel </Button>
+        <Button @click="deleteWarning.hide()"> {{ t('Instance.Mods.Cancel') }} </Button>
         <Button color="danger" @click="deleteSelected">
           <TrashIcon />
-          Remove
+          {{ t('Instance.Mods.Delete') }}
         </Button>
       </div>
     </div>
   </Modal>
-  <Modal ref="deleteDisabledWarning" header="Are you sure?">
+  <Modal ref="deleteDisabledWarning" :header="t('Instance.Mods.AreYouSure')">
     <div class="modal-body">
       <div class="markdown-body">
         <p>
-          Are you sure you want to remove
+          {{t('Instance.Mods.AreYouSureDesc')}}
           <strong
             >{{ Array.from(projects.values()).filter((x) => x.disabled).length }} disabled
             project(s)</strong
@@ -344,10 +344,10 @@
         </p>
       </div>
       <div class="button-group push-right">
-        <Button @click="deleteDisabledWarning.hide()"> Cancel </Button>
+        <Button @click="deleteDisabledWarning.hide()"> {{ t('Instance.Mods.Cancel') }} </Button>
         <Button color="danger" @click="deleteDisabled">
           <TrashIcon />
-          Remove
+          {{ t('Instance.Mods.Delete') }}
         </Button>
       </div>
     </div>
@@ -411,7 +411,8 @@ import { highlightModInProfile } from '@/helpers/utils.js'
 import { MenuIcon, ToggleIcon, TextInputIcon, AddProjectImage, PackageIcon } from '@/assets/icons'
 import ExportModal from '@/components/ui/ExportModal.vue'
 import ModpackVersionModal from '@/components/ui/ModpackVersionModal.vue'
-
+import { i18n } from '@/main.js';
+const t = i18n.global.t;
 const router = useRouter()
 
 const props = defineProps({

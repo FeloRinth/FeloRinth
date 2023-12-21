@@ -475,7 +475,7 @@ watch(
     projectType.value = newType
     breadcrumbs.setContext({ name: 'Browse', link: `/browse/${projectType.value}` })
 
-    sortType.value = { display: 'Relevance', name: 'relevance' }
+    sortType.value = { display: t('Browse.Relevance'), name: 'relevance' }
     query.value = ''
 
     loading.value = true
@@ -568,21 +568,21 @@ onUnmounted(() => unlistenOffline())
         </router-link>
         <Checkbox
           v-model="ignoreInstanceGameVersions"
-          label="Override game versions"
+          :label="t('Browse.OverrideGV')"
           class="filter-checkbox"
           @update:model-value="onSearchChangeToTop(1)"
           @click.prevent.stop
         />
         <Checkbox
           v-model="ignoreInstanceLoaders"
-          label="Override loaders"
+          :label="t('Browse.OverrideL')"
           class="filter-checkbox"
           @update:model-value="onSearchChangeToTop(1)"
           @click.prevent.stop
         />
         <Checkbox
           v-model="hideAlreadyInstalled"
-          label="Hide already installed"
+          :label="t('Browse.HideInstalled')"
           class="filter-checkbox"
           @update:model-value="onSearchChangeToTop(1)"
           @click.prevent.stop
@@ -600,7 +600,7 @@ onUnmounted(() => unlistenOffline())
           "
           @click="clearFilters"
         >
-          <ClearIcon /> Clear filters
+          <ClearIcon /> {{t('Browse.ClearFilters')}}
         </Button>
         <div v-if="showLoaders" class="loaders">
           <h2>Loaders</h2>
@@ -683,7 +683,7 @@ onUnmounted(() => unlistenOffline())
           </SearchFilter>
         </div>
         <div class="open-source">
-          <h2>Open source</h2>
+          <h2>{{t('Browse.OpenSource')}}</h2>
           <Checkbox
             v-model="onlyOpenSource"
             :label="t('Browse.OpenSourceOnly')"
@@ -744,7 +744,7 @@ onUnmounted(() => unlistenOffline())
       />
       <SplashScreen v-if="loading" />
       <section v-else-if="offline && results.total_hits === 0" class="offline">
-        You are currently offline. Connect to the internet to browse Modrinth!
+        {{t('Browse.CurrentlyOffline')}}
       </section>
       <section v-else class="project-list display-mode--list instance-results" role="list">
         <SearchCard

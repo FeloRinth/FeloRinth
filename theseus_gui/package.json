@@ -2,7 +2,7 @@
   "name": "theseus_gui",
   "private": true,
   "version": "0.6.3",
-  "patch_version": "05-Cosmic",
+  "patch_version": "06-Cosmic-Beta",
   "type": "module",
   "scripts": {
     "dev": "vite",

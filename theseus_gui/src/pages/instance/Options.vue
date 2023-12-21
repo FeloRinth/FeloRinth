@@ -360,16 +360,16 @@
   <Card v-if="instance.metadata.linked_data">
     <div class="label">
       <h3>
-        <span class="label__title size-card-header">Modpack</span>
+        <span class="label__title size-card-header">{{t('Instance.Options.Modpack')}}</span>
       </h3>
     </div>
     <div class="adjacent-input">
       <label for="general-modpack-info">
         <span class="label__description">
-          <strong>Modpack: </strong> {{ instance.metadata.name }}
+          <strong>{{t('Instance.Options.Modpack')}}: </strong> {{ instance.metadata.name }}
         </span>
         <span class="label__description">
-          <strong>Version: </strong>
+          <strong>{{t('Instance.Options.Version')}}: </strong>
           {{
             installedVersionData?.name != null
               ? installedVersionData.name.charAt(0).toUpperCase() +
@@ -381,44 +381,38 @@
     </div>
     <div v-if="!isPackLocked" class="adjacent-input">
       <Card class="unlocked-instance">
-        This is an unlocked instance. There may be unexpected behaviour unintended by the modpack
-        creator.
+        {{t('Instance.Options.Unlocked')}}
       </Card>
     </div>
     <div v-else class="adjacent-input">
       <label for="unlock-profile">
-        <span class="label__title">Unlock instance</span>
+        <span class="label__title">{{t('Instance.Options.UnlockedInstance')}}</span>
         <span class="label__description">
-          Allows modifications to the instance, which allows you to add projects to the modpack. The
-          pack will remain linked, and you can still change versions. Only mods listed in the
-          modpack will be modified on version changes.
+          {{t('Instance.Options.UnlockedInstanceDesc')}}
         </span>
       </label>
       <Button id="unlock-profile" @click="$refs.modalConfirmUnlock.show()">
-        <LockIcon /> Unlock
+        <LockIcon /> {{t('Instance.Options.Unlock')}}
       </Button>
     </div>
 
     <div class="adjacent-input">
       <label for="unpair-profile">
-        <span class="label__title">Unpair instance</span>
+        <span class="label__title">{{t('Instance.Options.UnpairInstance')}}</span>
         <span class="label__description">
-          Removes the link to an external Modrinth modpack on the instance. This allows you to edit
-          modpacks you download through the browse page but you will not be able to update the
-          instance from a new version of a modpack if you do this.
+          {{t('Instance.Options.UnpairInstanceDesc')}}
         </span>
       </label>
       <Button id="unpair-profile" @click="$refs.modalConfirmUnpair.show()">
-        <XIcon /> Unpair
+        <XIcon /> {{t('Instance.Options.Unpair')}}
       </Button>
     </div>
 
     <div v-if="props.instance.metadata.linked_data.project_id" class="adjacent-input">
       <label for="change-modpack-version">
-        <span class="label__title">Change modpack version</span>
+        <span class="label__title">{{t('Instance.Options.ChangeMV')}}</span>
         <span class="label__description">
-          Changes to another version of the modpack, allowing upgrading or downgrading. This will
-          replace all files marked as relevant to the modpack.
+          {{t('Instance.Options.ChangeMVDesc')}}
         </span>
       </label>
 
@@ -428,33 +422,32 @@
         @click="modpackVersionModal.show()"
       >
         <SwapIcon />
-        Change modpack version
+        {{t('Instance.Options.ChangeMV')}}
       </Button>
     </div>
     <div class="adjacent-input">
       <label for="repair-modpack">
-        <span class="label__title">Reinstall modpack</span>
+        <span class="label__title">{{t('Instance.Options.ReinstallModpack')}}</span>
         <span class="label__description">
-          Removes all projects and reinstalls Modrinth modpack. Use this to fix unexpected behaviour
-          if your instance is diverging from the Modrinth modpack. This also re-locks the instance.
+          {{t('Instance.Options.ReinstallModpackDesc')}}
         </span>
       </label>
       <Button id="repair-modpack" color="highlight" :disabled="offline" @click="repairModpack">
-        <DownloadIcon /> Reinstall
+        <DownloadIcon /> {{t('Instance.Options.Reinstall')}}
       </Button>
     </div>
   </Card>
   <Card>
     <div class="label">
       <h3>
-        <span class="label__title size-card-header">Instance management</span>
+        <span class="label__title size-card-header">{{t('Instance.Options.InstanceManagement')}}</span>
       </h3>
     </div>
     <div v-if="instance.install_stage == 'installed'" class="adjacent-input">
       <label for="duplicate-profile">
-        <span class="label__title">Duplicate instance</span>
+        <span class="label__title">{{t('Instance.Options.DuplicateInstance')}}</span>
         <span class="label__description">
-          Creates another copy of the instance, including saves, configs, mods, and everything.
+          {{t('Instance.Options.DuplicateInstanceDesc')}}
         </span>
       </label>
       <Button
@@ -462,15 +455,14 @@
         :disabled:="installing || inProgress || offline"
         @click="duplicateProfile"
       >
-        <ClipboardCopyIcon /> Duplicate
+        <ClipboardCopyIcon /> {{t('Instance.Options.Duplicate')}}
       </Button>
     </div>
     <div class="adjacent-input">
       <label for="repair-profile">
-        <span class="label__title">Repair instance</span>
+        <span class="label__title">{{t('Instance.Options.RepairInstance')}}</span>
         <span class="label__description">
-          Reinstalls Minecraft dependencies and checks for corruption. Use this if your game is not
-          launching due to launcher-related errors.
+          {{t('Instance.Options.RepairInstanceDesc')}}
         </span>
       </label>
       <Button
@@ -479,15 +471,14 @@
         :disabled="installing || inProgress || repairing || offline"
         @click="repairProfile(true)"
       >
-        <HammerIcon /> Repair
+        <HammerIcon /> {{t('Instance.Options.Repair')}}
       </Button>
     </div>
     <div class="adjacent-input">
       <label for="delete-profile">
-        <span class="label__title">Delete instance</span>
+        <span class="label__title">{{t('Instance.Options.DeleteInstance')}}</span>
         <span class="label__description">
-          Fully removes a instance from the disk. Be careful, as once you delete a instance there is
-          no way to recover it.
+          {{t('Instance.Options.DeleteInstanceDesc')}}
         </span>
       </label>
       <Button
@@ -496,7 +487,7 @@
         :disabled="removing"
         @click="$refs.modal_confirm.show()"
       >
-        <TrashIcon /> Delete
+        <TrashIcon /> {{t('Instance.Options.Delete')}}
       </Button>
     </div>
   </Card>
