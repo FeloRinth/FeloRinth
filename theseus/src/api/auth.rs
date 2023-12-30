@@ -42,7 +42,7 @@ pub async fn refresh(user: uuid::Uuid) -> crate::Result<Credentials> {
 
     let credentials = users.get(user).ok_or_else(|| {
         crate::ErrorKind::OtherError(
-            "У вас нет аккаунта, пожалуйста добавьте его. Подробнее о добавлении оффлайн аккаунта можно узнать из статьи автора".to_string(),
+            "You don't have an account, please add one. More information about adding an offline account can be found on our Github".to_string(),
         )
             .as_error()
     })?;
