@@ -282,5 +282,27 @@
     "OpenFolder": "Открыть папку",
     "OpenInMR": "Открыть в Modrinth",
     "CopyLink": "Копировать ссылку"
+  },
+  "InstanceCreationModal": {
+    "CreateInstance": "Создать экземпляр",
+    "SelectIcon": "Выбрать значок",
+    "RemoveIcon": "Удалить значок",
+    "Name": "Название",
+    "Loader": "Загрузчик",
+    "GameVersion": "Версия игры",
+    "GameVersionSelection": "Выбрать версию игры",
+    "LoaderVersion": "Версия загрузчика",
+    "LoaderVersionSelection1": "Выбрать версию",
+    "LoaderVersionSelection2": "Выбрать версию загрузчика",
+    "warn1": "Выберите версию игры перед выбором версии загрузчика",
+    "HideAdvanced": "Скрыть дополнительные опции",
+    "ShowAdvanced": "Показать дополнительные опции",
+    "Cancel": "Отмена",
+    "Creating": "Создание...",
+    "Create": "Создать",
+    "Import": "Импорт из файла",
+    "DragImport": "Или перетащите ваш файл .mrpack",
+    "ProfileName": "Название профиля",
+    "NoProfileFound": "Профили не найдены"
   }
 }

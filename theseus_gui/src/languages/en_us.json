@@ -282,5 +282,27 @@
     "OpenFolder": "Open Folder",
     "OpenInMR": "Open in Modrinth",
     "CopyLink": "Copy Link"
+  },
+  "InstanceCreationModal": {
+    "CreateInstance": "Create instance",
+    "SelectIcon": "Select icon",
+    "RemoveIcon": "Remove icon",
+    "Name": "Name",
+    "Loader": "Loader",
+    "GameVersion": "Game Version",
+    "GameVersionSelection": "Select game version",
+    "LoaderVersion": "Loader Version",
+    "LoaderVersionSelection1": "Select version",
+    "LoaderVersionSelection2": "Select loader version",
+    "warn1": "Select a game version before you select a loader version",
+    "HideAdvanced": "Hide advanced",
+    "ShowAdvanced": "Show advanced",
+    "Cancel": "Cancel",
+    "Creating": "Creating...",
+    "Create": "Create",
+    "Import": "Import from file",
+    "DragImport": "Or drag and drop your .mrpack file",
+    "ProfileName": "Profile name",
+    "NoProfileFound": "No profiles found"
   }
 }
