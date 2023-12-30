@@ -1,14 +1,14 @@
 name: 'Tauri GUI Build'
 on:
   push:
-    branches: [ beta ]
+    branches: [ master, beta ]
   pull_request:
 jobs:
   test-tauri:
     strategy:
       fail-fast: false
       matrix:
-        platform: [windows-latest, ubuntu-20.04, ubuntu-22.04]
+        platform: [macos-latest, windows-latest, ubuntu-20.04, ubuntu-22.04]
 
     runs-on: ${{ matrix.platform }}
     defaults:

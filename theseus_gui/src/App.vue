@@ -160,7 +160,7 @@ const openSupport = async () => {
     __tauriModule: 'Shell',
     message: {
       cmd: 'open',
-      path: 'https://www.astralium.su/follow/telegram/astralium',
+      path: 'https://discord.gg/modrinth',
     },
   })
 }
@@ -304,11 +304,11 @@ command_listener(async (e) => {
           <AccountsCard ref="accounts" mode="small" />
         </suspense>
         <div class="pages-list">
-          <RouterLink v-tooltip.right="t('Application.Home')" to="/" class="btn icon-only collapsed-button">
+          <RouterLink v-tooltip="t('Application.Home')" to="/" class="btn icon-only collapsed-button">
             <HomeIcon />
           </RouterLink>
           <RouterLink
-            v-tooltip.right="t('Application.Browse')"
+            v-tooltip="t('Application.Browse')"
             to="/browse/modpack"
             class="btn icon-only collapsed-button"
             :class="{
@@ -317,7 +317,7 @@ command_listener(async (e) => {
           >
             <SearchIcon />
           </RouterLink>
-          <RouterLink v-tooltip.right="t('Application.Library')" to="/library" class="btn icon-only collapsed-button">
+          <RouterLink v-tooltip="t('Application.Library')" to="/library" class="btn icon-only collapsed-button">
             <LibraryIcon />
           </RouterLink>
           <Suspense>
@@ -327,7 +327,7 @@ command_listener(async (e) => {
       </div>
       <div class="settings pages-list">
         <Button
-          v-tooltip.right="t('Application.CreateProfile')"
+          v-tooltip="t('Application.CreateProfile')"
           class="sleek-primary collapsed-button"
           icon-only
           :disabled="offline"
@@ -335,7 +335,7 @@ command_listener(async (e) => {
         >
           <PlusIcon />
         </Button>
-        <RouterLink v-tooltip.right="t('Application.Settings')" to="/settings" class="btn icon-only collapsed-button">
+        <RouterLink v-tooltip="t('Application.Settings')" to="/settings" class="btn icon-only collapsed-button">
           <SettingsIcon />
         </RouterLink>
       </div>

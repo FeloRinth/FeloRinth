@@ -12,13 +12,13 @@ import { get } from '@/helpers/settings'
 import { invoke } from '@tauri-apps/api'
 import { isDev } from './helpers/utils.js'
 import { createI18n } from 'vue-i18n';
-import ru_ru from './languages/ru_ru.json';
-import en_us from './languages/en_us.json';
+import ru_ruMessages from './languages/ru_ru.json';
+import en_usMessages from './languages/en_us.json';
 
 const i18n = createI18n({
   messages: {
-    russian: ru_ru,
-    english: en_us
+    russian: ru_ruMessages,
+    english: en_usMessages
   },
 });
 

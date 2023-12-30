@@ -1,7 +1,7 @@
 <template>
   <div class="action-groups">
 <!--    <a href="https://discord.modrinth.com" class="link">-->
-    <a href="https://www.astralium.su/follow/telegram/astralium" class="link">
+    <a href="https://t.me/AstraliumOrg" class="link">
       <ChatIcon />
       <span> {{t('RunningAppBar.GetSupport')}} </span>
     </a>
@@ -189,7 +189,7 @@ const refreshInfo = async () => {
   currentLoadingBars.value = Object.values(await progress_bars_list().catch(handleError)).map(
     (x) => {
       if (x.bar_type.type === 'java_download') {
-        x.title = "Downloading Java" + ' ' + x.bar_type.version
+        x.title = t('RunningAppBar.Java') + ' ' + x.bar_type.version
       }
       if (x.bar_type.profile_name) {
         x.title = x.bar_type.profile_name

@@ -1,12 +1,12 @@
 //! Authentication flow interface
-pub use inner::Credentials;
-
 use crate::{
-    hydra::init::DeviceLoginSuccess,
+    hydra::{self, init::DeviceLoginSuccess},
     launcher::auth as inner,
     State,
 };
+
 use crate::state::AuthTask;
+pub use inner::Credentials;
 
 /// Authenticate a user with Hydra - part 1
 /// This begins the authentication flow quasi-synchronously, returning a URL
@@ -38,11 +38,11 @@ pub async fn cancel_flow() -> crate::Result<()> {
 #[theseus_macros::debug_pin]
 pub async fn refresh(user: uuid::Uuid) -> crate::Result<Credentials> {
     let state = State::get().await?;
-    let users = state.users.write().await;
+    let mut users = state.users.write().await;
 
     let credentials = users.get(user).ok_or_else(|| {
         crate::ErrorKind::OtherError(
-            "You don't have an account, please add one. More information about adding an offline account can be found on our Github".to_string(),
+            "У вас нет аккаунта, пожалуйста добавьте его. Подробнее о добавлении оффлайн аккаунта можно узнать из статьи автора".to_string(),
         )
             .as_error()
     })?;
