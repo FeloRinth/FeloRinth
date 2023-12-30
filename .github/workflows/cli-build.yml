@@ -2,7 +2,7 @@ name: CLI Build + Lint
 
 on:
   push:
-    branches: [ master, beta ]
+    branches: [ beta ]
   pull_request:
 env:
   CARGO_TERM_COLOR: always
