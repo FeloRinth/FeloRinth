@@ -91,7 +91,7 @@ const image = computed(() => props.gallery[page.value - 1])
       <Button :disabled="page === 1" class="left-button" icon-only @click="page--">
         <ChevronLeftIcon />
       </Button>
-      <Button :disabled="page === 2" class="right-button" icon-only @click="page++">
+      <Button :disabled="page === 9" class="right-button" icon-only @click="page++">
         <ChevronRightIcon />
       </Button>
     </div>

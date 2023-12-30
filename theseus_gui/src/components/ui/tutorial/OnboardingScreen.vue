@@ -7,7 +7,7 @@ import {
   PlusIcon,
   SettingsIcon,
   XIcon,
-  Notifications,
+  Notifications
 } from 'omorphia'
 import { appWindow } from '@tauri-apps/api/window'
 import { saveWindowState, StateFlags } from 'tauri-plugin-window-state-api'
@@ -110,21 +110,68 @@ onMounted(async () => {
     <GalleryImage
       v-if="page === 1"
       :gallery="[
-        {
-          url: 'https://cdn.discordapp.com/attachments/817413688771608587/1131109353928265809/Screenshot_2023-07-15_at_4.16.18_PM.png',
-          title: 'Discovery',
-          subtitle: 'See the latest and greatest mods and modpacks to play with from Modrinth',
+        { // Main gallery
+          url: 'https://cdn.discordapp.com/attachments/1006329469428043846/1190611972815847524/dayKChuHhx9K0y6L.png',
+          title: 'AstralRinth Contacts',
+          subtitle: 'You can get support and help with our patches or just have a nice chat in our chat. Scan the QR-Code and follow the news!',
         },
-        {
-          url: 'https://cdn.discordapp.com/attachments/817413688771608587/1131109354238640238/Screenshot_2023-07-15_at_4.17.43_PM.png',
+        { // Discovery - 1
+          // url: 'https://cdn.discordapp.com/attachments/817413688771608587/1131109353928265809/Screenshot_2023-07-15_at_4.16.18_PM.png',
+          url: 'https://media.discordapp.net/attachments/1006329469428043846/1190613137221763153/SWrxdvA3EDXA4w3A.png',
+          title: 'Discovery',
+          subtitle: 'See the latest and greatest mods and modpacks to play with from Modrinth!',
+        },
+        { // Discovery - 2
+          url: 'https://media.discordapp.net/attachments/1006329469428043846/1190613137964150944/eYD4l6r2B6SE1gNv.png',
+          title: 'Discovery',
+          subtitle: 'Sort, filter and find your Minecraft modifications!',
+        },
+        { // Profile Management - 1
+          // url: 'https://cdn.discordapp.com/attachments/817413688771608587/1131109354238640238/Screenshot_2023-07-15_at_4.17.43_PM.png',
+          url: 'https://media.discordapp.net/attachments/1006329469428043846/1190606005059465306/00GYEYMyyPIiAr9L.png',
           title: 'Profile Management',
           subtitle:
             'Play, manage and search through all the amazing profiles downloaded on your computer at any time, even offline!',
         },
+        { // Profile Management - 2
+          url: 'https://media.discordapp.net/attachments/1006329469428043846/1190613138769461288/2FB4zboEk8j9ZAsr.png',
+          title: 'Profile Management',
+          subtitle:
+            'Play, manage and search through all the amazing profiles downloaded on your computer at any time, even offline!',
+        },
+        { // Settings - 1
+          url: 'https://media.discordapp.net/attachments/1006329469428043846/1190606005973811230/bGDTrwuh9X8UWnsW.png',
+          title: 'Setting features',
+          subtitle:
+            'MultiLanguage support in the launcher! You can choose your language, international English or other languages',
+        },
+        { // Account Management - 1
+          url: 'https://media.discordapp.net/attachments/1006329469428043846/1190606008230346832/L19JjyDpYdkUAD9g.png',
+          title: 'Account Management',
+          subtitle:
+            'Select the account type, pirated or licensed.',
+        },
+        { // Account Management - 2
+          url: 'https://media.discordapp.net/attachments/1006329469428043846/1190606006753964123/rh9vEjjArrKkaPXe.png',
+          title: 'Account Management',
+          subtitle:
+            'Add your first account, if you want to try the Minecraft game, you can use the pirate login method!',
+        },
+        { // Account Management - 3
+          url: 'https://media.discordapp.net/attachments/1006329469428043846/1190606007446016160/wJMusS8kr1BStPyb.png',
+          title: 'Account Management',
+          subtitle:
+            'Hurray! You have added your first account!',
+        },
+        { // Main gallery
+          url: 'https://cdn.discordapp.com/attachments/1006329469428043846/1190611972815847524/dayKChuHhx9K0y6L.png',
+          title: 'AstralRinth Contacts',
+          subtitle: 'You can get support and help with our patches or just have a nice chat in our chat. Scan the QR-Code and follow the news!',
+        },
       ]"
       logo
     >
-      <Button color="primary" @click="nextPage"> Get started </Button>
+      <Button color="primary" @click="finishOnboarding">Start the journey</Button>
     </GalleryImage>
     <LoginCard v-else-if="page === 2" :next-page="nextPage" :prev-page="prevPage" />
     <ModrinthLoginScreen
@@ -490,7 +537,7 @@ onMounted(async () => {
 
 .onboarding {
   background: top linear-gradient(0deg, #31375f, rgba(8, 14, 55, 0)),
-    url(https://cdn.modrinth.com/landing-new/landing-lower.webp);
+  url(https://cdn.modrinth.com/landing-new/landing-lower.webp);
   background-size: cover;
   height: 100vh;
   min-height: 100vh;
