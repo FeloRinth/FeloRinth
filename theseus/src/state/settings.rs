@@ -17,6 +17,7 @@ const CURRENT_FORMAT_VERSION: u32 = 1;
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Settings {
     pub theme: Theme,
+    pub language: Language,
     pub memory: MemorySettings,
     #[serde(default)]
     pub force_fullscreen: bool,
@@ -87,6 +88,7 @@ impl Settings {
             // Create new settings file
             let settings = Self {
                 theme: Theme::Dark,
+                language: Language::English,
                 memory: MemorySettings::default(),
                 force_fullscreen: false,
                 game_resolution: WindowSize::default(),
@@ -199,6 +201,13 @@ pub enum Theme {
     Dark,
     Light,
     Oled,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
+#[serde(rename_all = "snake_case")]
+pub enum Language {
+    English,
+    Russian
 }
 
 /// Minecraft memory settings

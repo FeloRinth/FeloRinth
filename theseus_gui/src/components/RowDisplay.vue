@@ -32,7 +32,8 @@ import { useFetch } from '@/helpers/fetch.js'
 import { install as pack_install } from '@/helpers/pack.js'
 import { useTheming } from '@/store/state.js'
 import { mixpanel_track } from '@/helpers/mixpanel'
-
+import { i18n } from '@/main.js';
+const t = i18n.global.t;
 const router = useRouter()
 
 const props = defineProps({
@@ -265,17 +266,17 @@ onUnmounted(() => {
     </div>
   </div>
   <ContextMenu ref="instanceOptions" @option-clicked="handleOptionsClick">
-    <template #play> <PlayIcon /> Play </template>
-    <template #stop> <StopCircleIcon /> Stop </template>
-    <template #add_content> <PlusIcon /> Add content </template>
-    <template #edit> <EyeIcon /> View instance </template>
-    <template #delete> <TrashIcon /> Delete </template>
-    <template #open_folder> <FolderOpenIcon /> Open folder </template>
-    <template #duplicate> <ClipboardCopyIcon /> Duplicate instance</template>
-    <template #copy_path> <ClipboardCopyIcon /> Copy path </template>
-    <template #install> <DownloadIcon /> Install </template>
-    <template #open_link> <GlobeIcon /> Open in Modrinth <ExternalIcon /> </template>
-    <template #copy_link> <ClipboardCopyIcon /> Copy link </template>
+    <template #play> <PlayIcon /> {{t('RowDisplay.Play')}} </template>
+    <template #stop> <StopCircleIcon /> {{t('RowDisplay.Stop')}} </template>
+    <template #add_content> <PlusIcon /> {{t('RowDisplay.AddContent')}} </template>
+    <template #edit> <EyeIcon /> {{t('RowDisplay.ViewInstance')}} </template>
+    <template #delete> <TrashIcon /> {{t('RowDisplay.Delete')}} </template>
+    <template #open_folder> <FolderOpenIcon /> {{t('RowDisplay.OpenFolder')}} </template>
+    <template #duplicate> <ClipboardCopyIcon /> {{t('RowDisplay.DuplicateInstance')}}</template>
+    <template #copy_path> <ClipboardCopyIcon /> {{t('RowDisplay.CopyPath')}} </template>
+    <template #install> <DownloadIcon /> {{t('RowDisplay.Install')}} </template>
+    <template #open_link> <GlobeIcon /> {{t('RowDisplay.OpenInMR')}} <ExternalIcon /> </template>
+    <template #copy_link> <ClipboardCopyIcon /> {{t('RowDisplay.CopyLink')}} </template>
   </ContextMenu>
   <InstallConfirmModal ref="confirmModal" />
   <ModInstallModal ref="modInstallModal" />

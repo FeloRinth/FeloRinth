@@ -1,4 +1,7 @@
 <script setup>
+import { i18n } from '@/main.js';
+const t = i18n.global.t;
+
 import { computed, nextTick, ref, readonly, shallowRef, watch, onUnmounted } from 'vue'
 import {
   Pagination,
@@ -13,7 +16,7 @@ import {
   NavRow,
   formatCategoryHeader,
   formatCategory,
-  Promotion,
+  // Promotion,
   XIcon,
   DropdownSelect,
 } from 'omorphia'
@@ -59,11 +62,11 @@ const showSnapshots = ref(false)
 const hideAlreadyInstalled = ref(false)
 const selectedEnvironments = ref([])
 const sortTypes = readonly([
-  { display: 'Relevance', name: 'relevance' },
-  { display: 'Download count', name: 'downloads' },
-  { display: 'Follow count', name: 'follows' },
-  { display: 'Recently published', name: 'newest' },
-  { display: 'Recently updated', name: 'updated' },
+  { display: t('Browse.Relevance'), name: 'relevance' },
+  { display: t('Browse.DownloadCount'), name: 'downloads' },
+  { display: t('Browse.FollowCount'), name: 'follows' },
+  { display: t('Browse.RecentlyPublished'), name: 'newest' },
+  { display: t('Browse.RecentlyUpdated'), name: 'updated' },
 ])
 const sortType = ref(sortTypes[0])
 const maxResults = ref(20)
@@ -121,19 +124,19 @@ if (route.query.s) {
 
   switch (sortType.value.name) {
     case 'relevance':
-      sortType.value.display = 'Relevance'
+      sortType.value.display = t('Browse.Relevance')
       break
     case 'downloads':
-      sortType.value.display = 'Downloads'
+      sortType.value.display = t('Browse.Downloads')
       break
     case 'newest':
-      sortType.value.display = 'Recently published'
+      sortType.value.display = t('Browse.RecentlyPublished')
       break
     case 'updated':
-      sortType.value.display = 'Recently updated'
+      sortType.value.display = t('Browse.RecentlyUpdated')
       break
     case 'follows':
-      sortType.value.display = 'Follow count'
+      sortType.value.display = t('Browse.FollowCount')
       break
   }
 }
@@ -472,7 +475,7 @@ watch(
     projectType.value = newType
     breadcrumbs.setContext({ name: 'Browse', link: `/browse/${projectType.value}` })
 
-    sortType.value = { display: 'Relevance', name: 'relevance' }
+    sortType.value = { display: t('Browse.Relevance'), name: 'relevance' }
     query.value = ''
 
     loading.value = true
@@ -493,8 +496,8 @@ const [categories, loaders, availableGameVersions] = await Promise.all([
 
 const selectableProjectTypes = computed(() => {
   const values = [
-    { label: 'Shaders', href: `/browse/shader` },
-    { label: 'Resource Packs', href: `/browse/resourcepack` },
+    { label: t('Browse.Shaders'), href: `/browse/shader` },
+    { label: t('Browse.ResourcePacks'), href: `/browse/resourcepack` },
   ]
 
   if (instanceContext.value) {
@@ -503,16 +506,16 @@ const selectableProjectTypes = computed(() => {
         (x) => x.version === instanceContext.value.metadata.game_version
       ) <= availableGameVersions.value.findIndex((x) => x.version === '1.13')
     ) {
-      values.unshift({ label: 'Data Packs', href: `/browse/datapack` })
+      values.unshift({ label: t('Browse.DataPacks'), href: `/browse/datapack` })
     }
 
     if (instanceContext.value.metadata.loader !== 'vanilla') {
       values.unshift({ label: 'Mods', href: '/browse/mod' })
     }
   } else {
-    values.unshift({ label: 'Data Packs', href: `/browse/datapack` })
-    values.unshift({ label: 'Mods', href: '/browse/mod' })
-    values.unshift({ label: 'Modpacks', href: '/browse/modpack' })
+    values.unshift({ label: t('Browse.DataPacks'), href: `/browse/datapack` })
+    values.unshift({ label: t('Browse.Mods'), href: '/browse/mod' })
+    values.unshift({ label: t('Browse.Modpacks'), href: '/browse/modpack' })
   }
 
   return values
@@ -565,21 +568,21 @@ onUnmounted(() => unlistenOffline())
         </router-link>
         <Checkbox
           v-model="ignoreInstanceGameVersions"
-          label="Override game versions"
+          :label="t('Browse.OverrideGV')"
           class="filter-checkbox"
           @update:model-value="onSearchChangeToTop(1)"
           @click.prevent.stop
         />
         <Checkbox
           v-model="ignoreInstanceLoaders"
-          label="Override loaders"
+          :label="t('Browse.OverrideL')"
           class="filter-checkbox"
           @update:model-value="onSearchChangeToTop(1)"
           @click.prevent.stop
         />
         <Checkbox
           v-model="hideAlreadyInstalled"
-          label="Hide already installed"
+          :label="t('Browse.HideInstalled')"
           class="filter-checkbox"
           @update:model-value="onSearchChangeToTop(1)"
           @click.prevent.stop
@@ -597,7 +600,7 @@ onUnmounted(() => unlistenOffline())
           "
           @click="clearFilters"
         >
-          <ClearIcon /> Clear filters
+          <ClearIcon /> {{t('Browse.ClearFilters')}}
         </Button>
         <div v-if="showLoaders" class="loaders">
           <h2>Loaders</h2>
@@ -637,7 +640,7 @@ onUnmounted(() => unlistenOffline())
             :close-on-select="false"
             :clear-search-on-select="false"
             :show-labels="false"
-            placeholder="Choose versions..."
+            :placeholder="t('Browse.ChooseVersionsPl')"
             @update:model-value="onSearchChangeToTop(1)"
           />
         </div>
@@ -680,10 +683,10 @@ onUnmounted(() => unlistenOffline())
           </SearchFilter>
         </div>
         <div class="open-source">
-          <h2>Open source</h2>
+          <h2>{{t('Browse.OpenSource')}}</h2>
           <Checkbox
             v-model="onlyOpenSource"
-            label="Open source only"
+            :label="t('Browse.OpenSourceOnly')"
             class="filter-checkbox"
             @update:model-value="onSearchChangeToTop(1)"
           />
@@ -691,8 +694,8 @@ onUnmounted(() => unlistenOffline())
       </Card>
     </aside>
     <div class="search">
-      <Promotion class="promotion" :external="false" query-param="?r=launcher" />
-      <Card class="project-type-container">
+<!--      <Promotion class="promotion" :external="false" query-param="?r=launcher" />-->
+      <Card class="project-type-container promotion">
         <NavRow :links="selectableProjectTypes" />
       </Card>
       <Card class="search-panel-container">
@@ -741,7 +744,7 @@ onUnmounted(() => unlistenOffline())
       />
       <SplashScreen v-if="loading" />
       <section v-else-if="offline && results.total_hits === 0" class="offline">
-        You are currently offline. Connect to the internet to browse Modrinth!
+        {{t('Browse.CurrentlyOffline')}}
       </section>
       <section v-else class="project-list display-mode--list instance-results" role="list">
         <SearchCard

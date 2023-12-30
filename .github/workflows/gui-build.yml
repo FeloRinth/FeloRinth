@@ -2,7 +2,7 @@ name: GUI Build + Lint
 
 on:
   push:
-    branches: [master]
+    branches: [master, beta]
   pull_request:
 jobs:
   build:
