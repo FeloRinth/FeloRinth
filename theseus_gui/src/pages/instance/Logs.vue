@@ -13,18 +13,18 @@
         <Button :disabled="!logs[selectedLogIndex]" @click="copyLog()">
           <ClipboardCopyIcon v-if="!copied" />
           <CheckIcon v-else />
-          {{ copied ? 'Copied' : 'Copy' }}
+          {{ copied ? t('Instance.Logs.Copied') : t('Instance.Logs.Copy') }}
         </Button>
         <Button color="primary" :disabled="offline || !logs[selectedLogIndex]" @click="share">
           <ShareIcon />
-          Share
+          {{ t('Instance.Logs.Share') }}
         </Button>
         <Button
           v-if="logs[selectedLogIndex] && logs[selectedLogIndex].live === true"
           @click="clearLiveLog()"
         >
           <TrashIcon />
-          Clear
+          {{ t('Instance.Logs.Clear') }}
         </Button>
 
         <Button
@@ -34,7 +34,7 @@
           @click="deleteLog()"
         >
           <TrashIcon />
-          Delete
+          {{ t('Instance.Logs.Delete') }}
         </Button>
       </div>
     </div>
@@ -45,7 +45,7 @@
         autocomplete="off"
         type="text"
         class="text-filter"
-        placeholder="Type to filter logs..."
+        :placeholder="t('Instance.Logs.TypeLogFilter')"
       />
       <div class="filter-group">
         <Checkbox
@@ -54,7 +54,8 @@
           v-model="levelFilters[level.toLowerCase()]"
           class="filter-checkbox"
         >
-          {{ level }}</Checkbox
+          {{ level }}
+        </Checkbox
         >
       </div>
     </div>
@@ -70,17 +71,17 @@
       >
         <div class="user no-wrap">
           <span :style="{ color: item.prefixColor, 'font-weight': item.weight }">{{
-            item.prefix
-          }}</span>
+              item.prefix
+            }}</span>
           <span :style="{ color: item.textColor }">{{ item.text }}</span>
         </div>
       </RecycleScroller>
     </div>
     <ShareModal
       ref="shareModal"
-      header="Share Log"
-      share-title="Instance Log"
-      share-text="Check out this log from an instance on the Modrinth App"
+      :header="t('Instance.Logs.ShareLog')"
+      :share-title="t('Instance.Logs.InstanceLog')"
+      :share-text="t('Instance.Logs.ShareText')"
       link
     />
   </Card>
@@ -90,20 +91,15 @@
 import {
   Button,
   Card,
+  Checkbox,
   CheckIcon,
   ClipboardCopyIcon,
   DropdownSelect,
   ShareIcon,
-  Checkbox,
-  TrashIcon,
   ShareModal,
+  TrashIcon
 } from 'omorphia'
-import {
-  delete_logs_by_filename,
-  get_logs,
-  get_output_by_filename,
-  get_std_log_cursor,
-} from '@/helpers/logs.js'
+import { delete_logs_by_filename, get_logs, get_output_by_filename, get_std_log_cursor } from '@/helpers/logs.js'
 import { computed, nextTick, onBeforeUnmount, onMounted, onUnmounted, ref, watch } from 'vue'
 import dayjs from 'dayjs'
 import isToday from 'dayjs/plugin/isToday'
@@ -116,7 +112,9 @@ import { ofetch } from 'ofetch'
 
 import { RecycleScroller } from 'vue-virtual-scroller'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
+import { i18n } from '@/main.js'
 
+const t = i18n.global.t
 dayjs.extend(isToday)
 dayjs.extend(isYesterday)
 
@@ -125,16 +123,16 @@ const route = useRoute()
 const props = defineProps({
   instance: {
     type: Object,
-    required: true,
+    required: true
   },
   offline: {
     type: Boolean,
-    default: false,
+    default: false
   },
   playing: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 })
 
 const currentLiveLog = ref(null)
@@ -208,7 +206,7 @@ const processedLogs = computed(() => {
         prefixColor: prefixColor,
         textColor: textColor,
         weight: weight,
-        level: level,
+        level: level
       })
       id += 1
     })
@@ -290,9 +288,9 @@ const share = async () => {
     const url = await ofetch('https://api.mclo.gs/1/log', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
-      body: `content=${encodeURIComponent(logs.value[selectedLogIndex.value].stdout)}`,
+      body: `content=${encodeURIComponent(logs.value[selectedLogIndex.value].stdout)}`
     }).catch(handleError)
 
     shareModal.value.show(url.url)
@@ -528,6 +526,7 @@ onUnmounted(() => {
     justify-self: center;
   }
 }
+
 .filter-group {
   display: flex;
   padding: 0.6rem;

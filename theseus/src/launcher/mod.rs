@@ -17,6 +17,7 @@ use daedalus::minecraft::{RuleAction, VersionInfo};
 use st::Profile;
 use std::collections::HashMap;
 use std::{process::Stdio, sync::Arc};
+use rand::prelude::SliceRandom;
 use tokio::process::Command;
 use uuid::Uuid;
 
@@ -603,9 +604,10 @@ pub async fn launch_minecraft(
 
     if !*state.offline.read().await {
         // Add game played to discord rich presence
+        let selected_phrase = crate::state::discord::ACTIVE_PHRASES.choose(&mut rand::thread_rng()).unwrap();
         let _ = state
             .discord_rpc
-            .set_activity(&format!("Playing {}", profile.metadata.name), true)
+            .set_activity(&format!("{} {}", selected_phrase, profile.metadata.name), true)
             .await;
     }
 

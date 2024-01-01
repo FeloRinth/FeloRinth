@@ -246,6 +246,7 @@
       "Name": "Name",
       "Version": "Version",
       "Actions": "Actions",
+      "Update": "Update",
       "Share": "Share",
       "UnlockThisInstanceRemove": "Unlock this instance to remove mods",
       "UnlockThisInstanceUpdate": "Unlock this instance to update mods",
@@ -268,6 +269,17 @@
       "AreYouSure": "Are you sure?",
       "AreYouSureDesc": "Are you sure you want to remove",
       "Cancel": "Cancel"
+    },
+    "Logs": {
+      "Copied": "Copied",
+      "Copy": "Copy",
+      "Share": "Share",
+      "Clear": "Clear",
+      "Delete": "Delete",
+      "TypeLogFilter": "Type to filter logs...",
+      "ShareLog": "Share Log",
+      "InstanceLog": "Instance Log",
+      "ShareText": "Check out this log from an instance on the Modrinth App"
     }
   },
   "RowDisplay": {
@@ -304,5 +316,14 @@
     "DragImport": "Or drag and drop your .mrpack file",
     "ProfileName": "Profile name",
     "NoProfileFound": "No profiles found"
+  },
+  "ExportModal": {
+    "ModpackName": "Modpack Name",
+    "Version": "Version number",
+    "Description": "Description",
+    "DescriptionPl": "Enter modpack description...",
+    "SelectFiles": "Select files and folders to include in pack",
+    "Cancel": "Cancel",
+    "Export": "Export"
   }
 }

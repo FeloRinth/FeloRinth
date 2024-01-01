@@ -1,12 +1,12 @@
 //! Authentication flow interface
+pub use inner::Credentials;
+
 use crate::{
-    hydra::{self, init::DeviceLoginSuccess},
+    hydra::init::DeviceLoginSuccess,
     launcher::auth as inner,
     State,
 };
-
 use crate::state::AuthTask;
-pub use inner::Credentials;
 
 /// Authenticate a user with Hydra - part 1
 /// This begins the authentication flow quasi-synchronously, returning a URL
@@ -38,7 +38,7 @@ pub async fn cancel_flow() -> crate::Result<()> {
 #[theseus_macros::debug_pin]
 pub async fn refresh(user: uuid::Uuid) -> crate::Result<Credentials> {
     let state = State::get().await?;
-    let mut users = state.users.write().await;
+    let users = state.users.write().await;
 
     let credentials = users.get(user).ok_or_else(|| {
         crate::ErrorKind::OtherError(

@@ -130,7 +130,7 @@
               @mouseover="selectedOption = 'Update'"
             >
               <UpdatedIcon />
-              Update
+              {{ t('Instance.Mods.Update') }}
             </Button>
           </div>
           <div v-tooltip="isPackLocked ? t('Instance.Mods.UnlockThisInstanceToggle') : ''">
