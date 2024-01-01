@@ -11,9 +11,7 @@ import {
   ExternalIcon,
   EyeIcon,
   ChevronRightIcon,
-  Button,
-  Modal
-  // ModalConfirm,
+  ModalConfirm,
 } from 'omorphia'
 import Instance from '@/components/ui/Instance.vue'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
@@ -32,7 +30,7 @@ import { useRouter } from 'vue-router'
 import { showProfileInFolder } from '@/helpers/utils.js'
 import { useFetch } from '@/helpers/fetch.js'
 import { install as pack_install } from '@/helpers/pack.js'
-import { useTheming } from '@/store/theme.js'
+import { useTheming } from '@/store/state.js'
 import { mixpanel_track } from '@/helpers/mixpanel'
 import { i18n } from '@/main.js';
 const t = i18n.global.t;
@@ -67,12 +65,10 @@ const modInstallModal = ref(null)
 const themeStore = useTheming()
 const currentDeleteInstance = ref(null)
 
-async function deleteProfile(modal) {
+async function deleteProfile() {
   if (currentDeleteInstance.value) {
-    modal.hide()
     await remove(currentDeleteInstance.value).catch(handleError)
   }
-
 }
 
 async function duplicateProfile(p) {
@@ -232,33 +228,15 @@ onUnmounted(() => {
 </script>
 
 <template>
-<!--  <ModalConfirm-->
-<!--    ref="deleteConfirmModal"-->
-<!--    :title="t('Instance.Options.DeleteQuestion')"-->
-<!--    :description="t('Instance.Options.DeleteQuestionDesc')"-->
-<!--    :has-to-type="false"-->
-<!--    proceed-label="Delete"-->
-<!--    :noblur="!themeStore.advancedRendering"-->
-<!--    @proceed="deleteProfile"-->
-<!--  />-->
-
-  <Modal ref="deleteConfirmModal" :has-to-type="false" :noblur="!themeStore.advancedRendering" :header="t('Instance.Options.DeleteQuestion')">
-    <div class="modal-body">
-      <div class="markdown-body">
-        <p>
-          {{ t('Instance.Options.DeleteQuestionDesc') }}
-        </p>
-      </div>
-      <div class="button-group push-right">
-        <Button @click="deleteConfirmModal.hide()"> {{ t('Instance.Options.Cancel') }} </Button>
-        <Button color="danger" @click="deleteProfile(deleteConfirmModal)">
-          <TrashIcon />
-          {{ t('Instance.Options.Delete') }}
-        </Button>
-      </div>
-    </div>
-  </Modal>
-
+  <ModalConfirm
+    ref="deleteConfirmModal"
+    :title="t('Instance.Options.DeleteQuestion')"
+    :description="t('Instance.Options.DeleteQuestionDesc')"
+    :has-to-type="false"
+    proceed-label="Delete"
+    :noblur="!themeStore.advancedRendering"
+    @proceed="deleteProfile"
+  />
   <div class="content">
     <div v-for="row in actualInstances" ref="rows" :key="row.label" class="row">
       <div class="header">
@@ -321,22 +299,7 @@ onUnmounted(() => {
     background: transparent;
   }
 }
-.modal-body {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: var(--gap-lg);
 
-  .button-group {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-  }
-
-  strong {
-    color: var(--color-contrast);
-  }
-}
 .row {
   display: flex;
   flex-direction: column;
@@ -391,5 +354,4 @@ onUnmounted(() => {
     }
   }
 }
-
 </style>

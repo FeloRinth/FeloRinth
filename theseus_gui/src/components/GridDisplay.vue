@@ -15,8 +15,7 @@ import {
   XIcon,
   Button,
   formatCategoryHeader,
-  // ModalConfirm,
-  Modal
+  ModalConfirm,
 } from 'omorphia'
 import ContextMenu from '@/components/ui/ContextMenu.vue'
 import dayjs from 'dayjs'
@@ -44,9 +43,8 @@ const themeStore = useTheming()
 const currentDeleteInstance = ref(null)
 const confirmModal = ref(null)
 
-async function deleteProfile(modal) {
+async function deleteProfile() {
   if (currentDeleteInstance.value) {
-    modal.hide()
     instanceComponents.value = instanceComponents.value.filter(
       (x) => x.instance.path !== currentDeleteInstance.value
     )
@@ -127,50 +125,50 @@ const handleOptionsClick = async (args) => {
 }
 
 const search = ref('')
-const group = ref(t('GridDisplay.Category'))
-const filters = ref(t('GridDisplay.AllProf'))
-const sortBy = ref(t('GridDisplay.Name'))
+const group = ref('Category')
+const filters = ref('All profiles')
+const sortBy = ref('Name')
 
 const filteredResults = computed(() => {
   let instances = props.instances.filter((instance) => {
     return instance.metadata.name.toLowerCase().includes(search.value.toLowerCase())
   })
 
-  if (sortBy.value === t('GridDisplay.Name')) {
+  if (sortBy.value === 'Name') {
     instances.sort((a, b) => {
       return a.metadata.name.localeCompare(b.metadata.name)
     })
   }
 
-  if (sortBy.value === t('GridDisplay.GameVer')) {
+  if (sortBy.value === 'Game version') {
     instances.sort((a, b) => {
       return a.metadata.game_version.localeCompare(b.metadata.game_version)
     })
   }
 
-  if (sortBy.value === t('GridDisplay.LastPlayed')) {
+  if (sortBy.value === 'Last played') {
     instances.sort((a, b) => {
       return dayjs(b.metadata.last_played ?? 0).diff(dayjs(a.metadata.last_played ?? 0))
     })
   }
 
-  if (sortBy.value === t('GridDisplay.DateCreated')) {
+  if (sortBy.value === 'Date created') {
     instances.sort((a, b) => {
       return dayjs(b.metadata.date_created).diff(dayjs(a.metadata.date_created))
     })
   }
 
-  if (sortBy.value === t('GridDisplay.DateModify')) {
+  if (sortBy.value === 'Date modified') {
     instances.sort((a, b) => {
       return dayjs(b.metadata.date_modified).diff(dayjs(a.metadata.date_modified))
     })
   }
 
-  if (filters.value === t('GridDisplay.CustomInstances')) {
+  if (filters.value === 'Custom instances') {
     instances = instances.filter((instance) => {
       return !instance.metadata?.linked_data
     })
-  } else if (filters.value === t('GridDisplay.DownloadedModpacks')) {
+  } else if (filters.value === 'Downloaded modpacks') {
     instances = instances.filter((instance) => {
       return instance.metadata?.linked_data
     })
@@ -178,7 +176,7 @@ const filteredResults = computed(() => {
 
   const instanceMap = new Map()
 
-  if (group.value === t('GridDisplay.Loader')) {
+  if (group.value === 'Loader') {
     instances.forEach((instance) => {
       const loader = formatCategoryHeader(instance.metadata.loader)
       if (!instanceMap.has(loader)) {
@@ -187,7 +185,7 @@ const filteredResults = computed(() => {
 
       instanceMap.get(loader).push(instance)
     })
-  } else if (group.value === t('GridDisplay.GameVer')) {
+  } else if (group.value === 'Game version') {
     instances.forEach((instance) => {
       if (!instanceMap.has(instance.metadata.game_version)) {
         instanceMap.set(instance.metadata.game_version, [])
@@ -195,10 +193,10 @@ const filteredResults = computed(() => {
 
       instanceMap.get(instance.metadata.game_version).push(instance)
     })
-  } else if (group.value === t('GridDisplay.Category')) {
+  } else if (group.value === 'Category') {
     instances.forEach((instance) => {
       if (instance.metadata.groups.length === 0) {
-        instance.metadata.groups.push(t('GridDisplay.None'))
+        instance.metadata.groups.push('None')
       }
 
       for (const category of instance.metadata.groups) {
@@ -210,18 +208,18 @@ const filteredResults = computed(() => {
       }
     })
   } else {
-    return instanceMap.set(t('GridDisplay.None'), instances)
+    return instanceMap.set('None', instances)
   }
 
   // For 'name', we intuitively expect the sorting to apply to the name of the group first, not just the name of the instance
   // ie: Category A should come before B, even if the first instance in B comes before the first instance in A
-  if (sortBy.value === t('GridDisplay.Name')) {
+  if (sortBy.value === 'Name') {
     const sortedEntries = [...instanceMap.entries()].sort((a, b) => {
       // None should always be first
-      if (a[0] === t('GridDisplay.None') && b[0] !== t('GridDisplay.None')) {
+      if (a[0] === 'None' && b[0] !== 'None') {
         return -1
       }
-      if (a[0] !== t('GridDisplay.None') && b[0] === t('GridDisplay.None')) {
+      if (a[0] !== 'None' && b[0] === 'None') {
         return 1
       }
       return a[0].localeCompare(b[0])
@@ -236,67 +234,51 @@ const filteredResults = computed(() => {
 })
 </script>
 <template>
-<!--  <ModalConfirm-->
-<!--    ref="confirmModal"-->
-<!--    :title=""-->
-<!--    :description=""-->
-<!--    :has-to-type="false"-->
-<!--    proceed-label="Delete"-->
-<!--    :noblur="!themeStore.advancedRendering"-->
-<!--    @proceed="deleteProfile"-->
-<!--  />-->
-  <Modal ref="confirmModal" :has-to-type="false" :noblur="!themeStore.advancedRendering" :header="t('Instance.Options.DeleteQuestion')">
-    <div class="modal-body">
-      <div class="markdown-body">
-        <p>
-          {{ t('Instance.Options.DeleteQuestionDesc') }}
-        </p>
-      </div>
-      <div class="button-group push-right">
-        <Button @click="confirmModal.hide()"> {{ t('GridDisplay.Cancel') }} </Button>
-        <Button color="danger" @click="deleteProfile(confirmModal)">
-          <TrashIcon />
-          {{ t('GridDisplay.Delete') }}
-        </Button>
-      </div>
-    </div>
-  </Modal>
+  <ModalConfirm
+    ref="confirmModal"
+    :title="t('Instance.Options.DeleteQuestion')"
+    :description="t('Instance.Options.DeleteQuestionDesc')"
+    :has-to-type="false"
+    proceed-label="Delete"
+    :noblur="!themeStore.advancedRendering"
+    @proceed="deleteProfile"
+  />
   <Card class="header">
     <div class="iconified-input">
       <SearchIcon />
-      <input v-model="search" type="text" :placeholder="t('GridDisplay.Search')" class="search-input" />
+      <input v-model="search" type="text" placeholder="Search" class="search-input" />
       <Button @click="() => (search = '')">
         <XIcon />
       </Button>
     </div>
     <div class="labeled_button">
-      <span>{{t('GridDisplay.Sort')}}</span>
+      <span>Sort by</span>
       <DropdownSelect
         v-model="sortBy"
         class="sort-dropdown"
         name="Sort Dropdown"
-        :options="[t('GridDisplay.Name'), t('GridDisplay.LastPlayed'), t('GridDisplay.DateCreated'), t('GridDisplay.DateModify'), t('GridDisplay.GameVer')]"
-        :placeholder="t('GridDisplay.Selection')"
+        :options="['Name', 'Last played', 'Date created', 'Date modified', 'Game version']"
+        placeholder="Select..."
       />
     </div>
     <div class="labeled_button">
-      <span>{{t('GridDisplay.Filter')}}</span>
+      <span>Filter by</span>
       <DropdownSelect
         v-model="filters"
         class="filter-dropdown"
         name="Filter Dropdown"
-        :options="[t('GridDisplay.AllProf'), t('GridDisplay.CustomInstances'), t('GridDisplay.DownloadedModpacks')]"
-        :placeholder="t('GridDisplay.Selection')"
+        :options="['All profiles', 'Custom instances', 'Downloaded modpacks']"
+        placeholder="Select..."
       />
     </div>
     <div class="labeled_button">
-      <span>{{ t('GridDisplay.Group')}}</span>
+      <span>Group by</span>
       <DropdownSelect
         v-model="group"
         class="group-dropdown"
         name="Group Dropdown"
-        :options="[t('GridDisplay.Category'), t('GridDisplay.Loader'), t('GridDisplay.GameVer'), t('GridDisplay.None')]"
-        :placeholder="t('GridDisplay.Selection')"
+        :options="['Category', 'Loader', 'Game version', 'None']"
+        placeholder="Select..."
       />
     </div>
   </Card>
@@ -413,21 +395,5 @@ const filteredResults = computed(() => {
   margin-right: auto;
   scroll-behavior: smooth;
   overflow-y: auto;
-}
-.modal-body {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: var(--gap-lg);
-
-  .button-group {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-  }
-
-  strong {
-    color: var(--color-contrast);
-  }
 }
 </style>

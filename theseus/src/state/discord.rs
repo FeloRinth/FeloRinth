@@ -1,10 +1,10 @@
-use std::sync::{Arc, atomic::AtomicBool};
+use std::io::Read;
+use std::sync::{atomic::AtomicBool, Arc};
 
 use discord_rich_presence::{
     activity::{Activity, Assets},
     DiscordIpc, DiscordIpcClient,
 };
-use rand::prelude::SliceRandom;
 use serde::{Deserialize, Serialize};
 use tokio::io;
 use tokio::sync::RwLock;
@@ -17,22 +17,6 @@ pub struct DiscordGuard {
 }
 
 const PACKAGE_JSON_CONTENT: &str = include_str!("../../../theseus_gui/package.json");
-pub(crate) const ACTIVE_PHRASES: [&str; 6] = [
-    "Explores",
-    "Travels with",
-    "Pirating",
-    "Investigating the",
-    "Engaged in",
-    "Conducting"
-];
-pub(crate) const INACTIVE_PHRASES: [&str; 6] = [
-    "Idling...",
-    "Waiting for the pirate team...",
-    "Taking a break...",
-    "Resting...",
-    "On standby...",
-    "In a holding pattern..."
-];
 
 #[derive(Serialize, Deserialize)]
 struct Launcher {
@@ -148,7 +132,7 @@ impl DiscordGuard {
             Ok(launcher)
         }
 
-        let launcher = read_package_json()?;
+        let mut launcher = read_package_json()?;
         let text = format!("AR • v{} patch v{}", launcher.version, launcher.patch_version);
 
         let activity = Activity::new().state(msg).assets(
@@ -252,15 +236,13 @@ impl DiscordGuard {
             .await?
             .first()
         {
-            let selected_phrase = ACTIVE_PHRASES.choose(&mut rand::thread_rng()).unwrap();
             self.set_activity(
-                &format!("{} {}", selected_phrase, existing_child),
+                &format!("Playing {}", existing_child),
                 reconnect_if_fail,
             )
                 .await?;
         } else {
-            let selected_phrase = INACTIVE_PHRASES.choose(&mut rand::thread_rng()).unwrap();
-            self.set_activity(&format!("{}", selected_phrase), reconnect_if_fail).await?;
+            self.set_activity("Idling...", reconnect_if_fail).await?;
         }
         Ok(())
     }
