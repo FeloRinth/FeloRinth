@@ -1,10 +1,10 @@
-use std::io::Read;
-use std::sync::{atomic::AtomicBool, Arc};
+use std::sync::{Arc, atomic::AtomicBool};
 
 use discord_rich_presence::{
     activity::{Activity, Assets},
     DiscordIpc, DiscordIpcClient,
 };
+use rand::prelude::SliceRandom;
 use serde::{Deserialize, Serialize};
 use tokio::io;
 use tokio::sync::RwLock;
@@ -17,6 +17,22 @@ pub struct DiscordGuard {
 }
 
 const PACKAGE_JSON_CONTENT: &str = include_str!("../../../theseus_gui/package.json");
+pub(crate) const ACTIVE_PHRASES: [&str; 6] = [
+    "Explores",
+    "Travels with",
+    "Pirating",
+    "Investigating the",
+    "Engaged in",
+    "Conducting"
+];
+pub(crate) const INACTIVE_PHRASES: [&str; 6] = [
+    "Idling...",
+    "Waiting for the pirate team...",
+    "Taking a break...",
+    "Resting...",
+    "On standby...",
+    "In a holding pattern..."
+];
 
 #[derive(Serialize, Deserialize)]
 struct Launcher {
@@ -28,6 +44,8 @@ impl DiscordGuard {
     /// Initialize discord IPC client, and attempt to connect to it
     /// If it fails, it will still return a DiscordGuard, but the client will be unconnected
     pub async fn init(is_offline: bool) -> crate::Result<DiscordGuard> {
+        INACTIVE_PHRASES.shuffle(&mut rand::thread_rng());
+        ACTIVE_PHRASES.shuffle(&mut rand::thread_rng());
         let mut dipc =
             // DiscordIpcClient::new("1123683254248148992").map_err(|e| {
             //     crate::ErrorKind::OtherError(format!(
@@ -132,7 +150,7 @@ impl DiscordGuard {
             Ok(launcher)
         }
 
-        let mut launcher = read_package_json()?;
+        let launcher = read_package_json()?;
         let text = format!("AR • v{} patch v{}", launcher.version, launcher.patch_version);
 
         let activity = Activity::new().state(msg).assets(
@@ -236,13 +254,15 @@ impl DiscordGuard {
             .await?
             .first()
         {
+            let selected_phrase = ACTIVE_PHRASES.choose(&mut rand::thread_rng()).unwrap();
             self.set_activity(
-                &format!("Playing {}", existing_child),
+                &format!("{} {}", selected_phrase, existing_child),
                 reconnect_if_fail,
             )
                 .await?;
         } else {
-            self.set_activity("Idling...", reconnect_if_fail).await?;
+            let selected_phrase = INACTIVE_PHRASES.choose(&mut rand::thread_rng()).unwrap();
+            self.set_activity(&format!("{}", selected_phrase), reconnect_if_fail).await?;
         }
         Ok(())
     }
