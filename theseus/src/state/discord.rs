@@ -1,9 +1,12 @@
+use std::io::Read;
 use std::sync::{atomic::AtomicBool, Arc};
 
 use discord_rich_presence::{
     activity::{Activity, Assets},
     DiscordIpc, DiscordIpcClient,
 };
+use serde::{Deserialize, Serialize};
+use tokio::io;
 use tokio::sync::RwLock;
 
 use crate::State;
@@ -13,12 +16,26 @@ pub struct DiscordGuard {
     connected: Arc<AtomicBool>,
 }
 
+const PACKAGE_JSON_CONTENT: &str = include_str!("../../../theseus_gui/package.json");
+
+#[derive(Serialize, Deserialize)]
+struct Launcher {
+    version: String,
+    patch_version: String,
+}
+
 impl DiscordGuard {
     /// Initialize discord IPC client, and attempt to connect to it
     /// If it fails, it will still return a DiscordGuard, but the client will be unconnected
     pub async fn init(is_offline: bool) -> crate::Result<DiscordGuard> {
         let mut dipc =
-            DiscordIpcClient::new("1123683254248148992").map_err(|e| {
+            // DiscordIpcClient::new("1123683254248148992").map_err(|e| {
+            //     crate::ErrorKind::OtherError(format!(
+            //         "Could not create Discord client {}",
+            //         e,
+            //     ))
+            // })?;
+            DiscordIpcClient::new("1190718475832918136").map_err(|e| {
                 crate::ErrorKind::OtherError(format!(
                     "Could not create Discord client {}",
                     e,
@@ -102,10 +119,26 @@ impl DiscordGuard {
             return Ok(());
         }
 
+        // let activity = Activity::new().state(msg).assets(
+        //     Assets::new()
+        //         .large_image("modrinth_simple")
+        //         .large_text("Modrinth Logo"),
+        // );
+
+        fn read_package_json() -> io::Result<Launcher> {
+            // Deserialize the content of package.json into a Launcher struct
+            let launcher: Launcher = serde_json::from_str(PACKAGE_JSON_CONTENT)?;
+
+            Ok(launcher)
+        }
+
+        let mut launcher = read_package_json()?;
+        let text = format!("AR • v{} patch v{}", launcher.version, launcher.patch_version);
+
         let activity = Activity::new().state(msg).assets(
             Assets::new()
-                .large_image("modrinth_simple")
-                .large_text("Modrinth Logo"),
+                .large_image("astralrinth_logo")
+                .large_text(&text)
         );
 
         // Attempt to set the activity
@@ -207,7 +240,7 @@ impl DiscordGuard {
                 &format!("Playing {}", existing_child),
                 reconnect_if_fail,
             )
-            .await?;
+                .await?;
         } else {
             self.set_activity("Idling...", reconnect_if_fail).await?;
         }

@@ -22,7 +22,8 @@ import dayjs from 'dayjs'
 import { useTheming } from '@/store/theme.js'
 import { duplicate, remove } from '@/helpers/profile.js'
 import { handleError } from '@/store/notifications.js'
-
+import { i18n } from '@/main.js';
+const t = i18n.global.t;
 const props = defineProps({
   instances: {
     type: Array,
@@ -235,8 +236,8 @@ const filteredResults = computed(() => {
 <template>
   <ModalConfirm
     ref="confirmModal"
-    title="Are you sure you want to delete this instance?"
-    description="If you proceed, all data for your instance will be removed. You will not be able to recover it."
+    :title="t('Instance.Options.DeleteQuestion')"
+    :description="t('Instance.Options.DeleteQuestionDesc')"
     :has-to-type="false"
     proceed-label="Delete"
     :noblur="!themeStore.advancedRendering"
@@ -304,14 +305,14 @@ const filteredResults = computed(() => {
     </section>
   </div>
   <ContextMenu ref="instanceOptions" @option-clicked="handleOptionsClick">
-    <template #play> <PlayIcon /> Play </template>
-    <template #stop> <StopCircleIcon /> Stop </template>
-    <template #add_content> <PlusIcon /> Add content </template>
-    <template #edit> <EyeIcon /> View instance </template>
-    <template #duplicate> <ClipboardCopyIcon /> Duplicate instance</template>
-    <template #delete> <TrashIcon /> Delete </template>
-    <template #open> <FolderOpenIcon /> Open folder </template>
-    <template #copy> <ClipboardCopyIcon /> Copy path </template>
+    <template #play> <PlayIcon /> {{t('RowDisplay.Play')}} </template>
+    <template #stop> <StopCircleIcon /> {{t('RowDisplay.Stop')}} </template>
+    <template #add_content> <PlusIcon /> {{t('RowDisplay.AddContent')}} </template>
+    <template #edit> <EyeIcon /> {{t('RowDisplay.ViewInstance')}} </template>
+    <template #duplicate> <ClipboardCopyIcon /> {{t('RowDisplay.DuplicateInstance')}}</template>
+    <template #delete> <TrashIcon /> {{t('RowDisplay.Delete')}} </template>
+    <template #open> <FolderOpenIcon /> {{t('RowDisplay.OpenFolder')}} </template>
+    <template #copy> <ClipboardCopyIcon /> {{t('RowDisplay.CopyPath')}} </template>
   </ContextMenu>
 </template>
 <style lang="scss" scoped>

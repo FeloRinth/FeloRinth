@@ -230,8 +230,8 @@ onUnmounted(() => {
 <template>
   <ModalConfirm
     ref="deleteConfirmModal"
-    title="Are you sure you want to delete this instance?"
-    description="If you proceed, all data for your instance will be removed. You will not be able to recover it."
+    :title="t('Instance.Options.DeleteQuestion')"
+    :description="t('Instance.Options.DeleteQuestionDesc')"
     :has-to-type="false"
     proceed-label="Delete"
     :noblur="!themeStore.advancedRendering"

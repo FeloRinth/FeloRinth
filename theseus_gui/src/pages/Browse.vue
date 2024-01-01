@@ -510,7 +510,7 @@ const selectableProjectTypes = computed(() => {
     }
 
     if (instanceContext.value.metadata.loader !== 'vanilla') {
-      values.unshift({ label: 'Mods', href: '/browse/mod' })
+      values.unshift({ label: t('Browse.Mods'), href: '/browse/mod' })
     }
   } else {
     values.unshift({ label: t('Browse.DataPacks'), href: `/browse/datapack` })
