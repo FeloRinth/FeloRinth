@@ -44,8 +44,6 @@ impl DiscordGuard {
     /// Initialize discord IPC client, and attempt to connect to it
     /// If it fails, it will still return a DiscordGuard, but the client will be unconnected
     pub async fn init(is_offline: bool) -> crate::Result<DiscordGuard> {
-        INACTIVE_PHRASES.shuffle(&mut rand::thread_rng());
-        ACTIVE_PHRASES.shuffle(&mut rand::thread_rng());
         let mut dipc =
             // DiscordIpcClient::new("1123683254248148992").map_err(|e| {
             //     crate::ErrorKind::OtherError(format!(
