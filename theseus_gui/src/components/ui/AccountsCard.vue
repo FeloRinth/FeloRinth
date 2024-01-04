@@ -11,7 +11,7 @@
       :size="mode === 'expanded' ? 'xs' : 'sm'"
       :src="
         selectedAccount
-          ? `https://mc-heads.net/avatar/${selectedAccount.id}/128`
+          ? `https://mc-heads.net/avatar/${selectedAccount.username}/128`
           : 'https://launcher-files.modrinth.com/assets/steve_head.png'
       "
     />
@@ -24,9 +24,9 @@
       :class="{ expanded: mode === 'expanded', isolated: mode === 'isolated' }"
     >
       <div v-if="selectedAccount" class="selected account">
-        <Avatar size="xs" :src="`https://mc-heads.net/avatar/${selectedAccount.id}/128`" />
+        <Avatar size="xs" :src="`https://mc-heads.net/avatar/${selectedAccount.username}/128`" />
         <div>
-          <h4>{{ selectedAccount.username }}</h4>
+          <h4>{{ printAccountNameType(selectedAccount) }}</h4>
           <p>{{ t('AccountsCard.Active') }}</p>
         </div>
         <Button v-tooltip="t('AccountsCard.Logout')" icon-only color="raised" @click="logout(selectedAccount.id)">
@@ -46,8 +46,8 @@
       <div v-if="displayAccounts.length > 0" class="account-group">
         <div v-for="account in displayAccounts" :key="account.id" class="account-row">
           <Button class="option account" @click="setAccount(account)">
-            <Avatar :src="`https://mc-heads.net/avatar/${account.name}/128`" class="icon" />
-            <p>{{ account.username }}</p>
+            <Avatar :src="`https://mc-heads.net/avatar/${account.username}/128`" class="icon" />
+            <p>{{ printAccountNameType(account) }}</p>
           </Button>
           <Button v-tooltip="t('AccountsCard.Logout')" icon-only @click="logout(account.id)">
             <TrashIcon />
@@ -204,6 +204,13 @@ async function setAccount(account) {
   emit('change')
 }
 
+function printAccountNameType(account) {
+  if (account.access_token == "null") {
+    return account.username + " • " + t('AccountsCard.Pirate')
+  } else {
+    return account.username + " • " + t('AccountsCard.License')
+  }
+}
 const clipboardWrite = async (a) => {
   navigator.clipboard.writeText(a)
 }
