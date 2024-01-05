@@ -2,7 +2,7 @@
   <div
     v-if="mode !== 'isolated'"
     ref="button"
-    v-tooltip="t('AccountsCard.MinecraftAccounts')"
+    v-tooltip.right="t('AccountsCard.MinecraftAccounts')"
     class="button-base avatar-button"
     :class="{ expanded: mode === 'expanded' }"
     @click="showCard = !showCard"
