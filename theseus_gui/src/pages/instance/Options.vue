@@ -1,13 +1,30 @@
 <template>
-  <ModalConfirm
-    ref="modal_confirm"
-    :title="t('Instance.Options.DeleteQuestion')"
-    :description="t('Instance.Options.DeleteQuestionDesc')"
-    :has-to-type="false"
-    proceed-label="Delete"
-    :noblur="!themeStore.advancedRendering"
-    @proceed="removeProfile"
-  />
+<!--  <ModalConfirm-->
+<!--    ref="modal_confirm"-->
+<!--    :title="t('Instance.Options.DeleteQuestion')"-->
+<!--    :description="t('Instance.Options.DeleteQuestionDesc')"-->
+<!--    :has-to-type="false"-->
+<!--    proceed-label="Delete"-->
+<!--    :noblur="!themeStore.advancedRendering"-->
+<!--    @proceed="removeProfile"-->
+<!--  />-->
+
+  <Modal ref="modal_confirm" :has-to-type="false" :noblur="!themeStore.advancedRendering" :header="t('Instance.Options.DeleteQuestion')">
+    <div class="modal-body">
+      <div class="markdown-body">
+        <p>
+          {{ t('Instance.Options.DeleteQuestionDesc') }}
+        </p>
+      </div>
+      <div class="button-group push-right">
+        <Button @click="modal_confirm.hide()"> {{ t('Instance.Options.Cancel') }} </Button>
+        <Button color="danger" @click="removeProfile">
+          <TrashIcon />
+          {{ t('Instance.Options.Delete') }}
+        </Button>
+      </div>
+    </div>
+  </Modal>
   <Modal
     ref="modalConfirmUnlock"
     :header="t('Instance.Options.UnlockQuestion')"
@@ -485,7 +502,7 @@
         id="delete-profile"
         color="danger"
         :disabled="removing"
-        @click="$refs.modal_confirm.show()"
+        @click="modal_confirm.show()"
       >
         <TrashIcon /> {{t('Instance.Options.Delete')}}
       </Button>
@@ -515,7 +532,7 @@ import {
   SaveIcon,
   LockIcon,
   HammerIcon,
-  ModalConfirm,
+  // ModalConfirm,
   DownloadIcon,
   ClipboardCopyIcon,
   Button,
@@ -581,6 +598,7 @@ const icon = ref(props.instance.metadata.icon)
 const groups = ref(props.instance.metadata.groups)
 
 const modpackVersionModal = ref(null)
+const modal_confirm = ref(null)
 
 const instancesList = Object.values(await list(true))
 const availableGroups = ref([
@@ -1001,6 +1019,22 @@ async function saveGvLoaderEdits() {
   .button-group {
     margin-left: auto;
     margin-top: 1.5rem;
+  }
+}
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: var(--gap-lg);
+
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+
+  strong {
+    color: var(--color-contrast);
   }
 }
 </style>
