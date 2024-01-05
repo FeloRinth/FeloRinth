@@ -4,7 +4,7 @@ use crate::event::{LoadingBarId, LoadingBarType};
 use crate::jre::{self, JAVA_17_KEY, JAVA_18PLUS_KEY, JAVA_8_KEY};
 use crate::launcher::io::IOError;
 use crate::prelude::JavaVersion;
-use crate::state::ProfileInstallStage;
+use crate::state::{ACTIVE_PHRASES, ProfileInstallStage};
 use crate::util::io;
 use crate::{
     process,
@@ -17,6 +17,7 @@ use daedalus::minecraft::{RuleAction, VersionInfo};
 use st::Profile;
 use std::collections::HashMap;
 use std::sync::Arc;
+use rand::prelude::SliceRandom;
 use tokio::process::Command;
 use uuid::Uuid;
 
@@ -601,9 +602,10 @@ pub async fn launch_minecraft(
 
     if !*state.offline.read().await {
         // Add game played to discord rich presence
+        let selected_phrase = ACTIVE_PHRASES.choose(&mut rand::thread_rng()).unwrap();
         let _ = state
             .discord_rpc
-            .set_activity(&format!("Playing {}", profile.metadata.name), true)
+            .set_activity(&format!("{} {}", selected_phrase, profile.metadata.name), true)
             .await;
     }
 
