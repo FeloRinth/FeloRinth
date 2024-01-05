@@ -2,7 +2,7 @@
   <div
     v-if="mode !== 'isolated'"
     ref="button"
-    v-tooltip.right="'Minecraft accounts'"
+    v-tooltip.right="t('AccountsCard.MinecraftAccounts')"
     class="button-base avatar-button"
     :class="{ expanded: mode === 'expanded' }"
     @click="showCard = !showCard"
@@ -11,7 +11,7 @@
       :size="mode === 'expanded' ? 'xs' : 'sm'"
       :src="
         selectedAccount
-          ? `https://mc-heads.net/avatar/${selectedAccount.id}/128`
+          ? `https://mc-heads.net/avatar/${selectedAccount.username}/128`
           : 'https://launcher-files.modrinth.com/assets/steve_head.png'
       "
     />
@@ -24,49 +24,58 @@
       :class="{ expanded: mode === 'expanded', isolated: mode === 'isolated' }"
     >
       <div v-if="selectedAccount" class="selected account">
-        <Avatar size="xs" :src="`https://mc-heads.net/avatar/${selectedAccount.id}/128`" />
+        <Avatar size="xs" :src="`https://mc-heads.net/avatar/${selectedAccount.username}/128`" />
         <div>
-          <h4>{{ selectedAccount.username }}</h4>
-          <p>Selected</p>
+          <h4>{{ printAccountNameType(selectedAccount) }}</h4>
+          <p>{{ t('AccountsCard.Active') }}</p>
         </div>
-        <Button v-tooltip="'Log out'" icon-only color="raised" @click="logout(selectedAccount.id)">
+        <Button v-tooltip="t('AccountsCard.Logout')" icon-only color="raised" @click="logout(selectedAccount.id)">
           <TrashIcon />
         </Button>
       </div>
       <div v-else class="logged-out account">
-        <h4>Not signed in</h4>
-        <Button v-tooltip="'Log in'" icon-only color="primary" @click="login()">
+        <h4>{{ t('AccountsCard.NoAccount') }}</h4>
+        <Button v-tooltip="t('AccountsCard.LoginLicense')" icon-only color="primary" @click="login()">
           <LogInIcon />
+        </Button>
+        <Button v-tooltip="t('AccountsCard.LoginOffline')" icon-only color="secondary" @click="loginOffline()">
+          <PlusIcon />
         </Button>
       </div>
       <div v-if="displayAccounts.length > 0" class="account-group">
         <div v-for="account in displayAccounts" :key="account.id" class="account-row">
           <Button class="option account" @click="setAccount(account)">
-            <Avatar :src="`https://mc-heads.net/avatar/${account.id}/128`" class="icon" />
-            <p>{{ account.username }}</p>
+            <Avatar :src="`https://mc-heads.net/avatar/${account.username}/128`" class="icon" />
+            <p>{{ printAccountNameType(account) }}</p>
           </Button>
-          <Button v-tooltip="'Log out'" icon-only @click="logout(account.id)">
+          <Button v-tooltip="t('AccountsCard.Logout')" icon-only @click="logout(account.id)">
             <TrashIcon />
           </Button>
         </div>
       </div>
-      <Button v-if="accounts.length > 0" @click="login()">
-        <PlusIcon />
-        Add account
-      </Button>
+      <div v-if="accounts.length > 0" class="logged-out account">
+        <Button @click="login()">
+          <LogInIcon />
+          {{ t('AccountsCard.License') }}
+        </Button>
+        <Button @click="loginOffline()">
+          <PlusIcon />
+          {{ t('AccountsCard.Pirate') }}
+        </Button>
+      </div>
     </Card>
   </transition>
-  <Modal ref="loginModal" class="modal" header="Signing in" :noblur="!themeStore.advancedRendering">
+  <Modal ref="loginModal" class="modal" :header="t('AccountsCard.AuthOnline')" :noblur="!themeStore.advancedRendering">
     <div class="modal-body">
       <QrcodeVue :value="loginUrl" class="qr-code" margin="3" size="160" />
       <div class="modal-text">
-        <div class="label">Copy this code</div>
+        <div class="label">{{ t('AccountsCard.CopyThis') }}</div>
         <div class="code-text">
           <div class="code">
             {{ loginCode }}
           </div>
           <Button
-            v-tooltip="'Copy code'"
+            v-tooltip="t('AccountsCard.CopyCode')"
             icon-only
             large
             color="raised"
@@ -75,12 +84,12 @@
             <ClipboardCopyIcon />
           </Button>
         </div>
-        <div>And enter it on Microsoft's website to sign in.</div>
+        <div>{{ t('AccountsCard.PasteMS') }}</div>
         <div class="iconified-input">
           <LogInIcon />
           <input type="text" :value="loginUrl" readonly />
           <Button
-            v-tooltip="'Open link'"
+            v-tooltip="t('AccountsCard.CopyLink')"
             icon-only
             color="raised"
             @click="() => clipboardWrite(loginUrl)"
@@ -91,9 +100,36 @@
       </div>
     </div>
   </Modal>
+  <Modal ref="loginOfflineModal" class="modal" :header="t('AccountsCard.AuthOffline')">
+    <div class="modal-body">
+      <div class="label">{{ t('AccountsCard.Username') }}</div>
+      <input type="text" v-model="playerName" :placeholder="t('AccountsCard.Username')" />
+      <Button v-tooltip="t('AccountsCard.Add')" icon-only color="secondary" @click="tryLoginOffline()">
+        <PlusIcon />
+      </Button>
+
+    </div>
+  </Modal>
+  <Modal ref="loginErrorModal" class="modal" :header="t('AccountsCard.InputError')">
+    <div class="modal-body">
+      <div class="label">{{ t('AccountsCard.TryAgainError') }}</div>
+      <Button color="primary" @click="tryAgainLoginOffline()">
+        {{ t('AccountsCard.TryAgain') }}
+      </Button>
+    </div>
+  </Modal>
+  <Modal ref="unexpectedErrorModal" class="modal" header="Ошибка">
+    <div class="modal-body">
+      <div class="label">{{ t('AccountsCard.UnexpectedError') }}</div>
+    </div>
+  </Modal>
 </template>
 
 <script setup>
+import { i18n } from '@/main.js'
+
+const t = i18n.global.t
+
 import {
   Avatar,
   Button,
@@ -103,14 +139,14 @@ import {
   LogInIcon,
   Modal,
   GlobeIcon,
-  ClipboardCopyIcon,
+  ClipboardCopyIcon
 } from 'omorphia'
 import { ref, computed, onMounted, onBeforeUnmount, onUnmounted } from 'vue'
 import {
   users,
   remove_user,
   authenticate_begin_flow,
-  authenticate_await_completion,
+  authenticate_await_completion, offline_authenticate_await_completion
 } from '@/helpers/auth'
 import { get, set } from '@/helpers/settings'
 import { handleError } from '@/store/state.js'
@@ -123,8 +159,8 @@ defineProps({
   mode: {
     type: String,
     required: true,
-    default: 'normal',
-  },
+    default: 'normal'
+  }
 })
 
 const emit = defineEmits(['change'])
@@ -136,13 +172,18 @@ const settings = ref({})
 const accounts = ref([])
 const loginUrl = ref('')
 const loginModal = ref(null)
+const loginOfflineModal = ref(null)
+const loginErrorModal = ref(null)
+const unexpectedErrorModal = ref(null)
+const playerName = ref('')
 
 async function refreshValues() {
   settings.value = await get().catch(handleError)
   accounts.value = await users().catch(handleError)
 }
+
 defineExpose({
-  refreshValues,
+  refreshValues
 })
 await refreshValues()
 
@@ -160,6 +201,13 @@ async function setAccount(account) {
   emit('change')
 }
 
+function printAccountNameType(account) {
+  if (account.access_token == "null") {
+    return account.username + " • " + t('AccountsCard.Pirate')
+  } else {
+    return account.username + " • " + t('AccountsCard.License')
+  }
+}
 const clipboardWrite = async (a) => {
   navigator.clipboard.writeText(a)
 }
@@ -174,8 +222,8 @@ async function login() {
     __tauriModule: 'Shell',
     message: {
       cmd: 'open',
-      path: loginSuccess.verification_uri,
-    },
+      path: loginSuccess.verification_uri
+    }
   })
 
   const loggedIn = await authenticate_await_completion().catch(handleError)
@@ -189,6 +237,38 @@ async function login() {
   loginModal.value.hide()
   mixpanel_track('AccountLogIn')
 }
+
+
+async function loginOffline() {
+  loginOfflineModal.value.show()
+}
+
+
+async function tryLoginOffline() { // By AstralRinth
+  let name = playerName.value
+  if (name.length > 1 && name.length < 32 && name !== '') {
+    const loggedIn = await offline_authenticate_await_completion(name).catch(handleError)
+    loginOfflineModal.value.hide()
+    if (loggedIn) {
+      await setAccount(loggedIn)
+      await refreshValues()
+    } else {
+      unexpectedErrorModal.value.show()
+    }
+    playerName.value = ''
+    mixpanel_track('AccountLogIn')
+  } else {
+    playerName.value = ''
+    loginOfflineModal.value.hide()
+    loginErrorModal.value.show()
+  }
+}
+
+function tryAgainLoginOffline() {
+  loginErrorModal.value.hide()
+  loginOffline()
+}
+
 
 const logout = async (id) => {
   await remove_user(id).catch(handleError)

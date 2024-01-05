@@ -11,11 +11,22 @@ import loadCssMixin from './mixins/macCssFix.js'
 import { get } from '@/helpers/settings'
 import { invoke } from '@tauri-apps/api'
 import { isDev } from './helpers/utils.js'
+import { createI18n } from 'vue-i18n';
+import ru_ru from './languages/ru_ru.json';
+import en_us from './languages/en_us.json';
+
+const i18n = createI18n({
+  messages: {
+    russian: ru_ru,
+    english: en_us
+  },
+});
 
 const pinia = createPinia()
 
 let app = createApp(App)
 app.use(router)
+app.use(i18n);
 app.use(pinia)
 app.use(FloatingVue)
 app.mixin(loadCssMixin)
@@ -62,3 +73,4 @@ initialize_state()
     console.error('Failed to initialize app', err)
     mountedApp.failure(err)
   })
+export { app, i18n };

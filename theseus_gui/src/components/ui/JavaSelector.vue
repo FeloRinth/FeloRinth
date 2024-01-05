@@ -24,80 +24,70 @@
         @click="reinstallJava"
       >
         <DownloadIcon />
-        {{ installingJava ? 'Installing...' : 'Install recommended' }}
+        {{ installingJava ? t('JavaSelector.Installing') : t('JavaSelector.InstallRec') }}
       </Button>
       <Button :disabled="props.disabled" @click="autoDetect">
         <SearchIcon />
-        Auto detect
+        {{ t('JavaSelector.AutoDetect') }}
       </Button>
       <Button :disabled="props.disabled" @click="handleJavaFileInput()">
         <FolderSearchIcon />
-        Browse
+        {{ t('JavaSelector.Browse') }}
       </Button>
-      <Button v-if="testingJava" disabled> Testing... </Button>
+      <div v-if="props.version">
+      <Button v-if="testingJava" disabled> {{ t('JavaSelector.Testing') }} </Button>
       <Button v-else-if="testingJavaSuccess === true">
         <CheckIcon class="test-success" />
-        Success
+        {{ t('JavaSelector.Success') }}
       </Button>
       <Button v-else-if="testingJavaSuccess === false">
         <XIcon class="test-fail" />
-        Failed
+        {{ t('JavaSelector.Failed') }}
       </Button>
       <Button v-else :disabled="props.disabled" @click="testJava">
         <PlayIcon />
-        Test
+        {{ t('JavaSelector.Test') }}
       </Button>
+        </div>
     </span>
   </div>
 </template>
 
 <script setup>
-import {
-  Button,
-  SearchIcon,
-  PlayIcon,
-  CheckIcon,
-  XIcon,
-  FolderSearchIcon,
-  DownloadIcon,
-} from 'omorphia'
-import {
-  auto_install_java,
-  find_jre_17_jres,
-  find_jre_8_jres,
-  get_jre,
-  test_jre,
-} from '@/helpers/jre.js'
+import { Button, CheckIcon, DownloadIcon, FolderSearchIcon, PlayIcon, SearchIcon, XIcon } from 'omorphia'
+import { auto_install_java, find_jre_17_jres, find_jre_8_jres, get_jre, test_jre } from '@/helpers/jre.js'
 import { ref } from 'vue'
 import { open } from '@tauri-apps/api/dialog'
 import JavaDetectionModal from '@/components/ui/JavaDetectionModal.vue'
 import { mixpanel_track } from '@/helpers/mixpanel'
 import { handleError } from '@/store/state.js'
+import { i18n } from '@/main.js'
 
+const t = i18n.global.t
 const props = defineProps({
   version: {
     type: Number,
     required: false,
-    default: null,
+    default: null
   },
   modelValue: {
     type: Object,
-    required: true,
+    required: true
   },
   disabled: {
     type: Boolean,
     required: false,
-    default: false,
+    default: false
   },
   placeholder: {
     type: String,
     required: false,
-    default: null,
+    default: null
   },
   compact: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -118,7 +108,7 @@ async function testJava() {
 
   mixpanel_track('JavaTest', {
     path: props.modelValue ? props.modelValue.path : '',
-    success: testingJavaSuccess.value,
+    success: testingJavaSuccess.value
   })
 
   setTimeout(() => {
@@ -135,13 +125,13 @@ async function handleJavaFileInput() {
       result = {
         path: filePath,
         version: props.version.toString(),
-        architecture: 'x86',
+        architecture: 'x86'
       }
     }
 
     mixpanel_track('JavaManualSelect', {
       path: filePath,
-      version: props.version,
+      version: props.version
     })
 
     emit('update:modelValue', result)
@@ -149,6 +139,7 @@ async function handleJavaFileInput() {
 }
 
 const detectJavaModal = ref(null)
+
 async function autoDetect() {
   if (!props.compact) {
     detectJavaModal.value.show(props.version, props.modelValue)
@@ -178,13 +169,13 @@ async function reinstallJava() {
     result = {
       path: path,
       version: props.version.toString(),
-      architecture: 'x86',
+      architecture: 'x86'
     }
   }
 
   mixpanel_track('JavaReInstall', {
     path: path,
-    version: props.version,
+    version: props.version
   })
 
   emit('update:modelValue', result)

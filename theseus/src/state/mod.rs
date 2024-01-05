@@ -15,6 +15,7 @@ use tokio::join;
 use tokio::sync::{OnceCell, RwLock, Semaphore};
 
 use futures::{channel::mpsc::channel, SinkExt, StreamExt};
+use rand::prelude::SliceRandom;
 
 // Submodules
 mod dirs;
@@ -49,7 +50,7 @@ pub use self::java_globals::*;
 mod safe_processes;
 pub use self::safe_processes::*;
 
-mod discord;
+pub(crate) mod discord;
 pub use self::discord::*;
 
 mod mr_auth;
@@ -191,7 +192,8 @@ impl State {
         if !settings.disable_discord_rpc && !is_offline {
             // Add default Idling to discord rich presence
             // Force add to avoid recursion
-            let _ = discord_rpc.force_set_activity("Idling...", true).await;
+            let selected_phrase = crate::state::discord::INACTIVE_PHRASES.choose(&mut rand::thread_rng()).unwrap();
+            let _ = discord_rpc.force_set_activity(&format!("{}", selected_phrase), true).await;
         }
 
         let children = Children::new();

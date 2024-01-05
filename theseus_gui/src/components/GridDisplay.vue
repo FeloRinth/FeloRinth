@@ -15,14 +15,16 @@ import {
   XIcon,
   Button,
   formatCategoryHeader,
-  ModalConfirm,
+  // ModalConfirm,
+  Modal
 } from 'omorphia'
 import ContextMenu from '@/components/ui/ContextMenu.vue'
 import dayjs from 'dayjs'
 import { useTheming } from '@/store/theme.js'
 import { duplicate, remove } from '@/helpers/profile.js'
 import { handleError } from '@/store/notifications.js'
-
+import { i18n } from '@/main.js';
+const t = i18n.global.t;
 const props = defineProps({
   instances: {
     type: Array,
@@ -42,8 +44,9 @@ const themeStore = useTheming()
 const currentDeleteInstance = ref(null)
 const confirmModal = ref(null)
 
-async function deleteProfile() {
+async function deleteProfile(modal) {
   if (currentDeleteInstance.value) {
+    modal.hide()
     instanceComponents.value = instanceComponents.value.filter(
       (x) => x.instance.path !== currentDeleteInstance.value
     )
@@ -124,50 +127,50 @@ const handleOptionsClick = async (args) => {
 }
 
 const search = ref('')
-const group = ref('Category')
-const filters = ref('All profiles')
-const sortBy = ref('Name')
+const group = ref(t('GridDisplay.Category'))
+const filters = ref(t('GridDisplay.AllProf'))
+const sortBy = ref(t('GridDisplay.Name'))
 
 const filteredResults = computed(() => {
   let instances = props.instances.filter((instance) => {
     return instance.metadata.name.toLowerCase().includes(search.value.toLowerCase())
   })
 
-  if (sortBy.value === 'Name') {
+  if (sortBy.value === t('GridDisplay.Name')) {
     instances.sort((a, b) => {
       return a.metadata.name.localeCompare(b.metadata.name)
     })
   }
 
-  if (sortBy.value === 'Game version') {
+  if (sortBy.value === t('GridDisplay.GameVer')) {
     instances.sort((a, b) => {
       return a.metadata.game_version.localeCompare(b.metadata.game_version)
     })
   }
 
-  if (sortBy.value === 'Last played') {
+  if (sortBy.value === t('GridDisplay.LastPlayed')) {
     instances.sort((a, b) => {
       return dayjs(b.metadata.last_played ?? 0).diff(dayjs(a.metadata.last_played ?? 0))
     })
   }
 
-  if (sortBy.value === 'Date created') {
+  if (sortBy.value === t('GridDisplay.DateCreated')) {
     instances.sort((a, b) => {
       return dayjs(b.metadata.date_created).diff(dayjs(a.metadata.date_created))
     })
   }
 
-  if (sortBy.value === 'Date modified') {
+  if (sortBy.value === t('GridDisplay.DateModify')) {
     instances.sort((a, b) => {
       return dayjs(b.metadata.date_modified).diff(dayjs(a.metadata.date_modified))
     })
   }
 
-  if (filters.value === 'Custom instances') {
+  if (filters.value === t('GridDisplay.CustomInstances')) {
     instances = instances.filter((instance) => {
       return !instance.metadata?.linked_data
     })
-  } else if (filters.value === 'Downloaded modpacks') {
+  } else if (filters.value === t('GridDisplay.DownloadedModpacks')) {
     instances = instances.filter((instance) => {
       return instance.metadata?.linked_data
     })
@@ -175,7 +178,7 @@ const filteredResults = computed(() => {
 
   const instanceMap = new Map()
 
-  if (group.value === 'Loader') {
+  if (group.value === t('GridDisplay.Loader')) {
     instances.forEach((instance) => {
       const loader = formatCategoryHeader(instance.metadata.loader)
       if (!instanceMap.has(loader)) {
@@ -184,7 +187,7 @@ const filteredResults = computed(() => {
 
       instanceMap.get(loader).push(instance)
     })
-  } else if (group.value === 'Game version') {
+  } else if (group.value === t('GridDisplay.GameVer')) {
     instances.forEach((instance) => {
       if (!instanceMap.has(instance.metadata.game_version)) {
         instanceMap.set(instance.metadata.game_version, [])
@@ -192,10 +195,10 @@ const filteredResults = computed(() => {
 
       instanceMap.get(instance.metadata.game_version).push(instance)
     })
-  } else if (group.value === 'Category') {
+  } else if (group.value === t('GridDisplay.Category')) {
     instances.forEach((instance) => {
       if (instance.metadata.groups.length === 0) {
-        instance.metadata.groups.push('None')
+        instance.metadata.groups.push(t('GridDisplay.None'))
       }
 
       for (const category of instance.metadata.groups) {
@@ -207,18 +210,18 @@ const filteredResults = computed(() => {
       }
     })
   } else {
-    return instanceMap.set('None', instances)
+    return instanceMap.set(t('GridDisplay.None'), instances)
   }
 
   // For 'name', we intuitively expect the sorting to apply to the name of the group first, not just the name of the instance
   // ie: Category A should come before B, even if the first instance in B comes before the first instance in A
-  if (sortBy.value === 'Name') {
+  if (sortBy.value === t('GridDisplay.Name')) {
     const sortedEntries = [...instanceMap.entries()].sort((a, b) => {
       // None should always be first
-      if (a[0] === 'None' && b[0] !== 'None') {
+      if (a[0] === t('GridDisplay.None') && b[0] !== t('GridDisplay.None')) {
         return -1
       }
-      if (a[0] !== 'None' && b[0] === 'None') {
+      if (a[0] !== t('GridDisplay.None') && b[0] === t('GridDisplay.None')) {
         return 1
       }
       return a[0].localeCompare(b[0])
@@ -233,51 +236,67 @@ const filteredResults = computed(() => {
 })
 </script>
 <template>
-  <ModalConfirm
-    ref="confirmModal"
-    title="Are you sure you want to delete this instance?"
-    description="If you proceed, all data for your instance will be removed. You will not be able to recover it."
-    :has-to-type="false"
-    proceed-label="Delete"
-    :noblur="!themeStore.advancedRendering"
-    @proceed="deleteProfile"
-  />
+<!--  <ModalConfirm-->
+<!--    ref="confirmModal"-->
+<!--    :title=""-->
+<!--    :description=""-->
+<!--    :has-to-type="false"-->
+<!--    proceed-label="Delete"-->
+<!--    :noblur="!themeStore.advancedRendering"-->
+<!--    @proceed="deleteProfile"-->
+<!--  />-->
+  <Modal ref="confirmModal" :has-to-type="false" :noblur="!themeStore.advancedRendering" :header="t('Instance.Options.DeleteQuestion')">
+    <div class="modal-body">
+      <div class="markdown-body">
+        <p>
+          {{ t('Instance.Options.DeleteQuestionDesc') }}
+        </p>
+      </div>
+      <div class="button-group push-right">
+        <Button @click="confirmModal.hide()"> {{ t('GridDisplay.Cancel') }} </Button>
+        <Button color="danger" @click="deleteProfile(confirmModal)">
+          <TrashIcon />
+          {{ t('GridDisplay.Delete') }}
+        </Button>
+      </div>
+    </div>
+  </Modal>
   <Card class="header">
     <div class="iconified-input">
       <SearchIcon />
-      <input v-model="search" type="text" placeholder="Search" class="search-input" />
+      <input v-model="search" type="text" :placeholder="t('GridDisplay.Search')" class="search-input" />
       <Button @click="() => (search = '')">
         <XIcon />
       </Button>
     </div>
     <div class="labeled_button">
-      <span>Sort by</span>
+      <span>{{t('GridDisplay.Sort')}}</span>
       <DropdownSelect
         v-model="sortBy"
         class="sort-dropdown"
         name="Sort Dropdown"
-        :options="['Name', 'Last played', 'Date created', 'Date modified', 'Game version']"
-        placeholder="Select..."
+        :options="[t('GridDisplay.Name'), t('GridDisplay.LastPlayed'), t('GridDisplay.DateCreated'), t('GridDisplay.DateModify'), t('GridDisplay.GameVer')]"
+        :placeholder="t('GridDisplay.Selection')"
       />
     </div>
     <div class="labeled_button">
-      <span>Filter by</span>
+      <span>{{t('GridDisplay.Filter')}}</span>
       <DropdownSelect
         v-model="filters"
         class="filter-dropdown"
         name="Filter Dropdown"
-        :options="['All profiles', 'Custom instances', 'Downloaded modpacks']"
-        placeholder="Select..."
+        :options="[t('GridDisplay.AllProf'), t('GridDisplay.CustomInstances'), t('GridDisplay.DownloadedModpacks')]"
+        :placeholder="t('GridDisplay.Selection')"
       />
     </div>
     <div class="labeled_button">
-      <span>Group by</span>
+      <span>{{ t('GridDisplay.Group')}}</span>
       <DropdownSelect
         v-model="group"
         class="group-dropdown"
         name="Group Dropdown"
-        :options="['Category', 'Loader', 'Game version', 'None']"
-        placeholder="Select..."
+        :options="[t('GridDisplay.Category'), t('GridDisplay.Loader'), t('GridDisplay.GameVer'), t('GridDisplay.None')]"
+        :placeholder="t('GridDisplay.Selection')"
       />
     </div>
   </Card>
@@ -304,14 +323,14 @@ const filteredResults = computed(() => {
     </section>
   </div>
   <ContextMenu ref="instanceOptions" @option-clicked="handleOptionsClick">
-    <template #play> <PlayIcon /> Play </template>
-    <template #stop> <StopCircleIcon /> Stop </template>
-    <template #add_content> <PlusIcon /> Add content </template>
-    <template #edit> <EyeIcon /> View instance </template>
-    <template #duplicate> <ClipboardCopyIcon /> Duplicate instance</template>
-    <template #delete> <TrashIcon /> Delete </template>
-    <template #open> <FolderOpenIcon /> Open folder </template>
-    <template #copy> <ClipboardCopyIcon /> Copy path </template>
+    <template #play> <PlayIcon /> {{t('RowDisplay.Play')}} </template>
+    <template #stop> <StopCircleIcon /> {{t('RowDisplay.Stop')}} </template>
+    <template #add_content> <PlusIcon /> {{t('RowDisplay.AddContent')}} </template>
+    <template #edit> <EyeIcon /> {{t('RowDisplay.ViewInstance')}} </template>
+    <template #duplicate> <ClipboardCopyIcon /> {{t('RowDisplay.DuplicateInstance')}}</template>
+    <template #delete> <TrashIcon /> {{t('RowDisplay.Delete')}} </template>
+    <template #open> <FolderOpenIcon /> {{t('RowDisplay.OpenFolder')}} </template>
+    <template #copy> <ClipboardCopyIcon /> {{t('RowDisplay.CopyPath')}} </template>
   </ContextMenu>
 </template>
 <style lang="scss" scoped>
@@ -394,5 +413,21 @@ const filteredResults = computed(() => {
   margin-right: auto;
   scroll-behavior: smooth;
   overflow-y: auto;
+}
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: var(--gap-lg);
+
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+
+  strong {
+    color: var(--color-contrast);
+  }
 }
 </style>

@@ -11,7 +11,9 @@ import {
   ExternalIcon,
   EyeIcon,
   ChevronRightIcon,
-  ModalConfirm,
+  Button,
+  Modal
+  // ModalConfirm,
 } from 'omorphia'
 import Instance from '@/components/ui/Instance.vue'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
@@ -30,9 +32,10 @@ import { useRouter } from 'vue-router'
 import { showProfileInFolder } from '@/helpers/utils.js'
 import { useFetch } from '@/helpers/fetch.js'
 import { install as pack_install } from '@/helpers/pack.js'
-import { useTheming } from '@/store/state.js'
+import { useTheming } from '@/store/theme.js'
 import { mixpanel_track } from '@/helpers/mixpanel'
-
+import { i18n } from '@/main.js';
+const t = i18n.global.t;
 const router = useRouter()
 
 const props = defineProps({
@@ -64,10 +67,12 @@ const modInstallModal = ref(null)
 const themeStore = useTheming()
 const currentDeleteInstance = ref(null)
 
-async function deleteProfile() {
+async function deleteProfile(modal) {
   if (currentDeleteInstance.value) {
+    modal.hide()
     await remove(currentDeleteInstance.value).catch(handleError)
   }
+
 }
 
 async function duplicateProfile(p) {
@@ -227,15 +232,33 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <ModalConfirm
-    ref="deleteConfirmModal"
-    title="Are you sure you want to delete this instance?"
-    description="If you proceed, all data for your instance will be removed. You will not be able to recover it."
-    :has-to-type="false"
-    proceed-label="Delete"
-    :noblur="!themeStore.advancedRendering"
-    @proceed="deleteProfile"
-  />
+<!--  <ModalConfirm-->
+<!--    ref="deleteConfirmModal"-->
+<!--    :title="t('Instance.Options.DeleteQuestion')"-->
+<!--    :description="t('Instance.Options.DeleteQuestionDesc')"-->
+<!--    :has-to-type="false"-->
+<!--    proceed-label="Delete"-->
+<!--    :noblur="!themeStore.advancedRendering"-->
+<!--    @proceed="deleteProfile"-->
+<!--  />-->
+
+  <Modal ref="deleteConfirmModal" :has-to-type="false" :noblur="!themeStore.advancedRendering" :header="t('Instance.Options.DeleteQuestion')">
+    <div class="modal-body">
+      <div class="markdown-body">
+        <p>
+          {{ t('Instance.Options.DeleteQuestionDesc') }}
+        </p>
+      </div>
+      <div class="button-group push-right">
+        <Button @click="deleteConfirmModal.hide()"> {{ t('Instance.Options.Cancel') }} </Button>
+        <Button color="danger" @click="deleteProfile(deleteConfirmModal)">
+          <TrashIcon />
+          {{ t('Instance.Options.Delete') }}
+        </Button>
+      </div>
+    </div>
+  </Modal>
+
   <div class="content">
     <div v-for="row in actualInstances" ref="rows" :key="row.label" class="row">
       <div class="header">
@@ -265,17 +288,17 @@ onUnmounted(() => {
     </div>
   </div>
   <ContextMenu ref="instanceOptions" @option-clicked="handleOptionsClick">
-    <template #play> <PlayIcon /> Play </template>
-    <template #stop> <StopCircleIcon /> Stop </template>
-    <template #add_content> <PlusIcon /> Add content </template>
-    <template #edit> <EyeIcon /> View instance </template>
-    <template #delete> <TrashIcon /> Delete </template>
-    <template #open_folder> <FolderOpenIcon /> Open folder </template>
-    <template #duplicate> <ClipboardCopyIcon /> Duplicate instance</template>
-    <template #copy_path> <ClipboardCopyIcon /> Copy path </template>
-    <template #install> <DownloadIcon /> Install </template>
-    <template #open_link> <GlobeIcon /> Open in Modrinth <ExternalIcon /> </template>
-    <template #copy_link> <ClipboardCopyIcon /> Copy link </template>
+    <template #play> <PlayIcon /> {{t('RowDisplay.Play')}} </template>
+    <template #stop> <StopCircleIcon /> {{t('RowDisplay.Stop')}} </template>
+    <template #add_content> <PlusIcon /> {{t('RowDisplay.AddContent')}} </template>
+    <template #edit> <EyeIcon /> {{t('RowDisplay.ViewInstance')}} </template>
+    <template #delete> <TrashIcon /> {{t('RowDisplay.Delete')}} </template>
+    <template #open_folder> <FolderOpenIcon /> {{t('RowDisplay.OpenFolder')}} </template>
+    <template #duplicate> <ClipboardCopyIcon /> {{t('RowDisplay.DuplicateInstance')}}</template>
+    <template #copy_path> <ClipboardCopyIcon /> {{t('RowDisplay.CopyPath')}} </template>
+    <template #install> <DownloadIcon /> {{t('RowDisplay.Install')}} </template>
+    <template #open_link> <GlobeIcon /> {{t('RowDisplay.OpenInMR')}} <ExternalIcon /> </template>
+    <template #copy_link> <ClipboardCopyIcon /> {{t('RowDisplay.CopyLink')}} </template>
   </ContextMenu>
   <InstallConfirmModal ref="confirmModal" />
   <ModInstallModal ref="modInstallModal" />
@@ -298,7 +321,22 @@ onUnmounted(() => {
     background: transparent;
   }
 }
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: var(--gap-lg);
 
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+
+  strong {
+    color: var(--color-contrast);
+  }
+}
 .row {
   display: flex;
   flex-direction: column;
@@ -353,4 +391,5 @@ onUnmounted(() => {
     }
   }
 }
+
 </style>

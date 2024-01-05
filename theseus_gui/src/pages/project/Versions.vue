@@ -133,7 +133,7 @@
                 new Date(version.date_published).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'short',
-                  day: 'numeric',
+                  day: 'numeric'
                 })
               }}
             </strong>
@@ -151,20 +151,40 @@
 </template>
 
 <script setup>
-import {
-  Card,
-  Button,
-  CheckIcon,
-  ClearIcon,
-  Badge,
-  DownloadIcon,
-  Pagination,
-  formatNumber,
-} from 'omorphia'
+import { Badge, Button, Card, CheckIcon, ClearIcon, DownloadIcon, formatNumber, Pagination } from 'omorphia'
 import Multiselect from 'vue-multiselect'
 import { releaseColor } from '@/helpers/utils'
 import { computed, ref, watch } from 'vue'
 import { SwapIcon } from '@/assets/icons/index.js'
+
+// [Error] ReferenceError: Cannot access uninitialized variable.
+// Fixed in AstralRinth v0.6.311
+const props = defineProps({
+  versions: {
+    type: Array,
+    required: true
+  },
+  install: {
+    type: Function,
+    required: true
+  },
+  installed: {
+    type: Boolean,
+    default: null
+  },
+  installing: {
+    type: Boolean,
+    default: false
+  },
+  instance: {
+    type: Object,
+    default: null
+  },
+  installedVersion: {
+    type: String,
+    default: null
+  }
+})
 
 const filterVersions = ref([])
 const filterLoader = ref(props.instance ? [props.instance?.metadata?.loader] : [])
@@ -177,33 +197,6 @@ const clearFilters = () => {
   filterLoader.value = []
   filterGameVersions.value = []
 }
-
-const props = defineProps({
-  versions: {
-    type: Array,
-    required: true,
-  },
-  install: {
-    type: Function,
-    required: true,
-  },
-  installed: {
-    type: Boolean,
-    default: null,
-  },
-  installing: {
-    type: Boolean,
-    default: false,
-  },
-  instance: {
-    type: Object,
-    default: null,
-  },
-  installedVersion: {
-    type: String,
-    default: null,
-  },
-})
 
 const filteredVersions = computed(() => {
   return props.versions.filter(

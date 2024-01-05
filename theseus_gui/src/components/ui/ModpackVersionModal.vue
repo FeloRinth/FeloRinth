@@ -5,7 +5,8 @@ import { useTheming } from '@/store/theme'
 import { update_managed_modrinth_version } from '@/helpers/profile'
 import { releaseColor } from '@/helpers/utils'
 import { SwapIcon } from '@/assets/icons/index.js'
-
+import { i18n } from '@/main.js';
+const t = i18n.global.t;
 const props = defineProps({
   versions: {
     type: Array,
@@ -45,7 +46,7 @@ const switchVersion = async (versionId) => {
   <Modal
     ref="modpackVersionModal"
     class="modpack-version-modal"
-    header="Change modpack version"
+    :header="t('Instance.Options.ChangeMV')"
     :noblur="!themeStore.advancedRendering"
   >
     <div class="modal-body">

@@ -1,13 +1,11 @@
 //! Authentication flow based on Hydra
 
-use crate::hydra;
-use crate::util::fetch::FetchSemaphore;
-
-use chrono::{prelude::*, Duration};
-
+use chrono::{Duration, prelude::*};
 use serde::{Deserialize, Serialize};
 
 use crate::api::hydra::stages::{bearer_token, xbl_signin, xsts_token};
+use crate::hydra;
+use crate::util::fetch::FetchSemaphore;
 
 // Login information
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -61,7 +59,7 @@ pub async fn refresh_credentials(
                 "Error getting XBox Live token: {}",
                 err
             ))
-            .as_error())
+                .as_error());
         }
         xsts_token::XSTSResponse::Success { token: xsts_token } => {
             let (bearer_token, expires_in) =

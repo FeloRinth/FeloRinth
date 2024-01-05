@@ -1,5 +1,5 @@
 <template>
-  <Modal ref="modal" header="Create instance" :noblur="!themeStore.advancedRendering">
+  <Modal ref="modal" :header="t('InstanceCreationModal.CreateInstance')" :noblur="!themeStore.advancedRendering">
     <div class="modal-header">
       <Chips v-model="creationType" :items="['custom', 'from file', 'import from launcher']" />
     </div>
@@ -10,16 +10,16 @@
         <div class="image-input">
           <Button @click="upload_icon()">
             <UploadIcon />
-            Select icon
+            {{t('InstanceCreationModal.SelectIcon')}}
           </Button>
           <Button :disabled="!display_icon" @click="reset_icon">
             <XIcon />
-            Remove icon
+            {{t('InstanceCreationModal.RemoveIcon')}}
           </Button>
         </div>
       </div>
       <div class="input-row">
-        <p class="input-label">Name</p>
+        <p class="input-label">{{ t('InstanceCreationModal.Name') }}</p>
         <input
           v-model="profile_name"
           autocomplete="off"
@@ -29,11 +29,11 @@
         />
       </div>
       <div class="input-row">
-        <p class="input-label">Loader</p>
+        <p class="input-label">{{ t('InstanceCreationModal.Loader') }}</p>
         <Chips v-model="loader" :items="loaders" />
       </div>
       <div class="input-row">
-        <p class="input-label">Game version</p>
+        <p class="input-label">{{t('InstanceCreationModal.GameVersion')}}</p>
         <div class="versions">
           <multiselect
             v-model="game_version"
@@ -41,7 +41,7 @@
             :options="game_versions"
             :multiple="false"
             :searchable="true"
-            placeholder="Select game version"
+            :placeholder="t('InstanceCreationModal.GameVersionSelection')"
             open-direction="top"
             :show-labels="false"
           />
@@ -54,44 +54,44 @@
         </div>
       </div>
       <div v-if="showAdvanced && loader !== 'vanilla'" class="input-row">
-        <p class="input-label">Loader version</p>
+        <p class="input-label">{{t('InstanceCreationModal.LoaderVersion')}}</p>
         <Chips v-model="loader_version" :items="['stable', 'latest', 'other']" />
       </div>
       <div v-if="showAdvanced && loader_version === 'other' && loader !== 'vanilla'">
         <div v-if="game_version" class="input-row">
-          <p class="input-label">Select version</p>
+          <p class="input-label">{{t('InstanceCreationModal.LoaderVersionSelection1')}}</p>
           <multiselect
             v-model="specified_loader_version"
             class="selector"
             :options="selectable_versions"
             :searchable="true"
-            placeholder="Select loader version"
+            :placeholder="t('InstanceCreationModal.LoaderVersionSelection2')"
             open-direction="top"
             :show-labels="false"
           />
         </div>
         <div v-else class="input-row">
-          <p class="warning">Select a game version before you select a loader version</p>
+          <p class="warning">{{t('InstanceCreationModal.warn1')}}</p>
         </div>
       </div>
       <div class="input-group push-right">
         <Button @click="toggle_advanced">
           <CodeIcon />
-          {{ showAdvanced ? 'Hide advanced' : 'Show advanced' }}
+          {{ showAdvanced ? t('InstanceCreationModal.HideAdvanced') : t('InstanceCreationModal.ShowAdvanced') }}
         </Button>
         <Button @click="hide()">
           <XIcon />
-          Cancel
+          {{t('InstanceCreationModal.Cancel')}}
         </Button>
         <Button color="primary" :disabled="!check_valid || creating" @click="create_instance()">
           <PlusIcon v-if="!creating" />
-          {{ creating ? 'Creating...' : 'Create' }}
+          {{ creating ? t('InstanceCreationModal.Creating') : t('InstanceCreationModal.Create') }}
         </Button>
       </div>
     </div>
     <div v-else-if="creationType === 'from file'" class="modal-body">
-      <Button @click="openFile"> <FolderOpenIcon /> Import from file </Button>
-      <div class="info"><InfoIcon /> Or drag and drop your .mrpack file</div>
+      <Button @click="openFile"> <FolderOpenIcon /> {{t('InstanceCreationModal.Import')}} </Button>
+      <div class="info"><InfoIcon /> {{t('InstanceCreationModal.DragImport')}} </div>
     </div>
     <div v-else class="modal-body">
       <Chips
@@ -138,7 +138,7 @@
               "
             />
           </div>
-          <div class="name-cell table-cell">Profile name</div>
+          <div class="name-cell table-cell">{{t('InstanceCreationModal.ProfileName')}}</div>
         </div>
         <div
           v-if="
@@ -160,7 +160,7 @@
             </div>
           </div>
         </div>
-        <div v-else class="table-content empty">No profiles found</div>
+        <div v-else class="table-content empty">{{t('InstanceCreationModal.NoProfileFound')}}</div>
       </div>
       <div class="button-row">
         <Button
@@ -236,7 +236,8 @@ import {
   import_instance,
 } from '@/helpers/import.js'
 import ProgressBar from '@/components/ui/ProgressBar.vue'
-
+import { i18n } from '@/main.js';
+const t = i18n.global.t;
 const themeStore = useTheming()
 
 const profile_name = ref('')

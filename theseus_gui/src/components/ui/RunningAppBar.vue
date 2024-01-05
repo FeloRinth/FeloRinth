@@ -1,8 +1,9 @@
 <template>
   <div class="action-groups">
-    <a href="https://discord.modrinth.com" class="link">
+<!--    <a href="https://discord.modrinth.com" class="link">-->
+    <a href="https://www.astralium.su/follow/telegram/astralium" class="link">
       <ChatIcon />
-      <span> Get support </span>
+      <span> {{t('RunningAppBar.GetSupport')}} </span>
     </a>
     <Button
       v-if="currentLoadingBars.length > 0"
@@ -16,7 +17,7 @@
     <div v-if="offline" class="status">
       <span class="circle stopped" />
       <div class="running-text clickable" @click="refreshInternet()">
-        <span> Offline </span>
+        <span> {{t('RunningAppBar.Offline')}} </span>
       </div>
     </div>
     <div v-if="selectedProfile" class="status">
@@ -34,10 +35,10 @@
           <DropdownIcon />
         </div>
       </div>
-      <Button v-tooltip="'Stop instance'" icon-only class="icon-button stop" @click="stop()">
+      <Button v-tooltip="t('RunningAppBar.StopInstance')" icon-only class="icon-button stop" @click="stop()">
         <StopCircleIcon />
       </Button>
-      <Button v-tooltip="'View logs'" icon-only class="icon-button" @click="goToTerminal()">
+      <Button v-tooltip="t('RunningAppBar.Logs')" icon-only class="icon-button" @click="goToTerminal()">
         <TerminalSquareIcon />
       </Button>
       <Button
@@ -52,7 +53,7 @@
     </div>
     <div v-else class="status">
       <span class="circle stopped" />
-      <span class="running-text"> No instances running </span>
+      <span class="running-text"> {{t('RunningAppBar.NoRun')}} </span>
     </div>
   </div>
   <transition name="download">
@@ -82,7 +83,7 @@
       >
         <div class="text"><span class="circle running" /> {{ profile.metadata.name }}</div>
         <Button
-          v-tooltip="'Stop instance'"
+          v-tooltip="t('RunningAppBar.StopInstance')"
           icon-only
           class="icon-button stop"
           @click.stop="stop(profile.path)"
@@ -90,7 +91,7 @@
           <StopCircleIcon />
         </Button>
         <Button
-          v-tooltip="'View logs'"
+          v-tooltip="t('RunningAppBar.Logs')"
           icon-only
           class="icon-button"
           @click.stop="goToTerminal(profile.path)"
@@ -103,6 +104,8 @@
 </template>
 
 <script setup>
+import { i18n } from '@/main.js';
+const t = i18n.global.t;
 import {
   Button,
   DownloadIcon,
@@ -186,7 +189,7 @@ const refreshInfo = async () => {
   currentLoadingBars.value = Object.values(await progress_bars_list().catch(handleError)).map(
     (x) => {
       if (x.bar_type.type === 'java_download') {
-        x.title = 'Downloading Java ' + x.bar_type.version
+        x.title = "Downloading Java" + ' ' + x.bar_type.version
       }
       if (x.bar_type.profile_name) {
         x.title = x.bar_type.profile_name
