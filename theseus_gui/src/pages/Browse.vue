@@ -705,7 +705,7 @@ onUnmounted(() => unlistenOffline())
             v-model="query"
             autocomplete="off"
             type="text"
-            :placeholder="`Search ${projectType}s...`"
+            :placeholder="`${t('Browse.Search')} ${projectType}s...`"
             @input="onSearchChange(1)"
           />
           <Button @click="() => clearSearch()">
@@ -713,7 +713,7 @@ onUnmounted(() => unlistenOffline())
           </Button>
         </div>
         <div class="inline-option">
-          <span>Sort by</span>
+          <span>{{t('Browse.Sort')}}</span>
           <DropdownSelect
             v-model="sortType"
             name="Sort by"
@@ -723,7 +723,7 @@ onUnmounted(() => unlistenOffline())
           />
         </div>
         <div class="inline-option">
-          <span>Show per page</span>
+          <span>{{t('Browse.ShowPerPage')}}</span>
           <DropdownSelect
             v-model="maxResults"
             name="Max results"

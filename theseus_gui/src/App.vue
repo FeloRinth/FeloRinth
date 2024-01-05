@@ -160,7 +160,7 @@ const openSupport = async () => {
     __tauriModule: 'Shell',
     message: {
       cmd: 'open',
-      path: 'https://discord.gg/modrinth',
+      path: 'https://www.astralium.su/follow/telegram/astralium',
     },
   })
 }

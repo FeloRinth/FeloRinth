@@ -26,7 +26,10 @@
     "HideInstalled": "Hide already installed",
     "ClearFilters": "Clear filters",
     "OpenSource": "Open source",
-    "CurrentlyOffline": "You are currently offline. Connect to the internet to browse Modrinth!"
+    "CurrentlyOffline": "You are currently offline. Connect to the internet to browse Modrinth!",
+    "Sort": "Sort by",
+    "ShowPerPage": "Show per page",
+    "Search": "Search"
   },
   "Settings": {
     "GeneralSettings": "General settings",
@@ -93,10 +96,9 @@
     "Display": "Display"
   },
   "RunningAppBar": {
-    "GetSupport": "Get support",
+    "GetSupport": "Get support ⭐",
     "Offline": "Offline",
     "NoRun": "No instances running",
-    "Java": "Downloading Java",
     "StopInstance": "Stop instance",
     "Logs": "View logs"
   },
@@ -147,7 +149,10 @@
       "ShowHideUnSelected": "Show/Hide unselected",
       "Update": "Update",
       "SelectUpdatable": "Select Updatable",
-      "OpenInstanceFolder": "Open instance folder"
+      "OpenInstanceFolder": "Open instance folder",
+      "JumpBackIn": "Jump back in Library",
+      "PopularPacks": "Popular packs",
+      "PopularMods": "Popular mods"
     },
     "Options": {
       "DeleteQuestion": "Are you sure you want to delete this instance?",
@@ -234,7 +239,8 @@
       "Repair": "Repair",
       "DeleteInstance": "Delete instance",
       "DeleteInstanceDesc": "Fully removes a instance from the disk. Be careful, as once you delete a instance there is\n          no way to recover it.",
-      "Delete": "Delete"
+      "Delete": "Delete",
+      "Cancel": "Cancel"
     },
     "Mods": {
       "Export": "Export modpack",
@@ -268,7 +274,15 @@
       "NoProjectFoundDesc": "Add a project to get started",
       "AreYouSure": "Are you sure?",
       "AreYouSureDesc": "Are you sure you want to remove",
-      "Cancel": "Cancel"
+      "Cancel": "Cancel",
+      "Show": "Show",
+      "Hide": "Hide",
+      "Untoggled": "untoggled",
+      "ThisAction": "This action",
+      "Cannot": "cannot",
+      "BeUndone": "be undone.",
+      "Search": "Search in",
+      "Projects": "project's"
     },
     "Logs": {
       "Copied": "Copied",
@@ -325,5 +339,39 @@
     "SelectFiles": "Select files and folders to include in pack",
     "Cancel": "Cancel",
     "Export": "Export"
+  },
+  "GridDisplay": {
+    "Name": "Name",
+    "LastPlayed": "Last player",
+    "DateCreated": "Date created",
+    "DateModify": "Date modified",
+    "GameVer": "Game version",
+    "AllProf": "All profiles",
+    "CustomInstances": "Custom instances",
+    "DownloadedModpacks": "Downloaded modpacks",
+    "Selection": "Select...",
+    "Search": "Search",
+    "Category": "Category",
+    "Loader": "Loader",
+    "None": "Category is none",
+    "Sort": "Sort by",
+    "Filter": "Filter by",
+    "Group": "Group by",
+    "Delete": "Delete",
+    "Cancel": "Cancel"
+  },
+  "JavaSelector": {
+    "AutoDetect": "Auto detect",
+    "Browse": "Browse",
+    "Success": "Success",
+    "Testing": "Testing...",
+    "Test": "Test",
+    "Failed": "Failed",
+    "Installing": "Installing...",
+    "InstallRec": "Install recommended"
+  },
+  "Library": {
+    "CreateInstance": "Create new instance",
+    "NoInstances": "No instances found"
   }
 }

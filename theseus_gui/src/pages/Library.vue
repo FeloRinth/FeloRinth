@@ -10,7 +10,9 @@ import { Button, PlusIcon } from 'omorphia'
 import InstanceCreationModal from '@/components/ui/InstanceCreationModal.vue'
 import { NewInstanceImage } from '@/assets/icons'
 import { isOffline } from '@/helpers/utils'
+import { i18n } from '@/main.js'
 
+const t = i18n.global.t
 const route = useRoute()
 const breadcrumbs = useBreadcrumbs()
 
@@ -40,10 +42,10 @@ onUnmounted(() => {
     <div class="icon">
       <NewInstanceImage />
     </div>
-    <h3>No instances found</h3>
+    <h3>{{ t('Library.NoInstances') }}</h3>
     <Button color="primary" :disabled="offline" @click="$refs.installationModal.show()">
       <PlusIcon />
-      Create new instance
+      {{ t('Library.CreateInstance') }}
     </Button>
     <InstanceCreationModal ref="installationModal" />
   </div>

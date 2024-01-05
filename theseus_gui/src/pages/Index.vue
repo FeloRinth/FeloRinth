@@ -9,7 +9,8 @@ import { useFetch } from '@/helpers/fetch.js'
 import { handleError } from '@/store/notifications.js'
 import dayjs from 'dayjs'
 import { isOffline } from '@/helpers/utils'
-
+import { i18n } from '@/main.js';
+const t = i18n.global.t;
 const featuredModpacks = ref({})
 const featuredMods = ref({})
 const filter = ref('')
@@ -102,19 +103,19 @@ onUnmounted(() => {
       v-if="total > 0"
       :instances="[
         {
-          label: 'Jump back in',
+          label: t('Instance.Index.JumpBackIn'),
           route: '/library',
           instances: recentInstances,
           downloaded: true,
         },
         {
-          label: 'Popular packs',
+          label: t('Instance.Index.PopularPacks'),
           route: '/browse/modpack',
           instances: featuredModpacks,
           downloaded: false,
         },
         {
-          label: 'Popular mods',
+          label: t('Instance.Index.PopularMods'),
           route: '/browse/mod',
           instances: featuredMods,
           downloaded: false,

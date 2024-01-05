@@ -13,8 +13,8 @@
         <input
           v-model="searchFilter"
           type="text"
-          :placeholder="`Search ${search.length} ${(['All', 'Other'].includes(selectedProjectType)
-            ? 'projects'
+          :placeholder="`${t('Instance.Mods.Search')} ${search.length} ${(['All', 'Other'].includes(selectedProjectType)
+            ? t('Instance.Mods.Projects')
             : selectedProjectType.toLowerCase()
           ).slice(0, search.length === 1 ? -1 : 64)}...`"
           class="text-input"
@@ -197,7 +197,7 @@
           <Button class="transparent" @click="hideShowAll()">
             <EyeIcon v-if="hideNonSelected" />
             <EyeOffIcon v-else />
-            {{ hideNonSelected ? 'Show' : 'Hide' }} untoggled
+            {{ hideNonSelected ? t('Instance.Mods.Show') : t('Instance.Mods.Hide') }} {{t('Instance.Mods.Untoggled')}}
           </Button>
         </section>
       </div>
@@ -317,7 +317,7 @@
           {{t('Instance.Mods.AreYouSureDesc')}}
           <strong>{{ functionValues.length }} project(s)</strong> from {{ instance.metadata.name }}?
           <br />
-          This action <strong>cannot</strong> be undone.
+           {{t('Instance.Mods.ThisAction')}} <strong>{{t('Instance.Mods.Cannot')}}</strong> {{t('Instance.Mods.BeUndone')}}
         </p>
       </div>
       <div class="button-group push-right">
@@ -340,7 +340,7 @@
           >
           from {{ instance.metadata.name }}?
           <br />
-          This action <strong>cannot</strong> be undone.
+          {{t('Instance.Mods.ThisAction')}} <strong>{{t('Instance.Mods.Cannot')}}</strong> {{t('Instance.Mods.BeUndone')}}
         </p>
       </div>
       <div class="button-group push-right">
@@ -533,7 +533,7 @@ const installing = computed(() => props.instance.install_stage !== 'installed')
 
 const searchFilter = ref('')
 const selectAll = ref(false)
-const selectedProjectType = ref('All')
+const selectedProjectType = ref('Mods')
 const deleteWarning = ref(null)
 const deleteDisabledWarning = ref(null)
 const hideNonSelected = ref(false)
