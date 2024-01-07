@@ -68,7 +68,7 @@ fn main() {
     */
     let _log_guard = theseus::start_logger();
 
-    tracing::info!("Initialized tracing subscriber. Loading Modrinth App!");
+    tracing::info!("Initialized tracing subscriber. Loading AstralRinth App!");
 
     let mut builder = tauri::Builder::default();
     builder = builder

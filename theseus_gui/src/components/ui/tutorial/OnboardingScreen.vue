@@ -111,7 +111,7 @@ onMounted(async () => {
       v-if="page === 1"
       :gallery="[
         { // Main gallery
-          url: 'https://cdn.discordapp.com/attachments/1006329469428043846/1190611972815847524/dayKChuHhx9K0y6L.png',
+          url: 'https://cdn.discordapp.com/attachments/1006329469428043846/1193352866501501018/9pY1xWj9T6GcFjEP.png',
           title: 'AstralRinth Contacts',
           subtitle: 'You can get support and help with our patches or just have a nice chat in our chat. Scan the QR-Code and follow the news!',
         },
@@ -164,7 +164,7 @@ onMounted(async () => {
             'Hurray! You have added your first account!',
         },
         { // Main gallery
-          url: 'https://cdn.discordapp.com/attachments/1006329469428043846/1190611972815847524/dayKChuHhx9K0y6L.png',
+          url: 'https://cdn.discordapp.com/attachments/1006329469428043846/1193352866501501018/9pY1xWj9T6GcFjEP.png',
           title: 'AstralRinth Contacts',
           subtitle: 'You can get support and help with our patches or just have a nice chat in our chat. Scan the QR-Code and follow the news!',
         },
@@ -199,7 +199,7 @@ onMounted(async () => {
             :previous-function="prevPhase"
             :progress="phase"
             title="Signing in"
-            description="The Modrinth App uses your Microsoft account to allow you to launch Minecraft. You can sign in with your Microsoft account here, and switch between multiple accounts."
+            description="The AstralRinth App uses your Microsoft account to allow you to launch Minecraft. You can sign in with your Microsoft account here, and switch between multiple accounts."
           />
         </FakeAccountsCard>
         <div class="pages-list">
@@ -258,7 +258,7 @@ onMounted(async () => {
                 :previous-function="prevPhase"
                 :progress="phase"
                 title="Installing modpacks"
-                description="When you download a modpack, Modrinth App will automatically install it for you. You can view the progress of the installation here."
+                description="When you download a modpack, AstralRinth App will automatically install it for you. You can view the progress of the installation here."
               />
             </template>
           </FakeAppBar>
@@ -303,8 +303,8 @@ onMounted(async () => {
       class="first-tip highlighted"
       :progress-function="nextPhase"
       :progress="phase"
-      title="Enter the Modrinth App!"
-      description="This is the Modrinth App guide. Key parts are marked with a green shadow. Click 'Next' to
+      title="Enter the AstralRinth App!"
+      description="This is the AstralRinth App guide. Key parts are marked with a green shadow. Click 'Next' to
       proceed. You can leave the tutorial anytime using the Exit button above the plus button on the bottom left."
     />
     <div v-if="phase === 1" class="whole-page-shadow" />
@@ -342,15 +342,15 @@ onMounted(async () => {
       :previous-function="prevPhase"
       :progress="phase"
       title="Settings"
-      description="You will be able to view and change the settings for the Modrinth App here. You can change the appearance, set and download new Java versions, and more."
+      description="You will be able to view and change the settings for the AstralRinth App here. You can change the appearance, set and download new Java versions, and more."
     />
     <TutorialTip
       v-if="phase === 9"
       class="final-tip highlighted"
       :progress-function="finishOnboarding"
       :progress="phase"
-      title="Enter the Modrinth App!"
-      description="That's it! You're ready to use the Modrinth App. If you need help, you can always join our discord server!"
+      title="Enter the AstralRinth App!"
+      description="That's it! You're ready to use the AstralRinth App. If you need help, you can always join our discord server!"
     />
   </div>
 </template>

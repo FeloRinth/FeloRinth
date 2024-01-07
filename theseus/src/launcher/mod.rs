@@ -1,25 +1,28 @@
 //! Logic for launching Minecraft
-use crate::event::emit::{emit_loading, init_or_edit_loading};
+use std::collections::HashMap;
+use std::sync::Arc;
+
+use chrono::Utc;
+use daedalus as d;
+use daedalus::minecraft::{RuleAction, VersionInfo};
+use rand::prelude::SliceRandom;
+use tokio::process::Command;
+use uuid::Uuid;
+
+use st::Profile;
+
+use crate::{
+    process,
+    state::{MinecraftChild, self as st},
+    State,
+};
 use crate::event::{LoadingBarId, LoadingBarType};
+use crate::event::emit::{emit_loading, init_or_edit_loading};
 use crate::jre::{self, JAVA_17_KEY, JAVA_18PLUS_KEY, JAVA_8_KEY};
 use crate::launcher::io::IOError;
 use crate::prelude::JavaVersion;
 use crate::state::{ACTIVE_PHRASES, ProfileInstallStage};
 use crate::util::io;
-use crate::{
-    process,
-    state::{self as st, MinecraftChild},
-    State,
-};
-use chrono::Utc;
-use daedalus as d;
-use daedalus::minecraft::{RuleAction, VersionInfo};
-use st::Profile;
-use std::collections::HashMap;
-use std::sync::Arc;
-use rand::prelude::SliceRandom;
-use tokio::process::Command;
-use uuid::Uuid;
 
 mod args;
 
@@ -162,14 +165,14 @@ pub async fn install_minecraft(
         100.0,
         "Downloading Minecraft",
     )
-    .await?;
+        .await?;
 
     crate::api::profile::edit(&profile.profile_id(), |prof| {
         prof.install_stage = ProfileInstallStage::Installing;
 
         async { Ok(()) }
     })
-    .await?;
+        .await?;
     State::sync().await?;
 
     if sync_projects {
@@ -193,11 +196,11 @@ pub async fn install_minecraft(
     let version = &metadata.minecraft.versions[version_index];
     let minecraft_updated = version_index
         <= metadata
-            .minecraft
-            .versions
-            .iter()
-            .position(|x| x.id == "22w16a")
-            .unwrap_or(0);
+        .minecraft
+        .versions
+        .iter()
+        .position(|x| x.id == "22w16a")
+        .unwrap_or(0);
 
     let version_jar = profile
         .metadata
@@ -215,7 +218,7 @@ pub async fn install_minecraft(
         Some(repairing),
         Some(&loading_bar),
     )
-    .await?;
+        .await?;
 
     let java_version = get_java_version_from_profile(profile, &version_info)
         .await?
@@ -244,7 +247,7 @@ pub async fn install_minecraft(
         repairing,
         minecraft_updated,
     )
-    .await?;
+        .await?;
 
     if let Some(processors) = &version_info.processors {
         let client_path = state
@@ -304,13 +307,13 @@ pub async fn install_minecraft(
                             &processor.jar,
                             false,
                         )?)
-                        .await?
-                        .ok_or_else(|| {
-                            crate::ErrorKind::LauncherError(format!(
-                                "Could not find processor main class for {}",
-                                processor.jar
-                            ))
-                        })?,
+                            .await?
+                            .ok_or_else(|| {
+                                crate::ErrorKind::LauncherError(format!(
+                                    "Could not find processor main class for {}",
+                                    processor.jar
+                                ))
+                            })?,
                     )
                     .args(args::get_processor_arguments(
                         &libraries_dir,
@@ -331,7 +334,7 @@ pub async fn install_minecraft(
                         "Processor error: {}",
                         String::from_utf8_lossy(&child.stderr)
                     ))
-                    .as_error());
+                        .as_error());
                 }
 
                 emit_loading(
@@ -342,7 +345,7 @@ pub async fn install_minecraft(
                         index, total_length
                     )),
                 )
-                .await?;
+                    .await?;
             }
         }
     }
@@ -352,7 +355,7 @@ pub async fn install_minecraft(
 
         async { Ok(()) }
     })
-    .await?;
+        .await?;
     State::sync().await?;
     emit_loading(&loading_bar, 1.0, Some("Finished installing")).await?;
 
@@ -379,7 +382,7 @@ pub async fn launch_minecraft(
         return Err(crate::ErrorKind::LauncherError(
             "Profile is still installing".to_string(),
         )
-        .into());
+            .into());
     }
 
     if profile.install_stage != ProfileInstallStage::Installed {
@@ -404,11 +407,11 @@ pub async fn launch_minecraft(
     let version = &metadata.minecraft.versions[version_index];
     let minecraft_updated = version_index
         <= metadata
-            .minecraft
-            .versions
-            .iter()
-            .position(|x| x.id == "22w16a")
-            .unwrap_or(0);
+        .minecraft
+        .versions
+        .iter()
+        .position(|x| x.id == "22w16a")
+        .unwrap_or(0);
 
     let version_jar = profile
         .metadata
@@ -425,7 +428,7 @@ pub async fn launch_minecraft(
         None,
         None,
     )
-    .await?;
+        .await?;
 
     let java_version = get_java_version_from_profile(profile, &version_info)
         .await?
@@ -470,7 +473,7 @@ pub async fn launch_minecraft(
             "Profile {} is already running at UUID: {uuid}",
             profile.profile_id()
         ))
-        .as_error());
+            .as_error());
     }
     command
         .args(
@@ -491,8 +494,8 @@ pub async fn launch_minecraft(
                 Vec::from(java_args),
                 &java_version.architecture,
             )?
-            .into_iter()
-            .collect::<Vec<_>>(),
+                .into_iter()
+                .collect::<Vec<_>>(),
         )
         .arg(version_info.main_class.clone())
         .args(
@@ -509,8 +512,8 @@ pub async fn launch_minecraft(
                 *resolution,
                 &java_version.architecture,
             )?
-            .into_iter()
-            .collect::<Vec<_>>(),
+                .into_iter()
+                .collect::<Vec<_>>(),
         )
         .current_dir(instance_path.clone());
 
@@ -556,7 +559,7 @@ pub async fn launch_minecraft(
 
         async { Ok(()) }
     })
-    .await?;
+        .await?;
     State::sync().await?;
 
     let mut censor_strings = HashMap::new();

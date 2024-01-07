@@ -13,18 +13,18 @@
         <Button :disabled="!logs[selectedLogIndex]" @click="copyLog()">
           <ClipboardCopyIcon v-if="!copied" />
           <CheckIcon v-else />
-          {{ copied ? t('Instance.Logs.Copied') : t('Instance.Logs.Copy') }}
+          {{ copied ? 'Copied' : 'Copy' }}
         </Button>
         <Button color="primary" :disabled="offline || !logs[selectedLogIndex]" @click="share">
           <ShareIcon />
-          {{ t('Instance.Logs.Share') }}
+          Share
         </Button>
         <Button
           v-if="logs[selectedLogIndex] && logs[selectedLogIndex].live === true"
           @click="clearLiveLog()"
         >
           <TrashIcon />
-          {{ t('Instance.Logs.Clear') }}
+          Clear
         </Button>
 
         <Button
@@ -34,7 +34,7 @@
           @click="deleteLog()"
         >
           <TrashIcon />
-          {{ t('Instance.Logs.Delete') }}
+          Delete
         </Button>
       </div>
     </div>
@@ -45,7 +45,7 @@
         autocomplete="off"
         type="text"
         class="text-filter"
-        :placeholder="t('Instance.Logs.TypeLogFilter')"
+        placeholder="Type to filter logs..."
       />
       <div class="filter-group">
         <Checkbox
@@ -54,8 +54,7 @@
           v-model="levelFilters[level.toLowerCase()]"
           class="filter-checkbox"
         >
-          {{ level }}
-        </Checkbox
+          {{ level }}</Checkbox
         >
       </div>
     </div>
@@ -71,17 +70,17 @@
       >
         <div class="user no-wrap">
           <span :style="{ color: item.prefixColor, 'font-weight': item.weight }">{{
-              item.prefix
-            }}</span>
+            item.prefix
+          }}</span>
           <span :style="{ color: item.textColor }">{{ item.text }}</span>
         </div>
       </RecycleScroller>
     </div>
     <ShareModal
       ref="shareModal"
-      :header="t('Instance.Logs.ShareLog')"
-      :share-title="t('Instance.Logs.InstanceLog')"
-      :share-text="t('Instance.Logs.ShareText')"
+      header="Share Log"
+      share-title="Instance Log"
+      share-text="Check out this log from an instance on the AstralRinth App"
       link
     />
   </Card>
@@ -91,15 +90,20 @@
 import {
   Button,
   Card,
-  Checkbox,
   CheckIcon,
   ClipboardCopyIcon,
   DropdownSelect,
   ShareIcon,
+  Checkbox,
+  TrashIcon,
   ShareModal,
-  TrashIcon
 } from 'omorphia'
-import { delete_logs_by_filename, get_logs, get_output_by_filename, get_std_log_cursor } from '@/helpers/logs.js'
+import {
+  delete_logs_by_filename,
+  get_logs,
+  get_output_by_filename,
+  get_latest_log_cursor,
+} from '@/helpers/logs.js'
 import { computed, nextTick, onBeforeUnmount, onMounted, onUnmounted, ref, watch } from 'vue'
 import dayjs from 'dayjs'
 import isToday from 'dayjs/plugin/isToday'
@@ -112,9 +116,7 @@ import { ofetch } from 'ofetch'
 
 import { RecycleScroller } from 'vue-virtual-scroller'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
-import { i18n } from '@/main.js'
 
-const t = i18n.global.t
 dayjs.extend(isToday)
 dayjs.extend(isYesterday)
 
@@ -123,21 +125,21 @@ const route = useRoute()
 const props = defineProps({
   instance: {
     type: Object,
-    required: true
+    required: true,
   },
   offline: {
     type: Boolean,
-    default: false
+    default: false,
   },
   playing: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
 
 const currentLiveLog = ref(null)
 const currentLiveLogCursor = ref(0)
-const emptyText = ['No live game detected.', 'Start your game to proceed']
+const emptyText = ['No live game detected.', 'Start your game to proceed.']
 
 const logs = ref([])
 await setLogs()
@@ -206,7 +208,7 @@ const processedLogs = computed(() => {
         prefixColor: prefixColor,
         textColor: textColor,
         weight: weight,
-        level: level
+        level: level,
       })
       id += 1
     })
@@ -221,7 +223,7 @@ async function getLiveStdLog() {
     if (uuids.length === 0) {
       returnValue = emptyText.join('\n')
     } else {
-      const logCursor = await get_std_log_cursor(
+      const logCursor = await get_latest_log_cursor(
         props.instance.path,
         currentLiveLogCursor.value
       ).catch(handleError)
@@ -241,31 +243,15 @@ async function getLogs() {
   return (await get_logs(props.instance.path, true).catch(handleError))
     .reverse()
     .filter(
+      // filter out latest_stdout.log or anything without .log in it
       (log) =>
         log.filename !== 'latest_stdout.log' &&
         log.filename !== 'latest_stdout' &&
-        log.stdout !== ''
+        log.stdout !== '' &&
+        log.filename.includes('.log')
     )
     .map((log) => {
-      if (log.filename == 'latest.log') {
-        log.name = 'Latest Log'
-      } else {
-        let filename = log.filename.split('.')[0]
-        let day = dayjs(filename.slice(0, 10))
-        if (day.isValid()) {
-          if (day.isToday()) {
-            log.name = 'Today'
-          } else if (day.isYesterday()) {
-            log.name = 'Yesterday'
-          } else {
-            log.name = day.format('MMMM D, YYYY')
-          }
-          // Displays as "Today-1", "Today-2", etc, matching minecraft log naming but with the date
-          log.name = log.name + filename.slice(10)
-        } else {
-          log.name = filename
-        }
-      }
+      log.name = log.filename || 'Unknown'
       log.stdout = 'Loading...'
       return log
     })
@@ -288,9 +274,9 @@ const share = async () => {
     const url = await ofetch('https://api.mclo.gs/1/log', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: `content=${encodeURIComponent(logs.value[selectedLogIndex.value].stdout)}`
+      body: `content=${encodeURIComponent(logs.value[selectedLogIndex.value].stdout)}`,
     }).catch(handleError)
 
     shareModal.value.show(url.url)
@@ -526,7 +512,6 @@ onUnmounted(() => {
     justify-self: center;
   }
 }
-
 .filter-group {
   display: flex;
   padding: 0.6rem;

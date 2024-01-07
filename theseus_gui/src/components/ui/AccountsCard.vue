@@ -39,7 +39,7 @@
           <LogInIcon />
         </Button>
         <Button v-tooltip="t('AccountsCard.LoginOffline')" icon-only color="secondary" @click="loginOffline()">
-          <PlusIcon />
+          <LogInIcon />
         </Button>
       </div>
 
@@ -60,7 +60,7 @@
           {{ t('AccountsCard.License') }}
         </Button>
         <Button @click="loginOffline()">
-          <PlusIcon />
+          <LogInIcon />
           {{ t('AccountsCard.Pirate') }}
         </Button>
       </div>
@@ -104,7 +104,7 @@
   <Modal ref="loginOfflineModal" class="modal" :header="t('AccountsCard.AuthOffline')">
     <div class="modal-body">
       <div class="label">{{ t('AccountsCard.Username') }}</div>
-      <input type="text" v-model="playerName" :placeholder="t('AccountsCard.Username')" />
+      <input type="text" v-model="playerName" :placeholder="t('AccountsCard.UsernamePl')" />
       <Button v-tooltip="t('AccountsCard.Add')" icon-only color="secondary" @click="tryLoginOffline()">
         <PlusIcon />
       </Button>

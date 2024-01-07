@@ -15,10 +15,10 @@
           />
           <div class="small-instance_info">
             <span class="title">{{
-              instance.metadata.name.length > 20
-                ? instance.metadata.name.substring(0, 20) + '...'
-                : instance.metadata.name
-            }}</span>
+                instance.metadata.name.length > 20
+                  ? instance.metadata.name.substring(0, 20) + '...'
+                  : instance.metadata.name
+              }}</span>
             <span>
               {{
                 instance.metadata.loader.charAt(0).toUpperCase() + instance.metadata.loader.slice(1)
@@ -59,7 +59,7 @@
           >
             <DownloadIcon v-if="!installed && !installing" />
             <CheckIcon v-else-if="installed" />
-            {{ installing ? 'Installing...' : installed ? 'Installed' : 'Install' }}
+            {{ installing ? t('Index.Installing') : installed ? t('Index.Installed') : t('Index.Install') }}
           </Button>
           <a
             :href="`https://modrinth.com/${data.project_type}/${data.slug}`"
@@ -67,7 +67,7 @@
             class="btn"
           >
             <ExternalIcon />
-            Site
+            {{ t('Index.Site') }}
           </a>
         </div>
         <hr class="card-divider" />
@@ -76,26 +76,28 @@
             <DownloadIcon aria-hidden="true" />
             <p>
               <strong>{{ formatNumber(data.downloads) }}</strong>
-              <span class="stat-label"> download<span v-if="data.downloads !== '1'">s</span></span>
+              <span class="stat-label"> download<span
+                v-if="data.downloads !== '1'">s</span></span>
             </p>
           </div>
           <div class="stat">
             <HeartIcon aria-hidden="true" />
             <p>
               <strong>{{ formatNumber(data.followers) }}</strong>
-              <span class="stat-label"> follower<span v-if="data.followers !== '1'">s</span></span>
+              <span class="stat-label"> follower<span
+                v-if="data.followers !== '1'">s</span></span>
             </p>
           </div>
           <div class="stat date">
             <CalendarIcon aria-hidden="true" />
             <span
-              ><span class="date-label">Created </span> {{ dayjs(data.published).fromNow() }}</span
+            ><span class="date-label">Created </span> {{ dayjs(data.published).fromNow() }}</span
             >
           </div>
           <div class="stat date">
             <UpdatedIcon aria-hidden="true" />
             <span
-              ><span class="date-label">Updated </span> {{ dayjs(data.updated).fromNow() }}</span
+            ><span class="date-label">Updated </span> {{ dayjs(data.updated).fromNow() }}</span
             >
           </div>
         </div>
@@ -103,11 +105,11 @@
         <div class="button-group">
           <Button class="instance-button" disabled>
             <ReportIcon />
-            Report
+            {{ t('Index.Report') }}
           </Button>
           <Button class="instance-button" disabled>
             <HeartIcon />
-            Follow
+            {{ t('Index.Follow') }}
           </Button>
         </div>
         <hr class="card-divider" />
@@ -119,7 +121,7 @@
             rel="noopener nofollow ugc external"
           >
             <IssuesIcon aria-hidden="true" />
-            <span>Issues</span>
+            <span>{{ t('Index.Issues') }}</span>
           </a>
           <a
             v-if="data.source_url"
@@ -128,7 +130,7 @@
             rel="noopener nofollow ugc external"
           >
             <CodeIcon aria-hidden="true" />
-            <span>Source</span>
+            <span>{{ t('Index.Source') }}</span>
           </a>
           <a
             v-if="data.wiki_url"
@@ -137,7 +139,7 @@
             rel="noopener nofollow ugc external"
           >
             <WikiIcon aria-hidden="true" />
-            <span>Wiki</span>
+            <span>{{ t('Index.Wiki') }}</span>
           </a>
           <a
             v-if="data.discord_url"
@@ -146,7 +148,7 @@
             rel="noopener nofollow ugc external"
           >
             <DiscordIcon aria-hidden="true" />
-            <span>Discord</span>
+            <span>{{ t('Index.Discord') }}</span>
           </a>
           <a
             v-for="(donation, index) in data.donation_urls"
@@ -161,32 +163,32 @@
             <OpenCollectiveIcon v-else-if="donation.id === 'open-collective'" aria-hidden="true" />
             <HeartIcon v-else-if="donation.id === 'github'" />
             <CoinsIcon v-else />
-            <span v-if="donation.id === 'bmac'">Buy Me a Coffee</span>
-            <span v-else-if="donation.id === 'patreon'">Patreon</span>
-            <span v-else-if="donation.id === 'paypal'">PayPal</span>
-            <span v-else-if="donation.id === 'ko-fi'">Ko-fi</span>
-            <span v-else-if="donation.id === 'github'">GitHub Sponsors</span>
-            <span v-else>Donate</span>
+            <span v-if="donation.id === 'bmac'">{{ t('Index.BuyCoffee') }}</span>
+            <span v-else-if="donation.id === 'patreon'">{{ t('Index.Patreon') }}</span>
+            <span v-else-if="donation.id === 'paypal'">{{ t('Index.PayPal') }}</span>
+            <span v-else-if="donation.id === 'ko-fi'">{{ t('Index.KoFi') }}</span>
+            <span v-else-if="donation.id === 'github'">{{ t('Index.GithubSponsors') }}</span>
+            <span v-else>{{ t('Index.Donate') }}</span>
           </a>
         </div>
       </Card>
     </div>
     <div v-if="data" class="content-container">
-<!--      <Promotion :external="false" query-param="?r=launcher" />-->
+      <!--      <Promotion :external="false" query-param="?r=launcher" />-->
       <Card class="tabs">
         <NavRow
           v-if="data.gallery.length > 0"
           :links="[
             {
-              label: 'Description',
+              label: t('Index.Description'),
               href: `/project/${$route.params.id}/`,
             },
             {
-              label: 'Versions',
+              label: t('Index.Versions'),
               href: `/project/${$route.params.id}/versions`,
             },
             {
-              label: 'Gallery',
+              label: t('Index.Gallery'),
               href: `/project/${$route.params.id}/gallery`,
             },
           ]"
@@ -195,11 +197,11 @@
           v-else
           :links="[
             {
-              label: 'Description',
+              label: t('Index.Description'),
               href: `/project/${$route.params.id}/`,
             },
             {
-              label: 'Versions',
+              label: t('Index.Versions'),
               href: `/project/${$route.params.id}/versions`,
             },
           ]"
@@ -222,52 +224,54 @@
   <ModInstallModal ref="modInstallModal" />
   <IncompatibilityWarningModal ref="incompatibilityWarning" />
   <ContextMenu ref="options" @option-clicked="handleOptionsClick">
-    <template #install> <DownloadIcon /> Install </template>
-    <template #open_link> <GlobeIcon /> Open in Modrinth <ExternalIcon /> </template>
-    <template #copy_link> <ClipboardCopyIcon /> Copy link </template>
+    <template #install>
+      <DownloadIcon />
+      {{ t('Index.Install') }}
+    </template>
+    <template #open_link>
+      <GlobeIcon />
+      {{ t('Index.OpenMR') }}
+      <ExternalIcon />
+    </template>
+    <template #copy_link>
+      <ClipboardCopyIcon />
+      {{ t('Index.Copy') }}
+    </template>
   </ContextMenu>
 </template>
 
 <script setup>
 import {
-  Card,
   Avatar,
   Button,
-  DownloadIcon,
-  ReportIcon,
-  HeartIcon,
-  Categories,
-  EnvironmentIndicator,
-  UpdatedIcon,
   CalendarIcon,
-  IssuesIcon,
-  WikiIcon,
-  // Promotion,
-  NavRow,
-  CoinsIcon,
-  CodeIcon,
-  formatNumber,
-  ExternalIcon,
+  Card,
+  Categories,
   CheckIcon,
-  GlobeIcon,
   ClipboardCopyIcon,
+  CodeIcon,
+  CoinsIcon,
+  DownloadIcon,
+  EnvironmentIndicator,
+  ExternalIcon,
+  formatNumber,
+  GlobeIcon,
+  HeartIcon,
+  IssuesIcon,
+  NavRow,
+  ReportIcon,
+  UpdatedIcon,
+  WikiIcon
 } from 'omorphia'
-import {
-  BuyMeACoffeeIcon,
-  DiscordIcon,
-  PatreonIcon,
-  PaypalIcon,
-  KoFiIcon,
-  OpenCollectiveIcon,
-} from '@/assets/external'
+import { BuyMeACoffeeIcon, DiscordIcon, KoFiIcon, OpenCollectiveIcon, PatreonIcon, PaypalIcon } from '@/assets/external'
 import { get_categories } from '@/helpers/tags'
 import { install as packInstall } from '@/helpers/pack'
 import {
-  list,
   add_project_from_version as installMod,
   check_installed,
   get as getInstance,
-  remove_project,
+  list,
+  remove_project
 } from '@/helpers/profile'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -283,7 +287,9 @@ import { handleError } from '@/store/notifications.js'
 import { convertFileSrc } from '@tauri-apps/api/tauri'
 import ContextMenu from '@/components/ui/ContextMenu.vue'
 import { mixpanel_track } from '@/helpers/mixpanel'
+import { i18n } from '@/main.js'
 
+const t = i18n.global.t
 const route = useRoute()
 const breadcrumbs = useBreadcrumbs()
 
@@ -312,14 +318,14 @@ async function fetchProjectData() {
     members.value,
     dependencies.value,
     categories.value,
-    instance.value,
+    instance.value
   ] = await Promise.all([
     useFetch(`https://api.modrinth.com/v2/project/${route.params.id}`, 'project'),
     useFetch(`https://api.modrinth.com/v2/project/${route.params.id}/version`, 'project'),
     useFetch(`https://api.modrinth.com/v2/project/${route.params.id}/members`, 'project'),
     useFetch(`https://api.modrinth.com/v2/project/${route.params.id}/dependencies`, 'project'),
     get_categories().catch(handleError),
-    route.query.i ? getInstance(route.query.i, false).catch(handleError) : Promise.resolve(),
+    route.query.i ? getInstance(route.query.i, false).catch(handleError) : Promise.resolve()
   ])
 
   installed.value =
@@ -328,8 +334,8 @@ async function fetchProjectData() {
   breadcrumbs.setName('Project', data.value.title)
   installedVersion.value = instance.value
     ? Object.values(instance.value.projects).find(
-        (p) => p?.metadata?.version?.project_id === data.value.id
-      )?.metadata?.version?.id
+      (p) => p?.metadata?.version?.project_id === data.value.id
+    )?.metadata?.version?.id
     : null
 }
 
@@ -361,7 +367,7 @@ async function install(version) {
     const old_project = Object.entries(instance.value.projects)
       .map(([key, value]) => ({
         key,
-        value,
+        value
       }))
       .find((p) => p.value.metadata?.version?.project_id === data.value.id)
     if (!old_project) {
@@ -404,7 +410,7 @@ async function install(version) {
         id: data.value.id,
         version_id: queuedVersionData.id,
         title: data.value.title,
-        source: 'ProjectPage',
+        source: 'ProjectPage'
       })
     } else {
       confirmModal.value.show(
@@ -449,7 +455,7 @@ async function install(version) {
             project_type: data.value.project_type,
             version_id: queuedVersionData.id,
             title: data.value.title,
-            source: 'ProjectPage',
+            source: 'ProjectPage'
           })
         }
       } else {
@@ -473,7 +479,7 @@ async function install(version) {
             project_type: data.value.project_type,
             version_id: queuedVersionData.id,
             title: data.value.title,
-            source: 'ProjectPage',
+            source: 'ProjectPage'
           })
         } else {
           incompatibilityWarning.value.show(
@@ -507,7 +513,7 @@ const handleRightClick = (e) => {
     { name: 'install' },
     { type: 'divider' },
     { name: 'open_link' },
-    { name: 'copy_link' },
+    { name: 'copy_link' }
   ])
 }
 
@@ -521,8 +527,8 @@ const handleOptionsClick = (args) => {
         __tauriModule: 'Shell',
         message: {
           cmd: 'open',
-          path: `https://modrinth.com/${args.item.project_type}/${args.item.slug}`,
-        },
+          path: `https://modrinth.com/${args.item.project_type}/${args.item.slug}`
+        }
       })
       break
     case 'copy_link':

@@ -24,15 +24,15 @@
           <CheckIcon v-else />
           {{
             installing
-              ? 'Installing...'
+              ? t('Version.Installing')
               : installed && installedVersion === version.id
-              ? 'Installed'
-              : 'Install'
+                ? t('Version.Installed')
+                : t('Version.Install')
           }}
         </Button>
         <Button>
           <ReportIcon />
-          Report
+          {{ t('Version.Report') }}
         </Button>
         <a
           :href="`https://modrinth.com/mod/${route.params.id}/version/${route.params.version}`"
@@ -40,18 +40,18 @@
           class="btn"
         >
           <ExternalIcon />
-          Modrinth website
+          {{ t('Version.MRSite') }}
         </a>
       </div>
     </Card>
     <div class="version-container">
       <div class="description-cards">
         <Card>
-          <h3 class="card-title">Changelog</h3>
+          <h3 class="card-title">{{ t('Version.Changelog') }}</h3>
           <div class="markdown-body" v-html="renderString(version.changelog ?? '')" />
         </Card>
         <Card>
-          <h3 class="card-title">Files</h3>
+          <h3 class="card-title">{{ t('Version.Files') }}</h3>
           <Card
             v-for="file in version.files"
             :key="file.id"
@@ -65,7 +65,7 @@
                   {{ file.filename }}
                 </span>
                 ({{ formatBytes(file.size) }})
-                <span v-if="file.primary" class="primary-label"> Primary </span>
+                <span v-if="file.primary" class="primary-label"> {{ t('Version.Primary') }} </span>
               </span>
             </span>
             <Button
@@ -76,12 +76,12 @@
             >
               <DownloadIcon v-if="!installed" />
               <CheckIcon v-else />
-              {{ installed ? 'Installed' : 'Install' }}
+              {{ installed ? t('Index.Installed') : t('Version.Install') }}
             </Button>
           </Card>
         </Card>
         <Card v-if="displayDependencies.length > 0">
-          <h2>Dependencies</h2>
+          <h2>{{ t('Version.Dependencies') }}</h2>
           <div v-for="dependency in displayDependencies" :key="dependency.title">
             <router-link v-if="dependency.link" class="btn dependency" :to="dependency.link">
               <Avatar size="sm" :src="dependency.icon" />
@@ -101,46 +101,46 @@
         </Card>
       </div>
       <Card class="metadata-card">
-        <h3 class="card-title">Metadata</h3>
+        <h3 class="card-title">{{ t('Version.Metadata') }}</h3>
         <div class="metadata">
           <div class="metadata-item">
-            <span class="metadata-label">Release Channel</span>
+            <span class="metadata-label">{{ t('Version.ReleaseChannel') }}</span>
             <span class="metadata-value"
-              ><Badge
-                :color="releaseColor(version.version_type)"
-                :type="
+            ><Badge
+              :color="releaseColor(version.version_type)"
+              :type="
                   version.version_type.charAt(0).toUpperCase() + version.version_type.slice(1)
                 "
             /></span>
           </div>
           <div class="metadata-item">
-            <span class="metadata-label">Version Number</span>
+            <span class="metadata-label">{{ t('Version.Version') }}</span>
             <span class="metadata-value">{{ version.version_number }}</span>
           </div>
           <div class="metadata-item">
-            <span class="metadata-label">Loaders</span>
+            <span class="metadata-label">{{ t('Version.Loaders') }}</span>
             <span class="metadata-value">{{
-              version.loaders
-                .map((loader) => loader.charAt(0).toUpperCase() + loader.slice(1))
-                .join(', ')
-            }}</span>
+                version.loaders
+                  .map((loader) => loader.charAt(0).toUpperCase() + loader.slice(1))
+                  .join(', ')
+              }}</span>
           </div>
           <div class="metadata-item">
-            <span class="metadata-label">Game Versions</span>
+            <span class="metadata-label">{{ t('Version.GameVersions') }}</span>
             <span class="metadata-value"> {{ version.game_versions.join(', ') }} </span>
           </div>
           <div class="metadata-item">
-            <span class="metadata-label">Downloads</span>
+            <span class="metadata-label">{{ t('Version.Downloads') }}</span>
             <span class="metadata-value">{{ version.downloads }}</span>
           </div>
           <div class="metadata-item">
-            <span class="metadata-label">Publication Date</span>
+            <span class="metadata-label">{{ t('Version.PublicDate') }}</span>
             <span class="metadata-value">
               {{
                 new Date(version.date_published).toLocaleString('en-US', {
                   month: 'long',
                   day: 'numeric',
-                  year: 'numeric',
+                  year: 'numeric'
                 })
               }}
               at
@@ -149,13 +149,13 @@
                   hour: 'numeric',
                   minute: 'numeric',
                   second: 'numeric',
-                  hour12: true,
+                  hour12: true
                 })
               }}
             </span>
           </div>
           <div v-if="author" class="metadata-item">
-            <span class="metadata-label">Author</span>
+            <span class="metadata-label">{{ t('Version.Author') }}</span>
             <a
               :href="`https://modrinth.com/user/${author.user.username}`"
               rel="external"
@@ -172,7 +172,7 @@
             </a>
           </div>
           <div class="metadata-item">
-            <span class="metadata-label">Version ID</span>
+            <span class="metadata-label">{{ t('Version.VersionID') }}</span>
             <span class="metadata-value"><CopyCode class="copycode" :text="version.id" /></span>
           </div>
         </div>
@@ -183,26 +183,28 @@
 
 <script setup>
 import {
-  Card,
-  Button,
-  DownloadIcon,
-  FileIcon,
   Avatar,
-  ReportIcon,
   Badge,
-  ExternalIcon,
-  CopyCode,
-  CheckIcon,
   Breadcrumbs,
+  Button,
+  Card,
+  CheckIcon,
+  CopyCode,
+  DownloadIcon,
+  ExternalIcon,
+  FileIcon,
   formatBytes,
   renderString,
+  ReportIcon
 } from 'omorphia'
 import { releaseColor } from '@/helpers/utils'
-import { ref, watch, computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useBreadcrumbs } from '@/store/breadcrumbs'
 import { SwapIcon } from '@/assets/icons'
+import { i18n } from '@/main.js'
 
+const t = i18n.global.t
 const breadcrumbs = useBreadcrumbs()
 
 const route = useRoute()
@@ -210,36 +212,36 @@ const route = useRoute()
 const props = defineProps({
   project: {
     type: Object,
-    required: true,
+    required: true
   },
   versions: {
     type: Array,
-    required: true,
+    required: true
   },
   dependencies: {
     type: Object,
-    required: true,
+    required: true
   },
   members: {
     type: Array,
-    required: true,
+    required: true
   },
   install: {
     type: Function,
-    required: true,
+    required: true
   },
   installed: {
     type: Boolean,
-    required: true,
+    required: true
   },
   installing: {
     type: Boolean,
-    required: true,
+    required: true
   },
   installedVersion: {
     type: String,
-    required: true,
-  },
+    required: true
+  }
 })
 
 const version = ref(props.versions.find((version) => version.id === route.params.version))
@@ -270,7 +272,7 @@ const displayDependencies = computed(() =>
         icon: project?.icon_url,
         title: project?.title || project?.name,
         subtitle: `Version ${version.version_number} is ${dependency.dependency_type}`,
-        link: `/project/${project.slug}/version/${version.id}`,
+        link: `/project/${project.slug}/version/${version.id}`
       }
     } else {
       const project = props.dependencies.projects.find((obj) => obj.id === dependency.project_id)
@@ -280,14 +282,14 @@ const displayDependencies = computed(() =>
           icon: project?.icon_url,
           title: project?.title || project?.name,
           subtitle: `${dependency.dependency_type}`,
-          link: `/project/${project.slug}`,
+          link: `/project/${project.slug}`
         }
       } else {
         return {
           icon: null,
           title: dependency.file_name,
           subtitle: `Added via overrides`,
-          link: null,
+          link: null
         }
       }
     }
@@ -304,6 +306,7 @@ const displayDependencies = computed(() =>
 
 .version-title {
   margin-bottom: 1rem;
+
   h2 {
     font-size: var(--font-size-2xl);
     font-weight: 700;

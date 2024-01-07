@@ -1,64 +1,65 @@
 //! Theseus state management system
-use crate::event::emit::{emit_loading, emit_offline, init_loading_unsafe};
 use std::path::PathBuf;
-
-use crate::event::LoadingBarType;
-use crate::loading_join;
-
-use crate::state::users::Users;
-use crate::util::fetch::{self, FetchSemaphore, IoSemaphore};
-use notify::RecommendedWatcher;
-use notify_debouncer_mini::{new_debouncer, DebounceEventResult, Debouncer};
 use std::sync::Arc;
 use std::time::Duration;
+
+use futures::{channel::mpsc::channel, SinkExt, StreamExt};
+use notify::RecommendedWatcher;
+use notify_debouncer_mini::{DebounceEventResult, Debouncer, new_debouncer};
+use rand::prelude::SliceRandom;
 use tokio::join;
 use tokio::sync::{OnceCell, RwLock, Semaphore};
 
-use futures::{channel::mpsc::channel, SinkExt, StreamExt};
-use rand::prelude::SliceRandom;
+use crate::event::emit::{emit_loading, emit_offline, init_loading_unsafe};
+use crate::event::LoadingBarType;
+use crate::loading_join;
+use crate::state::users::Users;
+use crate::util::fetch::{self, FetchSemaphore, IoSemaphore};
+
+pub use self::auth_task::*;
+pub use self::children::*;
+pub use self::dirs::*;
+pub use self::discord::*;
+pub use self::java_globals::*;
+pub use self::metadata::*;
+pub use self::mr_auth::*;
+pub use self::profiles::*;
+pub use self::projects::*;
+pub use self::safe_processes::*;
+pub use self::settings::*;
+pub use self::tags::*;
 
 // Submodules
 mod dirs;
-pub use self::dirs::*;
 
 mod metadata;
-pub use self::metadata::*;
 
 mod profiles;
-pub use self::profiles::*;
 
 mod settings;
-pub use self::settings::*;
 
 mod projects;
-pub use self::projects::*;
 
 mod users;
 
 mod children;
-pub use self::children::*;
 
 mod auth_task;
-pub use self::auth_task::*;
 
 mod tags;
-pub use self::tags::*;
 
 mod java_globals;
-pub use self::java_globals::*;
 
 mod safe_processes;
-pub use self::safe_processes::*;
 
 pub(crate) mod discord;
-pub use self::discord::*;
 
 mod mr_auth;
-pub use self::mr_auth::*;
 
 // Global state
 // RwLock on state only has concurrent reads, except for config dir change which takes control of the State
 static LAUNCHER_STATE: OnceCell<RwLock<State>> = OnceCell::const_new();
+
 pub struct State {
     /// Whether or not the launcher is currently operating in 'offline mode'
     pub offline: RwLock<bool>,
@@ -105,8 +106,7 @@ pub struct State {
 
 impl State {
     /// Get the current launcher state, initializing it if needed
-    pub async fn get(
-    ) -> crate::Result<Arc<tokio::sync::RwLockReadGuard<'static, Self>>> {
+    pub async fn get() -> crate::Result<Arc<tokio::sync::RwLockReadGuard<'static, Self>>> {
         Ok(Arc::new(
             LAUNCHER_STATE
                 .get_or_try_init(Self::initialize_state)
@@ -119,8 +119,7 @@ impl State {
     /// Get the current launcher state, initializing it if needed
     /// Takes writing control of the state, blocking all other uses of it
     /// Only used for state change such as changing the config directory
-    pub async fn get_write(
-    ) -> crate::Result<tokio::sync::RwLockWriteGuard<'static, Self>> {
+    pub async fn get_write() -> crate::Result<tokio::sync::RwLockWriteGuard<'static, Self>> {
         Ok(LAUNCHER_STATE
             .get_or_try_init(Self::initialize_state)
             .await?
@@ -140,7 +139,7 @@ impl State {
             100.0,
             "Initializing launcher",
         )
-        .await?;
+            .await?;
 
         // Settings
         let settings =
@@ -189,6 +188,7 @@ impl State {
         let safety_processes = SafeProcesses::new();
 
         let discord_rpc = DiscordGuard::init(is_offline).await?;
+
         if !settings.disable_discord_rpc && !is_offline {
             // Add default Idling to discord rich presence
             // Force add to avoid recursion
@@ -276,7 +276,7 @@ impl State {
                 reader.sync(&state.directories.settings_file()).await?;
                 Ok::<_, crate::Error>(())
             })
-            .await?
+                .await?
         };
 
         let sync_profiles = async {
@@ -288,7 +288,7 @@ impl State {
                 profiles.sync().await?;
                 Ok::<_, crate::Error>(())
             })
-            .await?
+                .await?
         };
 
         tokio::try_join!(sync_settings, sync_profiles)?;
@@ -393,9 +393,9 @@ pub async fn init_watcher() -> crate::Result<Debouncer<RecommendedWatcher>> {
                             .components()
                             .any(|x| x.as_os_str() == "crash-reports")
                             && e.path
-                                .extension()
-                                .map(|x| x == "txt")
-                                .unwrap_or(false)
+                            .extension()
+                            .map(|x| x == "txt")
+                            .unwrap_or(false)
                         {
                             Profile::crash_task(profile_path_id);
                         } else if !visited_paths.contains(&new_path) {
