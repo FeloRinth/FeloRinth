@@ -37,7 +37,7 @@
     <div class="stats button-group">
       <div v-if="featured" class="badge">
         <StarIcon />
-        Featured
+        {{ t('SearchCard.Featured') }}
       </div>
       <div class="badge">
         <DownloadIcon />
@@ -56,7 +56,7 @@
       <Button color="primary" :disabled="installed || installing" @click.stop="install()">
         <DownloadIcon v-if="!installed" />
         <CheckIcon v-else />
-        {{ installing ? 'Installing' : installed ? 'Installed' : 'Install' }}
+        {{ installing ? t('SearchCard.Installing') : installed ? t('SearchCard.Installed') : t('SearchCard.Install') }}
       </Button>
     </div>
   </Card>
@@ -65,17 +65,17 @@
 <script setup>
 import {
   Avatar,
+  Button,
+  CalendarIcon,
   Card,
   Categories,
-  EnvironmentIndicator,
-  Button,
-  DownloadIcon,
-  formatNumber,
-  formatCategory,
-  HeartIcon,
-  CalendarIcon,
   CheckIcon,
-  StarIcon,
+  DownloadIcon,
+  EnvironmentIndicator,
+  formatCategory,
+  formatNumber,
+  HeartIcon,
+  StarIcon
 } from 'omorphia'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -86,45 +86,48 @@ import { installVersionDependencies } from '@/helpers/utils.js'
 import { useFetch } from '@/helpers/fetch.js'
 import { handleError } from '@/store/notifications.js'
 import { mixpanel_track } from '@/helpers/mixpanel'
+import { i18n } from '@/main.js'
+
+const t = i18n.global.t
 dayjs.extend(relativeTime)
 
 const props = defineProps({
   backgroundImage: {
     type: String,
-    default: null,
+    default: null
   },
   project: {
     type: Object,
-    required: true,
+    required: true
   },
   categories: {
     type: Array,
-    required: true,
+    required: true
   },
   instance: {
     type: Object,
-    default: null,
+    default: null
   },
   confirmModal: {
     type: Object,
-    default: null,
+    default: null
   },
   modInstallModal: {
     type: Object,
-    default: null,
+    default: null
   },
   incompatibilityWarningModal: {
     type: Object,
-    default: null,
+    default: null
   },
   featured: {
     type: Boolean,
-    default: false,
+    default: false
   },
   installed: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 })
 
 const emits = defineEmits(['open'])
@@ -169,7 +172,7 @@ async function install() {
         id: props.project.project_id,
         version_id: queuedVersionData.id,
         title: props.project.title,
-        source: 'SearchCard',
+        source: 'SearchCard'
       })
     } else {
       props.confirmModal.show(
@@ -203,7 +206,7 @@ async function install() {
           project_type: props.project.project_type,
           version_id: queuedVersionData.id,
           title: props.project.title,
-          source: 'SearchCard',
+          source: 'SearchCard'
         })
       }
     } else {

@@ -1,11 +1,13 @@
 <script setup>
-import { Button, Modal, XIcon, DownloadIcon } from 'omorphia'
+import { Button, DownloadIcon, Modal, XIcon } from 'omorphia'
 import { install as pack_install } from '@/helpers/pack'
 import { ref } from 'vue'
 import { mixpanel_track } from '@/helpers/mixpanel'
 import { useTheming } from '@/store/theme.js'
 import { handleError } from '@/store/state.js'
+import { i18n } from '@/main.js'
 
+const t = i18n.global.t
 const themeStore = useTheming()
 
 const version = ref('')
@@ -25,7 +27,7 @@ defineExpose({
     confirmModal.value.show()
 
     mixpanel_track('PackInstallStart')
-  },
+  }
 })
 
 async function install() {
@@ -42,19 +44,25 @@ async function install() {
     id: projectId.value,
     version_id: version.value,
     title: title.value,
-    source: 'ConfirmModal',
+    source: 'ConfirmModal'
   })
 }
 </script>
 
 <template>
-  <Modal ref="confirmModal" header="Are you sure?" :noblur="!themeStore.advancedRendering">
+  <Modal ref="confirmModal" :header="t('InstallConfirmModal.Question')" :noblur="!themeStore.advancedRendering">
     <div class="modal-body">
-      <p>You already have this modpack installed. Are you sure you want to install it again?</p>
+      <p>{{ t('InstallConfirmModal.QuestionDesc') }}</p>
       <div class="input-group push-right">
-        <Button @click="() => $refs.confirmModal.hide()"><XIcon />Cancel</Button>
+        <Button @click="() => $refs.confirmModal.hide()">
+          <XIcon />
+          {{ t('InstallConfirmModal.Cancel') }}
+        </Button>
         <Button color="primary" :disabled="installing" @click="install()"
-          ><DownloadIcon /> {{ installing ? 'Installing' : 'Install' }}</Button
+        >
+          <DownloadIcon />
+          {{ installing ? t('InstallConfirmModal.Installing') : t('InstallConfirmModal.Install') }}
+        </Button
         >
       </div>
     </div>

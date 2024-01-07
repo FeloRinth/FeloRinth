@@ -111,7 +111,7 @@ onMounted(async () => {
       v-if="page === 1"
       :gallery="[
         { // Main gallery
-          url: 'https://cdn.discordapp.com/attachments/1006329469428043846/1193352866501501018/9pY1xWj9T6GcFjEP.png',
+          url: 'https://cdn.discordapp.com/attachments/1006329469428043846/1193557264049655878/ZbsJuMYb8Qc5gL8n.png',
           title: 'AstralRinth Contacts',
           subtitle: 'You can get support and help with our patches or just have a nice chat in our chat. Scan the QR-Code and follow the news!',
         },
@@ -164,7 +164,7 @@ onMounted(async () => {
             'Hurray! You have added your first account!',
         },
         { // Main gallery
-          url: 'https://cdn.discordapp.com/attachments/1006329469428043846/1193352866501501018/9pY1xWj9T6GcFjEP.png',
+          url: 'https://cdn.discordapp.com/attachments/1006329469428043846/1193557264049655878/ZbsJuMYb8Qc5gL8n.png',
           title: 'AstralRinth Contacts',
           subtitle: 'You can get support and help with our patches or just have a nice chat in our chat. Scan the QR-Code and follow the news!',
         },
