@@ -29,7 +29,11 @@
     "CurrentlyOffline": "You are currently offline. Connect to the internet to browse Modrinth!",
     "Sort": "Sort by",
     "ShowPerPage": "Show per page",
-    "Search": "Search"
+    "Search": "Search",
+    "Loaders": "Loaders",
+    "MCVersions": "Minecraft versions",
+    "Environments": "Environments",
+    "Categories": "Categories"
   },
   "Settings": {
     "GeneralSettings": "General settings",
@@ -96,7 +100,7 @@
     "Display": "Display"
   },
   "RunningAppBar": {
-    "GetSupport": "Get support ⭐",
+    "GetSupport": "Support",
     "Offline": "Offline",
     "NoRun": "No instances running",
     "StopInstance": "Stop instance",
@@ -107,10 +111,10 @@
     "Active": "Active",
     "NoAccount": "You don't have account",
     "Logout": "Log out",
-    "LoginLicense": "Log in (License 🌐)",
-    "LoginOffline": "Log in (Pirate ⚑)",
-    "License": "License 🌐",
-    "Pirate": "Pirate ⚑",
+    "LoginLicense": "Log in Microsoft",
+    "LoginOffline": "Log in Pirate",
+    "License": "Microsoft",
+    "Pirate": "Pirated",
     "CopyThis": "Copy this code",
     "AuthOnline": "Authorization via a licensed account",
     "AuthOffline": "Authorization via a pirate account",
@@ -118,6 +122,7 @@
     "CopyLink": "Copy link",
     "PasteMS": "Paste the copied code in the browser on the Microsoft page.",
     "Username": "Provide minecraft user name",
+    "UsernamePl": "The input field",
     "Add": "Add",
     "TryAgainError": "Unfortunately, we cannot accept such a username, please try again!",
     "TryAgain": "Try again",
@@ -293,7 +298,7 @@
       "TypeLogFilter": "Type to filter logs...",
       "ShareLog": "Share Log",
       "InstanceLog": "Instance Log",
-      "ShareText": "Check out this log from an instance on the Modrinth App"
+      "ShareText": "Check out this log from an instance on the AstralRinth App"
     }
   },
   "RowDisplay": {
@@ -373,5 +378,59 @@
   "Library": {
     "CreateInstance": "Create new instance",
     "NoInstances": "No instances found"
+  },
+  "Index": {
+    "Installing": "Installing...",
+    "Installed": "Installed",
+    "Install": "Install",
+    "Site": "Site",
+    "Report": "Report",
+    "Follow": "Follow",
+    "Issues": "Issues",
+    "Source": "Source",
+    "Wiki": "Wiki",
+    "Discord": "Discord",
+    "BuyCoffee": "Buy Me a Coffee",
+    "Patreon": "Patreon",
+    "PayPal": "PayPal",
+    "KoFi": "Ko-fi",
+    "GithubSponsors": "Github Sponsors",
+    "Donate": "Donate",
+    "OpenMR": "Open on Modrinth",
+    "Copy": "Copy link",
+    "Description": "Description",
+    "Versions": "Versions",
+    "Gallery": "Gallery"
+  },
+  "Version": {
+    "Installing": "Installing...",
+    "Installed": "Installed",
+    "Install": "Install",
+    "Report": "Report",
+    "MRSite": "Modrinth website",
+    "Changelog": "Changelog",
+    "Files": "Files",
+    "Primary": "Primary",
+    "Dependencies": "Dependencies",
+    "Metadata": "Metadata",
+    "ReleaseChannel": "Release Channel",
+    "Version": "Version Number",
+    "Loaders": "Loaders",
+    "GameVersions": "Game Versions",
+    "Downloads": "Downloads",
+    "PublicDate": "Publication Date",
+    "Author": "Author",
+    "VersionID": "Version ID"
+  },
+  "Versions": {
+    "FilterLoader": "Filter loader...",
+    "FilterVersion": "Filter versions...",
+    "FilterRelChannel": "Filter release channel...",
+    "ClearFilter": "Clear filters",
+    "Name": "Name",
+    "Supports": "Supports",
+    "Stats": "Stats",
+    "PublishedOn": "Published on ",
+    "Downloads": " Downloads"
   }
 }

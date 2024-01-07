@@ -1,9 +1,11 @@
 use std::sync::{Arc, atomic::AtomicBool};
+use std::time::{SystemTime, UNIX_EPOCH};
 
 use discord_rich_presence::{
     activity::{Activity, Assets},
     DiscordIpc, DiscordIpcClient,
 };
+use discord_rich_presence::activity::Timestamps;
 use rand::prelude::SliceRandom;
 use serde::{Deserialize, Serialize};
 use tokio::io;
@@ -57,7 +59,6 @@ impl DiscordGuard {
                     e,
                 ))
             })?;
-
         let connected = if !is_offline {
             let res = dipc.connect(); // Do not need to connect to Discord to use app
             if res.is_ok() {
@@ -149,13 +150,21 @@ impl DiscordGuard {
         }
 
         let launcher = read_package_json()?;
-        let text = format!("AR • v{} patch v{}", launcher.version, launcher.patch_version);
 
+        let build_info = format!("AR • v{} patch v{}", launcher.version, launcher.patch_version);
+        let build_download = "https://astralium.su/get/ar";
+
+        let time = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("Failed to get system time")
+            .as_secs() as i64;
         let activity = Activity::new().state(msg).assets(
             Assets::new()
                 .large_image("astralrinth_logo")
-                .large_text(&text)
-        );
+                .large_text(&build_info)
+                .small_image("astralrinth_logo")
+                .small_text(&build_download)
+        ).timestamps(Timestamps::new().start(time));
 
         // Attempt to set the activity
         // If the existing connection fails, attempt to reconnect and try again

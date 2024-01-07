@@ -15,7 +15,7 @@
         :clear-search-on-select="false"
         :show-labels="false"
         :selectable="() => versions.length <= 6"
-        placeholder="Filter loader..."
+        :placeholder="t('Versions.FilterLoader')"
         :custom-label="(option) => option.charAt(0).toUpperCase() + option.slice(1)"
       />
       <multiselect
@@ -32,7 +32,7 @@
         :clear-search-on-select="false"
         :show-labels="false"
         :selectable="() => versions.length <= 6"
-        placeholder="Filter versions..."
+        :placeholder="t('Versions.FilterVersion')"
         :custom-label="(option) => option.charAt(0).toUpperCase() + option.slice(1)"
       />
       <multiselect
@@ -49,7 +49,7 @@
         :clear-search-on-select="false"
         :show-labels="false"
         :selectable="() => versions.length <= 6"
-        placeholder="Filter release channel..."
+        :placeholder="t('Versions.FilterRelChannel')"
         :custom-label="(option) => option.charAt(0).toUpperCase() + option.slice(1)"
       />
     </div>
@@ -61,7 +61,7 @@
       :action="clearFilters"
     >
       <ClearIcon />
-      Clear filters
+      {{ t('Versions.ClearFilter') }}
     </Button>
   </Card>
   <Pagination
@@ -75,9 +75,9 @@
     <div class="table">
       <div class="table-row table-head">
         <div class="table-cell table-text download-cell" />
-        <div class="name-cell table-cell table-text">Name</div>
-        <div class="table-cell table-text">Supports</div>
-        <div class="table-cell table-text">Stats</div>
+        <div class="name-cell table-cell table-text">{{ t('Versions.Name') }}</div>
+        <div class="table-cell table-text">{{ t('Versions.Supports') }}</div>
+        <div class="table-cell table-text">{{ t('Versions.Stats') }}</div>
       </div>
       <div
         v-for="version in filteredVersions.slice((currentPage - 1) * 20, currentPage * 20)"
@@ -127,7 +127,7 @@
         </div>
         <div class="table-cell table-text stacked-text">
           <div>
-            <span> Published on </span>
+            <span> {{ t('Versions.PublishedOn') }} </span>
             <strong>
               {{
                 new Date(version.date_published).toLocaleDateString('en-US', {
@@ -142,7 +142,7 @@
             <strong>
               {{ formatNumber(version.downloads) }}
             </strong>
-            <span> Downloads </span>
+            <span>  {{ t('Versions.Downloads') }} </span>
           </div>
         </div>
       </div>
@@ -156,7 +156,9 @@ import Multiselect from 'vue-multiselect'
 import { releaseColor } from '@/helpers/utils'
 import { computed, ref, watch } from 'vue'
 import { SwapIcon } from '@/assets/icons/index.js'
+import { i18n } from '@/main.js'
 
+const t = i18n.global.t
 // [Error] ReferenceError: Cannot access uninitialized variable.
 // Fixed in AstralRinth v0.6.311
 const props = defineProps({

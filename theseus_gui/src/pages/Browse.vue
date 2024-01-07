@@ -14,7 +14,7 @@ import {
   ClientIcon,
   ServerIcon,
   NavRow,
-  formatCategoryHeader,
+  // formatCategoryHeader,
   formatCategory,
   // Promotion,
   XIcon,
@@ -603,7 +603,7 @@ onUnmounted(() => unlistenOffline())
           <ClearIcon /> {{t('Browse.ClearFilters')}}
         </Button>
         <div v-if="showLoaders" class="loaders">
-          <h2>Loaders</h2>
+          <h2>{{ t('Browse.Loaders') }}</h2>
           <div
             v-for="loader in loaders.filter(
               (l) =>
@@ -623,7 +623,7 @@ onUnmounted(() => unlistenOffline())
           </div>
         </div>
         <div v-if="showVersions" class="versions">
-          <h2>Minecraft versions</h2>
+          <h2>{{ t('Browse.MCVersions') }}</h2>
           <Checkbox v-model="showSnapshots" class="filter-checkbox" label="Include snapshots" />
           <multiselect
             v-model="selectedVersions"
@@ -649,7 +649,8 @@ onUnmounted(() => unlistenOffline())
           :key="categoryList[0]"
           class="categories"
         >
-          <h2>{{ formatCategoryHeader(categoryList[0]) }}</h2>
+<!--          <h2>{{ formatCategoryHeader(categoryList[0]) }}</h2>-->
+          <h2>{{ t('Browse.Categories') }}</h2>
           <div v-for="category in categoryList[1]" :key="category.name">
             <SearchFilter
               :active-filters="facets"
@@ -662,7 +663,7 @@ onUnmounted(() => unlistenOffline())
           </div>
         </div>
         <div v-if="projectType !== 'datapack'" class="environment">
-          <h2>Environments</h2>
+          <h2>{{ t('Browse.Environments') }}</h2>
           <SearchFilter
             :active-filters="selectedEnvironments"
             display-name="Client"
