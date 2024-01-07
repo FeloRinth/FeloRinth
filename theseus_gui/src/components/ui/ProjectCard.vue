@@ -17,6 +17,8 @@ import { useFetch } from '@/helpers/fetch.js'
 import { list } from '@/helpers/profile.js'
 import { handleError } from '@/store/notifications.js'
 import { install as pack_install } from '@/helpers/pack.js'
+import { i18n } from '@/main.js';
+const t = i18n.global.t;
 dayjs.extend(relativeTime)
 
 const router = useRouter()
@@ -161,7 +163,7 @@ const install = async (e) => {
     </Card>
     <Button color="primary" class="install" :disabled="installing" @click="install">
       <DownloadIcon />
-      {{ installing ? 'Installing' : 'Install' }}
+      {{ installing ? t('ProjectCard.Installing') : t('ProjectCard.Install') }}
     </Button>
   </div>
 </template>

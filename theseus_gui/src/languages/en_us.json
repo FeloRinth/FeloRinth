@@ -432,5 +432,51 @@
     "Stats": "Stats",
     "PublishedOn": "Published on ",
     "Downloads": " Downloads"
+  },
+  "InstallConfirmModal": {
+    "Question": "Are you sure?",
+    "QuestionDesc": "You already have this modpack installed. Are you sure you want to install it again?",
+    "Cancel": "Cancel",
+    "Installing": "Installing...",
+    "Install": "Install"
+  },
+  "ProjectCard": {
+    "Installing": "Installing...",
+    "Install": "Install"
+  },
+  "SearchCard": {
+    "Installing": "Installing...",
+    "Install": "Install",
+    "Installed": "Installed",
+    "Featured": "Featured"
+  },
+  "IncompatibilityWarningModal": {
+    "Incompatibility": "Incompatibility warning",
+    "Warn": "is not compatible with the instance\n        you're trying to install it on. Are you sure you want to continue? Dependencies will not be\n        installed.",
+    "This": "This",
+    "Project": "project",
+    "Version": "version",
+    "SelectVersion": "Select version",
+    "VersionSelect": "Version select",
+    "Cancel": "Cancel",
+    "Installing": "Installing...",
+    "Install": "Install"
+  },
+  "ModInstallModal": {
+    "InstallToInstance": "Install project to instance",
+    "SearchInstance": "Search for an instance",
+    "UnpairWarn": "Unpair or unlock an instance to add mods.",
+    "Installing": "Installing...",
+    "Install": "Install",
+    "Installed": "Installed",
+    "Paired": "Paired",
+    "SelectIcon": "Select icon",
+    "RemoveIcon": "Remove icon",
+    "Name": "Name",
+    "Creating": "Creating...",
+    "Create": "Create",
+    "HideNew": "Hide New Instance",
+    "CreateNew": "Create New Instance",
+    "Cancel": "Cancel"
   }
 }

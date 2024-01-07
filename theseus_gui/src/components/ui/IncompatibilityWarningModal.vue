@@ -1,14 +1,14 @@
 <template>
   <Modal
     ref="incompatibleModal"
-    header="Incompatibility warning"
+    :header="t('IncompatibilityWarningModal.Incompatibility')"
     :noblur="!themeStore.advancedRendering"
   >
     <div class="modal-body">
       <p>
-        This {{ versions?.length > 0 ? 'project' : 'version' }} is not compatible with the instance
-        you're trying to install it on. Are you sure you want to continue? Dependencies will not be
-        installed.
+        {{ t('IncompatibilityWarningModal.This') }}
+        {{ versions?.length > 0 ? t('IncompatibilityWarningModal.Project') : t('IncompatibilityWarningModal.Version') }}
+        {{ t('IncompatibilityWarningModal.Warn') }}
       </p>
       <table>
         <tr class="header">
@@ -24,8 +24,8 @@
               v-if="versions?.length > 1"
               v-model="selectedVersion"
               :options="versions"
-              placeholder="Select version"
-              name="Version select"
+              :placeholder="t('IncompatibilityWarningModal.SelectVersion')"
+              :name="t('IncompatibilityWarningModal.VersionSelect')"
               :display-name="
                 (version) =>
                   `${version?.name} (${version?.loaders
@@ -46,9 +46,13 @@
         </tr>
       </table>
       <div class="button-group">
-        <Button @click="() => incompatibleModal.hide()"><XIcon />Cancel</Button>
+        <Button @click="() => incompatibleModal.hide()">
+          <XIcon />
+          {{ t('IncompatibilityWarningModal.Cancel') }}
+        </Button>
         <Button color="primary" :disabled="installing" @click="install()">
-          <DownloadIcon /> {{ installing ? 'Installing' : 'Install' }}
+          <DownloadIcon />
+          {{ installing ? t('IncompatibilityWarningModal.Installing') : t('IncompatibilityWarningModal.Install') }}
         </Button>
       </div>
     </div>
@@ -56,12 +60,14 @@
 </template>
 
 <script setup>
-import { Button, Modal, XIcon, DownloadIcon, DropdownSelect, formatCategory } from 'omorphia'
+import { Button, DownloadIcon, DropdownSelect, formatCategory, Modal, XIcon } from 'omorphia'
 import { add_project_from_version as installMod } from '@/helpers/profile'
 import { ref } from 'vue'
 import { handleError, useTheming } from '@/store/state.js'
 import { mixpanel_track } from '@/helpers/mixpanel'
+import { i18n } from '@/main.js'
 
+const t = i18n.global.t
 const themeStore = useTheming()
 
 const instance = ref(null)
@@ -73,7 +79,8 @@ const selectedVersion = ref(null)
 const incompatibleModal = ref(null)
 const installing = ref(false)
 
-let markInstalled = () => {}
+let markInstalled = () => {
+}
 
 defineExpose({
   show: (
@@ -96,7 +103,7 @@ defineExpose({
     markInstalled = extMarkInstalled
 
     mixpanel_track('ProjectInstallStart', { source: 'ProjectIncompatibilityWarningModal' })
-  },
+  }
 })
 
 const install = async () => {
@@ -113,7 +120,7 @@ const install = async () => {
     version_id: selectedVersion.value.id,
     project_type: projectType.value,
     title: projectTitle.value,
-    source: 'ProjectIncompatibilityWarningModal',
+    source: 'ProjectIncompatibilityWarningModal'
   })
 }
 </script>

@@ -26,7 +26,8 @@ import { mixpanel_track } from '@/helpers/mixpanel'
 import { useTheming } from '@/store/theme.js'
 import { useRouter } from 'vue-router'
 import { tauri } from '@tauri-apps/api'
-
+import { i18n } from '@/main.js';
+const t = i18n.global.t;
 const themeStore = useTheming()
 const router = useRouter()
 
@@ -216,7 +217,7 @@ const check_valid = computed(() => {
 <template>
   <Modal
     ref="installModal"
-    header="Install project to instance"
+    :header="t('ModInstallModal.InstallToInstance')"
     :noblur="!themeStore.advancedRendering"
   >
     <div class="modal-body">
@@ -225,7 +226,7 @@ const check_valid = computed(() => {
         autocomplete="off"
         type="text"
         class="search"
-        placeholder="Search for an instance"
+        :placeholder="t('ModInstallModal.SearchInstance')"
       />
       <div class="profiles" :class="{ 'hide-creation': !showCreation }">
         <div v-for="profile in profiles" :key="profile.metadata.name" class="option">
@@ -248,7 +249,7 @@ const check_valid = computed(() => {
           <div
             v-tooltip="
               profile.metadata.linked_data?.locked && !profile.installedMod
-                ? 'Unpair or unlock an instance to add mods.'
+                ? t('ModInstallModal.UnpairWarn')
                 : ''
             "
           >
@@ -262,12 +263,12 @@ const check_valid = computed(() => {
               <CheckIcon v-else-if="profile.installedMod" />
               {{
                 profile.installing
-                  ? 'Installing...'
+                  ? t('ModInstallModal.Installing')
                   : profile.installedMod
-                  ? 'Installed'
+                  ?  t('ModInstallModal.Installed')
                   : profile.metadata.linked_data && profile.metadata.linked_data.locked
-                  ? 'Paired'
-                  : 'Install'
+                  ?  t('ModInstallModal.Paired')
+                  :  t('ModInstallModal.Install')
               }}
             </Button>
           </div>
@@ -280,11 +281,11 @@ const check_valid = computed(() => {
             <div class="creation-icon__description">
               <Button @click="upload_icon()">
                 <UploadIcon />
-                <span class="no-wrap"> Select icon </span>
+                <span class="no-wrap"> {{ t('ModInstallModal.SelectIcon')}} </span>
               </Button>
               <Button :disabled="!display_icon" @click="reset_icon()">
                 <XIcon />
-                <span class="no-wrap"> Remove icon </span>
+                <span class="no-wrap"> {{ t('ModInstallModal.RemoveIcon')}} </span>
               </Button>
             </div>
           </div>
@@ -293,12 +294,12 @@ const check_valid = computed(() => {
               v-model="name"
               autocomplete="off"
               type="text"
-              placeholder="Name"
+              :placeholder="t('ModInstallModal.Name')"
               class="creation-input"
             />
             <Button :disabled="creatingInstance === true || !check_valid" @click="createInstance()">
               <RightArrowIcon />
-              {{ creatingInstance ? 'Creating...' : 'Create' }}
+              {{ creatingInstance ?  t('ModInstallModal.Creating') :  t('ModInstallModal.Create') }}
             </Button>
           </div>
         </div>
@@ -306,9 +307,9 @@ const check_valid = computed(() => {
       <div class="input-group push-right">
         <Button :color="showCreation ? '' : 'primary'" @click="toggleCreation()">
           <PlusIcon />
-          {{ showCreation ? 'Hide New Instance' : 'Create new instance' }}
+          {{ showCreation ?  t('ModInstallModal.HideNew') :  t('ModInstallModal.CreateNew') }}
         </Button>
-        <Button @click="installModal.hide()">Cancel</Button>
+        <Button @click="installModal.hide()">{{  t('ModInstallModal.Cancel') }}</Button>
       </div>
     </div>
   </Modal>
