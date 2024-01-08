@@ -53,7 +53,7 @@
           </Button>
         </div>
       </div>
-      <div v-if="accounts.length > 0" class="logged-out account">
+      <div v-if="accounts.length > 0" class="logged-out account-fix account">
         <Button @click="login()">
           <LogInIcon />
           {{ t('AccountsCard.License') }}
@@ -327,7 +327,7 @@ onUnmounted(() => {
 .logged-out {
   background: var(--color-bg);
   border-radius: var(--radius-lg);
-  gap: 1rem;
+  gap: 0.5rem;
 }
 
 .account {
@@ -335,12 +335,16 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   text-align: left;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.5rem;
 
   h4,
   p {
     margin: 0;
   }
+}
+.account-fix {
+  width: auto;
+  margin: auto;
 }
 
 .account-card {
@@ -353,7 +357,7 @@ onUnmounted(() => {
   gap: 0.5rem;
   padding: 1rem;
   border: 1px solid var(--color-button-bg);
-  width: max-content;
+  width: min-content;
   user-select: none;
   -ms-user-select: none;
   -webkit-user-select: none;
