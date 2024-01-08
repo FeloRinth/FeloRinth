@@ -1,5 +1,5 @@
+![ar_wm](https://github.com/DIDIRUS4/AstralRinth/assets/77334306/8238ac2d-ca07-4f50-ba91-f457ab5e287e)
 # Theseus: Empowering Your Minecraft Adventure with Modrinth
-
 Welcome to Theseus, the ultimate game launcher designed to enhance your Minecraft experience through the Modrinth platform. Whether you're a command-line connoisseur, a graphical interface enthusiast, or a developer integrating Modrinth projects, Theseus is your gateway to a new level of Minecraft gaming.
 
 ## Components
