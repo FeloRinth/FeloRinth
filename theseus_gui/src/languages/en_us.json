@@ -109,7 +109,7 @@
   "AccountsCard": {
     "MinecraftAccounts": "Minecraft accounts",
     "Active": "Active",
-    "NoAccount": "You don't have account",
+    "NoAccount": "You don't have account, please authenticate",
     "Logout": "Log out",
     "LoginLicense": "Log in Microsoft",
     "LoginOffline": "Log in Pirate",
@@ -121,7 +121,7 @@
     "CopyCode": "Copy code",
     "CopyLink": "Copy link",
     "PasteMS": "Paste the copied code in the browser on the Microsoft page.",
-    "Username": "Provide minecraft user name",
+    "Username": "Provide minecraft nickname",
     "UsernamePl": "The input field",
     "Add": "Add",
     "TryAgainError": "Unfortunately, we cannot accept such a username, please try again!",

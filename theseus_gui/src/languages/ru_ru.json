@@ -109,7 +109,7 @@
   "AccountsCard": {
     "MinecraftAccounts": "Аккаунты Minecraft",
     "Active": "Активный",
-    "NoAccount": "У вас нет аккаунта",
+    "NoAccount": "У вас нет аккаунта, авторизируйтесь",
     "Logout": "Выйти",
     "LoginLicense": "Войти в Microsoft",
     "LoginOffline": "Войти в обычный",
@@ -121,7 +121,7 @@
     "CopyCode": "Скопировать код",
     "CopyLink": "Скопировать ссылку",
     "PasteMS": "Вставьте скопированный код в браузере на странице Microsoft.",
-    "Username": "Укажите имя пользователя Minecraft",
+    "Username": "Введите никнейм Minecraft",
     "UsernamePl": "Поле для ввода",
     "Add": "Добавить",
     "TryAgainError": "К сожалению, мы не можем принять такое имя пользователя, пожалуйста, попробуйте снова!",
