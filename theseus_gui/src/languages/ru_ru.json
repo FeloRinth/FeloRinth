@@ -102,7 +102,8 @@
     "OurGithub": "нашем Github",
     "Remote": "Последняя версия на удаленном репозитории",
     "Local": "Локальная установленная версия",
-    "DownloadButton": "Скачать через Github"
+    "DownloadButton": "Скачать через Github",
+    "DevelopmentBuild": "Вы используете сборку для разработки, может возникнуть непредвиденная ошибка"
   },
   "RunningAppBar": {
     "GetSupport": "Поддержка",

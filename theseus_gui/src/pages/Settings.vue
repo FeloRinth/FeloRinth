@@ -23,7 +23,7 @@ import ModrinthLoginScreen from '@/components/ui/tutorial/ModrinthLoginScreen.vu
 import { mixpanel_opt_out_tracking, mixpanel_opt_in_tracking } from '@/helpers/mixpanel'
 import { open } from '@tauri-apps/api/dialog'
 import { getOS } from '@/helpers/utils.js'
-import { version, patch_version } from '../../package.json'
+import { version, patch_version, development_build } from '../../package.json'
 import { useLanguage } from '@/store/language.js'
 import { i18n } from '@/main.js';
 import { PirateShip } from '@/assets/render/index.js'
@@ -638,25 +638,65 @@ await forceRefreshRemote() // Calling when Settings.vue opened
           <UpdatedIcon/>
         </Button>
       </div>
+      <div v-if="development_build">
+        <label >
+          <span><a class="development option">{{ t('Settings.DevelopmentBuild') }}</a></span>
+        </label>
+      </div>
     </Card>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.option {
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+  //gap: 2rem;
+  width: auto;
+  display: inline-flex;
+  align-items: center;;
+  margin-top: 1.5rem;
+  margin-left: 20rem;
+  padding: 0.5rem;
+
+  h4,
+  p {
+    margin: 0;
+  }
+}
+
+
+
+a.development {
+  color: #ff6a00;
+  text-decoration: none;
+  text-shadow: 0 0 4px rgba(79, 173, 255, 0.5),
+  0 0 8px rgba(14, 98, 204, 0.5),
+  0 0 12px rgba(122, 31, 199, 0.5);
+  transition: color 1.5s ease;
+}
+
+a.development:hover,
+a.development:focus,
+a.development:active {
+  color: #4800d3;
+  text-shadow: #801313;
+}
+
 a.github {
   color: #3e8cde;
   text-decoration: none;
   text-shadow: 0 0 4px rgba(79, 173, 255, 0.5),
   0 0 8px rgba(14, 98, 204, 0.5),
   0 0 12px rgba(122, 31, 199, 0.5);
-  transition: color 0.6s ease;
+  transition: color 0.35s ease;
 }
 
 a.github:hover,
 a.github:focus,
 a.github:active {
-  color: #0fe007;
-  text-shadow: none;
+  color: #10fae5;
+  text-shadow: #26065e;
 }
 
 .icon-line-fix {
