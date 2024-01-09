@@ -320,7 +320,7 @@ onUnmounted(() => {
   background: var(--color-brand-highlight);
   border-radius: var(--radius-lg);
   color: var(--color-contrast);
-  margin-right: 0.5rem;
+  //margin-right: 0.5rem;
   gap: 1rem;
 }
 
@@ -335,7 +335,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   text-align: left;
-  padding: 0.5rem 0.5rem;
+  padding: 0.5rem;
 
   h4,
   p {
@@ -379,8 +379,9 @@ onUnmounted(() => {
 }
 
 .account-buttons-fix {
-  margin: auto;
+  //margin: auto;
   display: flex;
+  //gap: 2rem
 }
 
 .trash-icon-selected-fix {
@@ -460,10 +461,10 @@ onUnmounted(() => {
 .account-row {
   display: flex;
   flex-direction: row;
-  gap: 0.5rem;
+  gap: 0.25rem;
   vertical-align: center;
   justify-content: space-between;
-  padding-right: 1rem;
+  padding-right: 0.5rem;
 }
 
 .fade-enter-active,
