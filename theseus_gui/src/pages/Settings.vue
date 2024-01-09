@@ -26,7 +26,7 @@ import { getOS } from '@/helpers/utils.js'
 import { version, patch_version } from '../../package.json'
 import { useLanguage } from '@/store/language.js'
 import { i18n } from '@/main.js';
-import PirateShipIcon from '../components/ui/render/PirateShip.vue'
+import { PirateShip } from '@/assets/render/index.js'
 const t = i18n.global.t;
 const pageOptions = ['Home', 'Library']
 
@@ -621,7 +621,7 @@ await forceRefreshRemote() // Calling when Settings.vue opened
       </div>
       <div>
         <label>
-          <span class="label__title">AstralRinth <PirateShipIcon class="icon-line-fix"/>Version</span>
+          <span class="label__title">AstralRinth <PirateShip class="icon-line-fix"/>Version</span>
           <span class="label__subdescription">Theseus version: v{{ version }}. Our patch version: v{{ patch_version }} </span>
           <span class="label__description">The latest releases are available on <a class="github" :href="astraliumHref" target="_blank" rel="noopener noreferrer">our Github</a></span>
 
@@ -631,9 +631,9 @@ await forceRefreshRemote() // Calling when Settings.vue opened
             <span id="releaseData"></span></a>
           </span>
           <span class="label__description">Local installed version is v{{ version }}{{ patch_version }}</span>
-          <a :href="githubHref"><Button :disabled="blockdownload" class="remote-update-fix" color="primary"><DownloadIcon/>Download via github
-          </Button></a>
         </label>
+        <a :href="githubHref"><Button :disabled="blockdownload" class="remote-update-fix" color="primary"><DownloadIcon/>Download via github
+        </Button></a>
         <Button class="icon-line-fix" icon-only @click="forceRefreshRemote">
           <UpdatedIcon/>
         </Button>

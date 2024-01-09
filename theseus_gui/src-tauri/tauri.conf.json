@@ -83,7 +83,7 @@
       }
     },
     "security": {
-      "csp": "default-src 'self'; connect-src https://modrinth.com https://*.modrinth.com https://mixpanel.com https://*.mixpanel.com https://*.cloudflare.com https://api.mclo.gs; font-src https://cdn-raw.modrinth.com/fonts/inter/; img-src tauri: https: data: blob: asset: https://asset.localhost; script-src https://*.cloudflare.com 'self' 'unsafe-eval' 'sha256-qI6/iDpFRcrQvD88dpuloNxSy8DwdlZzYyHGlvNwjYU=' 'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='; frame-src https://*.cloudflare.com https://www.youtube.com 'self'; style-src 'self' 'unsafe-inline';"
+      "csp": "default-src 'self'; connect-src https://api.github.com https://modrinth.com https://*.modrinth.com https://mixpanel.com https://*.mixpanel.com https://*.cloudflare.com https://api.mclo.gs; font-src https://cdn-raw.modrinth.com/fonts/inter/; img-src tauri: https: data: blob: asset: https://asset.localhost; script-src https://*.cloudflare.com 'self' 'unsafe-eval' 'sha256-qI6/iDpFRcrQvD88dpuloNxSy8DwdlZzYyHGlvNwjYU=' 'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='; frame-src https://*.cloudflare.com https://www.youtube.com 'self'; style-src 'self' 'unsafe-inline';"
     },
     "updater": {
       "active": true,

@@ -39,10 +39,10 @@
         <h4>{{ t('AccountsCard.NoAccount') }}</h4>
         <div class="trash-icon-selected-fix account-no-account-fix">
         <Button v-tooltip="t('AccountsCard.LoginLicense')" icon-only color="secondary" @click="login()">
-          <MicrosoftIcon class="account-type-no-account"/>
+          <Microsoft class="account-type-no-account"/>
         </Button>
         <Button v-tooltip="t('AccountsCard.LoginOffline')" icon-only color="secondary" @click="loginOffline()">
-          <PirateIcon class="account-type-no-account"/>
+          <Pirate class="account-type-no-account"/>
         </Button>
         </div>
       </div>
@@ -61,11 +61,11 @@
       </div>
       <div v-if="accounts.length > 0" class="logged-out account-fix account">
         <Button @click="login()">
-          <MicrosoftIcon />
+          <Microsoft />
           {{ t('AccountsCard.License') }}
         </Button>
         <Button @click="loginOffline()">
-          <PirateIcon />
+          <Pirate />
           {{ t('AccountsCard.Pirate') }}
         </Button>
       </div>
@@ -135,8 +135,6 @@
 import { i18n } from '@/main.js'
 import { Avatar, Button, Card, ClipboardCopyIcon, GlobeIcon, LogInIcon, Modal, PlusIcon, TrashIcon } from 'omorphia'
 
-import MicrosoftIcon from './render/Microsoft.vue'
-import PirateIcon from './render/Pirate.vue'
 import { computed, onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue'
 import {
   authenticate_await_completion,
@@ -151,6 +149,7 @@ import { useTheming } from '@/store/theme.js'
 import { mixpanel_track } from '@/helpers/mixpanel'
 import QrcodeVue from 'qrcode.vue'
 import { process_listener } from '@/helpers/events'
+import { Pirate, Microsoft} from '@/assets/render/index.js'
 
 const t = i18n.global.t
 
@@ -202,9 +201,9 @@ async function setAccount(account) {
 
 function printAccountType(account) {
   if (account.access_token == 'null') {
-    return PirateIcon
+    return Pirate
   } else {
-    return MicrosoftIcon
+    return Microsoft
   }
 }
 
