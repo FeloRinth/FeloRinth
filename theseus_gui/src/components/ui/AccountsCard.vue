@@ -35,9 +35,9 @@
           <TrashIcon/>
         </Button>
       </div>
-      <div v-else class="logged-out account">
+      <div v-else class="logged-out no-account">
         <h4>{{ t('AccountsCard.NoAccount') }}</h4>
-        <div class="trash-icon-selected-fix account-no-account-fix">
+        <div class="account-no-account-fix">
         <Button v-tooltip="t('AccountsCard.LoginLicense')" icon-only color="secondary" @click="login()">
           <Microsoft class="account-type-no-account"/>
         </Button>
@@ -343,6 +343,19 @@ onUnmounted(() => {
   }
 }
 
+.no-account {
+  width: 20rem;
+  display: flex;
+  align-items: center;
+  text-align: left;
+  padding: 0.5rem;
+
+  h4,
+  p {
+    margin: 0;
+  }
+}
+
 .account-type {
   display: inline-flex;
   margin-left: 0.3rem;
@@ -359,9 +372,10 @@ onUnmounted(() => {
 }
 
 .account-no-account-fix {
-  width: auto;
-  margin-left: auto;
+  width: max-content;
   gap: 0.5rem;
+  display: flex;
+  margin-left: 3rem;
 }
 
 .account-buttons-fix {
@@ -374,13 +388,8 @@ onUnmounted(() => {
   margin-left: auto;
 }
 
-.trash-icon-selected-fix {
-  display: flex;
-  margin-left: auto;
-}
-
 .account-card {
-  width: 32%; // Change this percent value for rescale AccountsCard.vue window
+  width: min-content; // Change this percent value for rescale AccountsCard.vue window
   position: absolute;
   display: flex;
   flex-direction: column;

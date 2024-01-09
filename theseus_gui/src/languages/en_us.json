@@ -97,7 +97,12 @@
     "EnterWrapper": "Enter wrapper command...",
     "EnterEnvVars": "Enter environmental variables...",
     "EnterJavaArgs": "Enter java arguments...",
-    "Display": "Display"
+    "Display": "Display",
+    "LatestAvailable": "The latest releases are available on",
+    "OurGithub": "our Github",
+    "Remote": "Remote latest version is",
+    "Local": "Local installed version is",
+    "DownloadButton": "Download via github"
   },
   "RunningAppBar": {
     "GetSupport": "Support",
@@ -109,7 +114,7 @@
   "AccountsCard": {
     "MinecraftAccounts": "Minecraft accounts",
     "Active": "Active",
-    "NoAccount": "You don't have account, please authenticate",
+    "NoAccount": "You don't have account",
     "Logout": "Log out",
     "LoginLicense": "Log in Microsoft",
     "LoginOffline": "Log in Pirate",

@@ -97,7 +97,12 @@
     "EnterWrapper": "Введите команду оболочки...",
     "EnterEnvVars": "Введите переменные среды...",
     "EnterJavaArgs": "Введите аргументы Java...",
-    "Display": "Изображение"
+    "Display": "Изображение",
+    "LatestAvailable": "Последние релизы доступны на",
+    "OurGithub": "нашем Github",
+    "Remote": "Последняя версия на удаленном репозитории",
+    "Local": "Локальная установленная версия",
+    "DownloadButton": "Скачать через Github"
   },
   "RunningAppBar": {
     "GetSupport": "Поддержка",
