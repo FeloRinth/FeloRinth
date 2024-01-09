@@ -621,18 +621,18 @@ await forceRefreshRemote() // Calling when Settings.vue opened
       </div>
       <div>
         <label>
-          <span class="label__title">AstralRinth <PirateShip class="icon-line-fix"/>Version</span>
-          <span class="label__subdescription">Theseus version: v{{ version }}. Our patch version: v{{ patch_version }} </span>
-          <span class="label__description">The latest releases are available on <a class="github" :href="astraliumHref" target="_blank" rel="noopener noreferrer">our Github</a></span>
+          <span class="label__title">AstralRinth <PirateShip class="icon-line-fix"/> Version</span>
+          <span class="label__subdescription">Modrinth/Theseus version: v{{ version }}. Patch version: v{{ patch_version }} </span>
+          <span class="label__description">{{ t('Settings.LatestAvailable') }} <a class="github" :href="astraliumHref" target="_blank" rel="noopener noreferrer">{{ t('Settings.OurGithub') }}</a></span>
 
           <span class="label__title">Update Checker</span>
 
-          <span class="label__subdescription">Remote latest version is <a class="github">
+          <span class="label__subdescription">{{ t('Settings.Remote') }} <a class="github">
             <span id="releaseData"></span></a>
           </span>
-          <span class="label__description">Local installed version is v{{ version }}{{ patch_version }}</span>
+          <span class="label__description">{{ t('Settings.Local') }} v{{ version }}{{ patch_version }}</span>
         </label>
-        <a :href="githubHref"><Button :disabled="blockdownload" class="remote-update-fix" color="primary"><DownloadIcon/>Download via github
+        <a :href="githubHref"><Button :disabled="blockdownload" class="remote-update-fix" color="primary"><DownloadIcon/>{{ t('Settings.DownloadButton') }}
         </Button></a>
         <Button class="icon-line-fix" icon-only @click="forceRefreshRemote">
           <UpdatedIcon/>
