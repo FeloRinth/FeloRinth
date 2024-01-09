@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "AstralRinth App",
-    "version": "0.6.316"
+    "version": "0.6.317"
   },
   "tauri": {
     "allowlist": {

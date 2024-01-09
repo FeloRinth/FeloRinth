@@ -26,41 +26,47 @@
       <div v-if="selectedAccount" class="selected account">
         <Avatar size="xs" :src="`https://mc-heads.net/avatar/${selectedAccount.username}/128`" />
         <div>
-          <h4>{{ printAccountNameType(selectedAccount) }}</h4>
+          <h4 class="account-type">{{ selectedAccount.username }}
+            <component :is="printAccountType(selectedAccount)" class="account-type" />
+          </h4>
           <p>{{ t('AccountsCard.Active') }}</p>
         </div>
-        <Button v-tooltip="t('AccountsCard.Logout')" icon-only color="raised" @click="logout(selectedAccount.id)">
-          <TrashIcon />
+        <Button v-tooltip="t('AccountsCard.Logout')" class="trash-icon-selected-fix" icon-only color="raised" @click="logout(selectedAccount.id)">
+          <TrashIcon/>
         </Button>
       </div>
       <div v-else class="logged-out account">
         <h4>{{ t('AccountsCard.NoAccount') }}</h4>
-        <Button v-tooltip="t('AccountsCard.LoginLicense')" icon-only color="primary" @click="login()">
-          <LogInIcon />
+        <div class="trash-icon-selected-fix account-no-account-fix">
+        <Button v-tooltip="t('AccountsCard.LoginLicense')" icon-only color="secondary" @click="login()">
+          <MicrosoftIcon class="account-type-no-account"/>
         </Button>
         <Button v-tooltip="t('AccountsCard.LoginOffline')" icon-only color="secondary" @click="loginOffline()">
-          <LogInIcon />
+          <PirateIcon class="account-type-no-account"/>
         </Button>
+        </div>
       </div>
 
       <div v-if="displayAccounts.length > 0" class="account-group">
         <div v-for="account in displayAccounts" :key="account.id" class="account-row">
           <Button class="option account" @click="setAccount(account)">
             <Avatar :src="`https://mc-heads.net/avatar/${account.username}/128`" class="icon" />
-            <p>{{ printAccountNameType(account) }}</p>
+            <p class="account-type">{{ account.username }}
+              <component :is="printAccountType(account)" class="account-type" />
+            </p>
           </Button>
-          <Button v-tooltip="t('AccountsCard.Logout')" icon-only @click="logout(account.id)">
+          <Button v-tooltip="t('AccountsCard.Logout')" class="account-buttons-fix" icon-only @click="logout(account.id)">
             <TrashIcon />
           </Button>
         </div>
       </div>
       <div v-if="accounts.length > 0" class="logged-out account-fix account">
         <Button @click="login()">
-          <LogInIcon />
+          <MicrosoftIcon />
           {{ t('AccountsCard.License') }}
         </Button>
         <Button @click="loginOffline()">
-          <LogInIcon />
+          <PirateIcon />
           {{ t('AccountsCard.Pirate') }}
         </Button>
       </div>
@@ -129,26 +135,17 @@
 
 <script setup>
 import { i18n } from '@/main.js'
+import { Avatar, Button, Card, ClipboardCopyIcon, GlobeIcon, LogInIcon, Modal, PlusIcon, TrashIcon } from 'omorphia'
 
-const t = i18n.global.t
-
+import MicrosoftIcon from './render/Microsoft.vue'
+import PirateIcon from './render/Pirate.vue'
+import { computed, onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue'
 import {
-  Avatar,
-  Button,
-  Card,
-  PlusIcon,
-  TrashIcon,
-  LogInIcon,
-  Modal,
-  GlobeIcon,
-  ClipboardCopyIcon
-} from 'omorphia'
-import { ref, computed, onMounted, onBeforeUnmount, onUnmounted } from 'vue'
-import {
-  users,
-  remove_user,
+  authenticate_await_completion,
   authenticate_begin_flow,
-  authenticate_await_completion, offline_authenticate_await_completion
+  offline_authenticate_await_completion,
+  remove_user,
+  users
 } from '@/helpers/auth'
 import { get, set } from '@/helpers/settings'
 import { handleError } from '@/store/state.js'
@@ -156,6 +153,8 @@ import { useTheming } from '@/store/theme.js'
 import { mixpanel_track } from '@/helpers/mixpanel'
 import QrcodeVue from 'qrcode.vue'
 import { process_listener } from '@/helpers/events'
+
+const t = i18n.global.t
 
 defineProps({
   mode: {
@@ -204,13 +203,14 @@ async function setAccount(account) {
   emit('change')
 }
 
-function printAccountNameType(account) {
-  if (account.access_token == "null") {
-    return account.username + " • " + t('AccountsCard.Pirate')
+function printAccountType(account) {
+  if (account.access_token == 'null') {
+    return PirateIcon
   } else {
-    return account.username + " • " + t('AccountsCard.License')
+    return MicrosoftIcon
   }
 }
+
 const clipboardWrite = async (a) => {
   navigator.clipboard.writeText(a)
 }
@@ -249,7 +249,7 @@ async function loginOffline() {
 
 async function tryLoginOffline() { // By AstralRinth
   let name = playerName.value
-  if (name.length > 1 && name.length < 32 && name !== '') {
+  if (name.length > 1 && name.length < 20 && name !== '') {
     const loggedIn = await offline_authenticate_await_completion(name).catch(handleError)
     loginOfflineModal.value.hide()
     if (loggedIn) {
@@ -324,6 +324,7 @@ onUnmounted(() => {
   background: var(--color-brand-highlight);
   border-radius: var(--radius-lg);
   color: var(--color-contrast);
+  margin-right: 0.5rem;
   gap: 1rem;
 }
 
@@ -334,7 +335,7 @@ onUnmounted(() => {
 }
 
 .account {
-  width: max-content;
+  width: auto;
   display: flex;
   align-items: center;
   text-align: left;
@@ -345,12 +346,45 @@ onUnmounted(() => {
     margin: 0;
   }
 }
+
+.account-type {
+  display: inline-flex;
+  margin-left: 0.3rem;
+}
+
+.account-type-no-account {
+  display: inline-flex;
+  margin-left: 0.7rem;
+}
+
 .account-fix {
   width: auto;
   margin: auto;
 }
 
+.account-no-account-fix {
+  width: auto;
+  margin-left: auto;
+  gap: 0.5rem;
+}
+
+.account-buttons-fix {
+  margin: auto;
+  display: flex;
+}
+
+.trash-icon-selected-fix {
+  display: flex;
+  margin-left: auto;
+}
+
+.trash-icon-selected-fix {
+  display: flex;
+  margin-left: auto;
+}
+
 .account-card {
+  width: 32%; // Change this percent value for rescale AccountsCard.vue window
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -360,7 +394,6 @@ onUnmounted(() => {
   gap: 0.5rem;
   padding: 1rem;
   border: 1px solid var(--color-button-bg);
-  width: min-content;
   user-select: none;
   -ms-user-select: none;
   -webkit-user-select: none;

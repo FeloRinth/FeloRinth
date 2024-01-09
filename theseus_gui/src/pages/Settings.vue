@@ -12,6 +12,7 @@ import {
   BoxIcon,
   FolderSearchIcon,
   UpdatedIcon,
+  DownloadIcon
 } from 'omorphia'
 import { handleError, useTheming } from '@/store/state'
 import { is_dir_writeable, change_config_dir, get, set } from '@/helpers/settings'
@@ -25,6 +26,7 @@ import { getOS } from '@/helpers/utils.js'
 import { version, patch_version } from '../../package.json'
 import { useLanguage } from '@/store/language.js'
 import { i18n } from '@/main.js';
+import PirateShipIcon from '../components/ui/render/PirateShip.vue'
 const t = i18n.global.t;
 const pageOptions = ['Home', 'Library']
 
@@ -146,6 +148,62 @@ async function refreshDir() {
   settings.value = await accessSettings().catch(handleError)
   settingsDir.value = settings.value.loaded_config_dir
 }
+
+
+const astraliumHref = "https://www.astralium.su/get/ar"
+const githubHref = "https://github.com/DIDIRUS4/AstralRinth/releases/latest"
+const apiUrl = `https://api.github.com/repos/DIDIRUS4/AstralRinth/releases/latest`
+const failedPattern = `Failed to fetch remote AR releases:`
+const blockdownload = ref(true)
+async function forceRefreshRemote() {
+  fetch(apiUrl)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch releases. Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      const latestRelease = data.name;
+
+      const releaseData = document.getElementById('releaseData');
+      if (!releaseData) {
+        console.error("Release data element not found.");
+        return;
+      }
+
+      releaseData.textContent = latestRelease;
+
+      const v = `v`;
+      const localVersion = `${v}${version}${patch_version}`;
+      const remoteVersion = `${releaseData.textContent}`;
+
+      if (remoteVersion && remoteVersion.startsWith(localVersion)) {
+        console.log('No updates found.');
+        blockdownload.value = true
+      } else if (remoteVersion && remoteVersion.startsWith(v)) {
+        console.log('New update available');
+        blockdownload.value = false
+      } else {
+        blockdownload.value = true
+      }
+
+      console.log(blockdownload.value)
+    })
+    .catch((error) => {
+      console.log(failedPattern, error)
+      const errorData = document.getElementById('releaseData');
+      if (errorData) {
+        errorData.textContent = `${error.message}`;
+      }
+      blockdownload.value = true
+
+      console.log(blockdownload.value)
+
+    })
+}
+
+await forceRefreshRemote() // Calling when Settings.vue opened
 </script>
 
 <template>
@@ -563,15 +621,63 @@ async function refreshDir() {
       </div>
       <div>
         <label>
-          <span class="label__title">AstralRinth Version</span>
-          <span class="label__description">Theseus version: v{{ version }}. Our patch version: v{{ patch_version }} </span>
+          <span class="label__title">AstralRinth <PirateShipIcon class="icon-line-fix"/>Version</span>
+          <span class="label__subdescription">Theseus version: v{{ version }}. Our patch version: v{{ patch_version }} </span>
+          <span class="label__description">The latest releases are available on <a class="github" :href="astraliumHref" target="_blank" rel="noopener noreferrer">our Github</a></span>
+
+          <span class="label__title">Update Checker</span>
+
+          <span class="label__subdescription">Remote latest version is <a class="github">
+            <span id="releaseData"></span></a>
+          </span>
+          <span class="label__description">Local installed version is v{{ version }}{{ patch_version }}</span>
+          <a :href="githubHref"><Button :disabled="blockdownload" class="remote-update-fix" color="primary"><DownloadIcon/>Download via github
+          </Button></a>
         </label>
+        <Button class="icon-line-fix" icon-only @click="forceRefreshRemote">
+          <UpdatedIcon/>
+        </Button>
       </div>
     </Card>
   </div>
 </template>
 
 <style lang="scss" scoped>
+a.github {
+  color: #3e8cde;
+  text-decoration: none;
+  text-shadow: 0 0 4px rgba(79, 173, 255, 0.5),
+  0 0 8px rgba(14, 98, 204, 0.5),
+  0 0 12px rgba(122, 31, 199, 0.5);
+  transition: color 0.6s ease;
+}
+
+a.github:hover,
+a.github:focus,
+a.github:active {
+  color: #0fe007;
+  text-shadow: none;
+}
+
+.icon-line-fix {
+  display: inline-flex;
+  margin-left: 0.3rem;
+}
+
+.remote-update-fix {
+  display: inline-flex;
+  //width: ;
+  //margin-left: -0.2rem;
+
+  .iconified-input {
+    flex-grow: 1;
+
+    input {
+      flex-basis: auto;
+    }
+  }
+}
+
 .settings-page {
   margin: 1rem;
 }
