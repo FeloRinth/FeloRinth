@@ -624,12 +624,12 @@ await forceRefreshRemote() // Calling when Settings.vue opened
       <div>
         <label>
           <span class="label__title">AstralRinth <PirateShip class="icon-line-fix"/> Version</span>
-          <span class="label__subdescription">Modrinth/Theseus version: v{{ version }}. Patch version: v{{ patch_version }} </span>
+          <span class="label__description">Modrinth/Theseus version: v{{ version }}. Patch version: v{{ patch_version }} </span>
           <span class="label__description">{{ t('Settings.LatestAvailable') }} <a class="github" :href="astraliumHref" target="_blank" rel="noopener noreferrer">{{ t('Settings.OurGithub') }}</a></span>
 
           <span class="label__title">Update Checker</span>
 
-          <span class="label__subdescription">{{ t('Settings.Remote') }} <a id="releaseData" class="cosmic"></a>
+          <span class="label__description">{{ t('Settings.Remote') }} <a class="cosmic" id="releaseData" ></a>
           </span>
           <span class="label__description">{{ t('Settings.Local') }} <a class="cosmic">v{{ version }}{{ patch_version }}</a></span>
         </label>
