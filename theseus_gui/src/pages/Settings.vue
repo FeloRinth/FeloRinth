@@ -614,24 +614,23 @@ await forceRefreshRemote() // Calling when Settings.vue opened
       </div>
     </Card>
     <Card>
-      <div class="label">
+      <div class="label inline-fix">
         <h3>
-          <span class="label__title size-card-header">{{ t('Settings.About') }}
+          <span class="label__title size-card-header in">{{ t('Settings.About') }}
             <p v-if="development_build" class="development option">{{ t('Settings.DevelopmentBuild') }}</p>
           </span>
         </h3>
       </div>
       <div>
         <label>
-          <span class="label__title">AstralRinth <PirateShip class="icon-line-fix"/> Version</span>
+          <span class="label__title inl">AstralRinth <PirateShip class="icon-line-fix"/> Version</span>
           <span class="label__description">Modrinth/Theseus version: v{{ version }}. Patch version: v{{ patch_version }} </span>
           <span class="label__description">{{ t('Settings.LatestAvailable') }} <a class="github" :href="astraliumHref" target="_blank" rel="noopener noreferrer">{{ t('Settings.OurGithub') }}</a></span>
 
           <span class="label__title">Update Checker</span>
 
-          <span class="label__description">{{ t('Settings.Remote') }} <a class="cosmic" id="releaseData" ></a>
-          </span>
-          <span class="label__description">{{ t('Settings.Local') }} <a class="cosmic">v{{ version }}{{ patch_version }}</a></span>
+          <span class="label__description">{{ t('Settings.Remote') }} <p class="cosmic inline-fix" id="releaseData"></p></span>
+          <span class="label__description">{{ t('Settings.Local') }} <p class="cosmic inline-fix">v{{ version }}{{ patch_version }}</p></span>
         </label>
         <a :href="githubHref"><Button :disabled="blockdownload" class="remote-update-fix" color="primary"><DownloadIcon/>{{ t('Settings.DownloadButton') }}
         </Button></a>
@@ -680,9 +679,9 @@ await forceRefreshRemote() // Calling when Settings.vue opened
   0 0 12px rgba(122, 31, 199, 0.5);
   transition: color 0.35s ease;
 }
-a.cosmic:hover,
-a.cosmic:focus,
-a.cosmic:active {
+.cosmic:hover,
+.cosmic:focus,
+.cosmic:active {
   color: #10fae5;
   text-shadow: #26065e;
 }
@@ -706,6 +705,13 @@ a.github:active {
 .icon-line-fix {
   display: inline-flex;
   margin-left: 0.3rem;
+}
+
+.inline-fix {
+  display: inline-flex;
+  margin-top: -2rem;
+  margin-bottom: -2rem;
+  //margin-left: 0.3rem;
 }
 
 .remote-update-fix {
