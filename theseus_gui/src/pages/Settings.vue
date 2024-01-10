@@ -616,7 +616,9 @@ await forceRefreshRemote() // Calling when Settings.vue opened
     <Card>
       <div class="label">
         <h3>
-          <span class="label__title size-card-header">{{t('Settings.About')}}</span>
+          <span class="label__title size-card-header">{{ t('Settings.About') }}
+            <p v-if="development_build" class="development option">{{ t('Settings.DevelopmentBuild') }}</p>
+          </span>
         </h3>
       </div>
       <div>
@@ -627,21 +629,15 @@ await forceRefreshRemote() // Calling when Settings.vue opened
 
           <span class="label__title">Update Checker</span>
 
-          <span class="label__subdescription">{{ t('Settings.Remote') }} <a class="github">
-            <span id="releaseData"></span></a>
+          <span class="label__subdescription">{{ t('Settings.Remote') }} <a id="releaseData" class="cosmic"></a>
           </span>
-          <span class="label__description">{{ t('Settings.Local') }} v{{ version }}{{ patch_version }}</span>
+          <span class="label__description">{{ t('Settings.Local') }} <a class="cosmic">v{{ version }}{{ patch_version }}</a></span>
         </label>
         <a :href="githubHref"><Button :disabled="blockdownload" class="remote-update-fix" color="primary"><DownloadIcon/>{{ t('Settings.DownloadButton') }}
         </Button></a>
         <Button class="icon-line-fix" icon-only @click="forceRefreshRemote">
           <UpdatedIcon/>
         </Button>
-      </div>
-      <div v-if="development_build">
-        <label >
-          <span><a class="development option">{{ t('Settings.DevelopmentBuild') }}</a></span>
-        </label>
       </div>
     </Card>
   </div>
@@ -651,23 +647,16 @@ await forceRefreshRemote() // Calling when Settings.vue opened
 .option {
   background: var(--color-bg);
   border-radius: var(--radius-lg);
-  //gap: 2rem;
   width: auto;
   display: inline-flex;
-  align-items: center;;
-  margin-top: 1.5rem;
-  margin-left: 20rem;
+  align-items: center;
+  margin-top: auto;
+  margin-left: 0.5rem;
+  font-size: 1rem;
   padding: 0.5rem;
-
-  h4,
-  p {
-    margin: 0;
-  }
 }
 
-
-
-a.development {
+.development {
   color: #ff6a00;
   text-decoration: none;
   text-shadow: 0 0 4px rgba(79, 173, 255, 0.5),
@@ -676,11 +665,26 @@ a.development {
   transition: color 1.5s ease;
 }
 
-a.development:hover,
-a.development:focus,
-a.development:active {
+.development:hover,
+.development:focus,
+.development:active {
   color: #4800d3;
   text-shadow: #801313;
+}
+
+.cosmic {
+  color: #3e8cde;
+  text-decoration: none;
+  text-shadow: 0 0 4px rgba(79, 173, 255, 0.5),
+  0 0 8px rgba(14, 98, 204, 0.5),
+  0 0 12px rgba(122, 31, 199, 0.5);
+  transition: color 0.35s ease;
+}
+a.cosmic:hover,
+a.cosmic:focus,
+a.cosmic:active {
+  color: #10fae5;
+  text-shadow: #26065e;
 }
 
 a.github {
@@ -708,7 +712,6 @@ a.github:active {
   display: inline-flex;
   //width: ;
   //margin-left: -0.2rem;
-
   .iconified-input {
     flex-grow: 1;
 
