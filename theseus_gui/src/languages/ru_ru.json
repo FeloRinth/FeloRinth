@@ -116,6 +116,7 @@
     "MinecraftAccounts": "Аккаунты Minecraft",
     "Active": "Активный",
     "NoAccount": "У вас нет аккаунта, авторизируйтесь",
+    "NoSelected": "Выберите аккаунт для игры",
     "Logout": "Выйти",
     "LoginLicense": "Войти в Microsoft",
     "LoginOffline": "Войти в обычный",

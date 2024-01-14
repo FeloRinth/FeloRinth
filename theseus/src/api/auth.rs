@@ -1,4 +1,5 @@
 //! Authentication flow interface
+use chrono::Utc;
 pub use inner::Credentials;
 
 use crate::{
@@ -38,14 +39,34 @@ pub async fn cancel_flow() -> crate::Result<()> {
 #[theseus_macros::debug_pin]
 pub async fn refresh(user: uuid::Uuid) -> crate::Result<Credentials> {
     let state = State::get().await?;
-    let users = state.users.write().await;
+    let mut users = state.users.write().await;
 
-    let credentials = users.get(user).ok_or_else(|| {
+    let mut credentials = users.get(user).ok_or_else(|| {
         crate::ErrorKind::OtherError(
             "You don't have an account, please add one. More information about adding an offline account can be found on our Github".to_string(),
         )
             .as_error()
     })?;
+
+    let offline = *state.offline.read().await;
+
+    if !offline {
+        let fetch_semaphore: &crate::util::fetch::FetchSemaphore =
+            &state.fetch_semaphore;
+        if (Utc::now() > credentials.expires && credentials.access_token != "null")
+            && inner::refresh_credentials(&mut credentials, fetch_semaphore)
+            .await
+            .is_err()
+        {
+            users.remove(credentials.id).await?;
+
+            return Err(crate::ErrorKind::OtherError(
+                "Please re-authenticate with your Microsoft Minecraft account!"
+                    .to_string(),
+            )
+                .as_error());
+        }
+    }
 
     Ok(credentials)
 }

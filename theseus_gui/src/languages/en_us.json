@@ -116,6 +116,7 @@
     "MinecraftAccounts": "Minecraft accounts",
     "Active": "Active",
     "NoAccount": "You don't have account",
+    "NoSelected": "Please, select account for game",
     "Logout": "Log out",
     "LoginLicense": "Log in Microsoft",
     "LoginOffline": "Log in Pirate",
