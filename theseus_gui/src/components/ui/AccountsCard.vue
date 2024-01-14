@@ -35,6 +35,9 @@
           <TrashIcon/>
         </Button>
       </div>
+      <div v-else-if="!selectedAccount && displayAccounts.length > 0" class="logged-out no-account">
+        <h4>{{ t('AccountsCard.NoSelected') }}</h4>
+      </div>
       <div v-else class="logged-out no-account">
         <h4>{{ t('AccountsCard.NoAccount') }}</h4>
         <div class="account-no-account-fix">
