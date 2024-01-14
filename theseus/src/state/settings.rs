@@ -106,7 +106,7 @@ impl Settings {
                 native_decorations: false,
                 default_page: DefaultPage::Home,
                 developer_mode: false,
-                opt_out_analytics: false,
+                opt_out_analytics: true, // Disabled by default in AstralRinth
                 advanced_rendering: true,
                 fully_onboarded: rescued, // If we rescued the settings file, we should consider the user fully onboarded
 

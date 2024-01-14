@@ -9,6 +9,7 @@ pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
             settings_get,
             settings_set,
             settings_change_config_dir,
+            // settings_migrate_config_dir,
             settings_is_dir_writeable
         ])
         .build()
@@ -38,6 +39,13 @@ pub async fn settings_change_config_dir(new_config_dir: PathBuf) -> Result<()> {
     settings::set_config_dir(new_config_dir).await?;
     Ok(())
 }
+
+// AR Migrate impl
+// #[tauri::command]
+// pub async fn settings_migrate_config_dir(mrPath: PathBuf) -> Result<()> {
+//     settings::migrate_config_dir(mrPath).await?;
+//     Ok(())
+// }
 
 #[tauri::command]
 pub async fn settings_is_dir_writeable(
