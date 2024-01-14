@@ -27,6 +27,11 @@ impl DirectoryInfo {
             .or_else(|| Some(dirs::config_dir()?.join("com.modrinth.theseus")))
     }
 
+    // pub fn get_initial_ar_dir() -> Option<PathBuf> {
+    //     Self::env_path("ASTRALRINTH_DIR")
+    //         .or_else(|| Some(dirs::config_dir()?.join("astralrinth")))
+    // }
+
     #[inline]
     pub fn get_initial_settings_file() -> crate::Result<PathBuf> {
         let settings_dir = Self::get_initial_settings_dir().ok_or(
@@ -53,11 +58,23 @@ impl DirectoryInfo {
             ),
         )?;
 
+        // let ar_settings_dir = Self::get_initial_ar_dir().ok_or(
+        //     crate::ErrorKind::FSError(
+        //         "Could not find valid AstralRinth dir".to_string(),
+        //     ),
+        // )?;
+
         fs::create_dir_all(&settings_dir).map_err(|err| {
             crate::ErrorKind::FSError(format!(
                 "Error creating Theseus config directory: {err}"
             ))
         })?;
+
+        // fs::create_dir_all(&ar_settings_dir).map_err(|err| {
+        //     crate::ErrorKind::FSError(format!(
+        //         "Error creating AstralRinth directory: {err}"
+        //     ))
+        // })?;
 
         // config directory (for instances, etc.)
         // by default this is the same as the settings directory

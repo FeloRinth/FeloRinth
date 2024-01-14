@@ -86,6 +86,7 @@ defineExpose({
 
     mixpanel_init('014c7d6a336d0efaefe3aca91063748d', { debug: dev, persistence: 'localStorage' })
     if (opt_out_analytics) {
+      console.info("[AR • Hard Disable Patch] • OPT_OUT_ANALYTICS (DISABLED) status is ", opt_out_analytics)
       mixpanel_opt_out_tracking()
     }
     mixpanel_track('Launched', { version, dev, fully_onboarded })

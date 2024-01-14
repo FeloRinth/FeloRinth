@@ -99,6 +99,36 @@ async function fetchSettings() {
   await set(fetchSettings).catch(handleError)
 }
 
+// const accessSettings = async () => {
+//   const settings = await get()
+//
+//   if (!settings.java_globals.JAVA_8) settings.java_globals.JAVA_8 = { path: '', version: '' }
+//   if (!settings.java_globals.JAVA_17) settings.java_globals.JAVA_17 = { path: '', version: '' }
+//
+//   settings.javaArgs = settings.custom_java_args.join(' ')
+//   settings.envArgs = settings.custom_env_args.map((x) => x.join('=')).join(' ')
+//
+//   return settings
+// }
+
+// const settings = ref(accessSettings)
+// async function migrateModrinthData() {
+//   settings.value = await accessSettings().catch(handleError)
+//
+//   const pathSeparator = settings.value.loaded_config_dir.includes('/') ? '/' : '\\';
+//   const pathComponents = settings.value.loaded_config_dir.split(pathSeparator);
+//
+//   pathComponents.pop();
+//   pathComponents.push("astralrinth")
+//
+//   let newPath = pathComponents.join(pathSeparator)
+//
+//   console.log(settings.value.loaded_config_dir)
+//   console.log(newPath)
+//   // await migrate_config_dir(mrPath) // Migrate process...
+//   await change_config_dir(newPath)
+// }
+
 onMounted(async () => {
   await fetchSettings()
 })
@@ -115,53 +145,47 @@ onMounted(async () => {
           title: 'AstralRinth Contacts',
           subtitle: 'You can get support and help with our patches or just have a nice chat in our chat. Scan the QR-Code and follow the news!',
         },
-        { // Discovery - 1
+        {
           // url: 'https://cdn.discordapp.com/attachments/817413688771608587/1131109353928265809/Screenshot_2023-07-15_at_4.16.18_PM.png',
-          url: 'https://media.discordapp.net/attachments/1006329469428043846/1190613137221763153/SWrxdvA3EDXA4w3A.png',
+          url: 'https://cdn.discordapp.com/attachments/1006329469428043846/1195897161158766612/3KESRodssnGmtdbZ.png',
           title: 'Discovery',
           subtitle: 'See the latest and greatest mods and modpacks to play with from Modrinth!',
         },
-        { // Discovery - 2
-          url: 'https://media.discordapp.net/attachments/1006329469428043846/1190613137964150944/eYD4l6r2B6SE1gNv.png',
+        {
+          url: 'https://cdn.discordapp.com/attachments/1006329469428043846/1195897164556140595/1tWbB1wfpjYgEMGr.png',
           title: 'Discovery',
           subtitle: 'Sort, filter and find your Minecraft modifications!',
         },
-        { // Profile Management - 1
+        {
           // url: 'https://cdn.discordapp.com/attachments/817413688771608587/1131109354238640238/Screenshot_2023-07-15_at_4.17.43_PM.png',
-          url: 'https://media.discordapp.net/attachments/1006329469428043846/1190606005059465306/00GYEYMyyPIiAr9L.png',
+          url: 'https://cdn.discordapp.com/attachments/1006329469428043846/1195897165193683074/Fo5oJlIoOpxb11su.png',
           title: 'Profile Management',
           subtitle:
             'Play, manage and search through all the amazing profiles downloaded on your computer at any time, even offline!',
         },
-        { // Profile Management - 2
-          url: 'https://media.discordapp.net/attachments/1006329469428043846/1190613138769461288/2FB4zboEk8j9ZAsr.png',
+        {
+          url: 'https://cdn.discordapp.com/attachments/1006329469428043846/1195897165835415633/7HZnSmUdV9gQWblQ.png',
           title: 'Profile Management',
           subtitle:
             'Play, manage and search through all the amazing profiles downloaded on your computer at any time, even offline!',
         },
-        { // Settings - 1
-          url: 'https://media.discordapp.net/attachments/1006329469428043846/1190606005973811230/bGDTrwuh9X8UWnsW.png',
+        {
+          url: 'https://media.discordapp.net/attachments/1006329469428043846/1195897166439383090/KFbe8U9oF3RE3RtV.png',
           title: 'Setting features',
           subtitle:
             'MultiLanguage support in the launcher! You can choose your language, international English or other languages',
         },
-        { // Account Management - 1
-          url: 'https://media.discordapp.net/attachments/1006329469428043846/1190606008230346832/L19JjyDpYdkUAD9g.png',
+        {
+          url: 'https://media.discordapp.net/attachments/1006329469428043846/1195897167127257128/QA5Qz7vhQYKXcZJD.png',
+          title: 'Setting features',
+          subtitle:
+            'Check for updates right in the launcher!',
+        },
+        {
+          url: 'https://cdn.discordapp.com/attachments/1006329469428043846/1195900695367393390/q7v9L5201okpMxGs.png',
           title: 'Account Management',
           subtitle:
             'Select the account type, pirated or licensed.',
-        },
-        { // Account Management - 2
-          url: 'https://media.discordapp.net/attachments/1006329469428043846/1190606006753964123/rh9vEjjArrKkaPXe.png',
-          title: 'Account Management',
-          subtitle:
-            'Add your first account, if you want to try the Minecraft game, you can use the pirate login method!',
-        },
-        { // Account Management - 3
-          url: 'https://media.discordapp.net/attachments/1006329469428043846/1190606007446016160/wJMusS8kr1BStPyb.png',
-          title: 'Account Management',
-          subtitle:
-            'Hurray! You have added your first account!',
         },
         { // Main gallery
           url: 'https://cdn.discordapp.com/attachments/1006329469428043846/1193557264049655878/ZbsJuMYb8Qc5gL8n.png',
@@ -172,6 +196,7 @@ onMounted(async () => {
       logo
     >
       <Button color="primary" @click="finishOnboarding">Start the journey</Button>
+<!--      <Button color="danger" @click="migrateModrinthData">Migrate your data from Modrinth to AstralRinth</Button>-->
     </GalleryImage>
     <LoginCard v-else-if="page === 2" :next-page="nextPage" :prev-page="prevPage" />
     <ModrinthLoginScreen

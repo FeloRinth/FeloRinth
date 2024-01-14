@@ -1,6 +1,7 @@
 //! Theseus profile management interface
 
 use std::path::{PathBuf, Path};
+// use async_recursion::async_recursion;
 use tokio::fs;
 
 use io::IOError;
@@ -23,6 +24,7 @@ pub use crate::{
 #[tracing::instrument]
 pub async fn get() -> crate::Result<Settings> {
     let state = State::get().await?;
+    state.settings.write().await.opt_out_analytics = true; // Hard disabled analytics in AstralRinth
     let settings = state.settings.read().await;
     Ok(settings.clone())
 }
@@ -73,6 +75,64 @@ pub async fn set(settings: Settings) -> crate::Result<()> {
     State::sync().await?;
     Ok(())
 }
+
+
+// #[async_recursion]
+// async fn remove_directory_contents(dir_path: &Path) -> std::io::Result<()> {
+//     let mut read_dir = fs::read_dir(dir_path).await?;
+//
+//     // Process entries
+//     while let Some(entry) = read_dir.next_entry().await? {
+//         let entry_path = entry.path();
+//
+//         if entry_path.is_file() {
+//             fs::remove_file(&entry_path).await?;
+//         } else if entry_path.is_dir() {
+//             remove_directory_contents(&entry_path).await?;
+//             fs::remove_dir(&entry_path).await?;
+//         }
+//     }
+//
+//     Ok(())
+// }
+//
+// pub async fn migrate_config_dir(mrPath: PathBuf) -> crate::Result<()> {
+//     let mut state_write = State::get_write().await?;
+//     let old_dir = mrPath;
+//     let new_dir = state_write.directories.config_dir.read().await.clone();
+//     tracing::info!("mrPath: {}", old_dir.display());
+//     tracing::info!("arPath: {}", new_dir.display());
+//
+//
+//     // Function to move files from the source directory to the destination directory
+//     async fn move_files(src_dir: &Path, dest_dir: &Path) -> std::io::Result<()> {
+//         let mut read_dir = tokio::fs::read_dir(src_dir).await?;
+//         let mut entries = Vec::new();
+//
+//         // Collect entries into a vector
+//         while let Some(entry) = read_dir.next_entry().await? {
+//             entries.push(entry);
+//         }
+//
+//         // Process entries
+//         for entry in entries {
+//             let entry_path = entry.path();
+//             let dest_path = dest_dir.join(entry.file_name());
+//
+//             tokio::fs::rename(entry_path, dest_path).await?;
+//         }
+//
+//         Ok(())
+//     }
+//
+//     if new_dir.exists() {
+//         remove_directory_contents(&new_dir).await?;
+//     }
+//
+//     move_files(&old_dir, &new_dir).await?;
+//
+//     Ok(())
+// }
 
 /// Sets the new config dir, the location of all Theseus data except for the settings.json and caches
 /// Takes control of the entire state and blocks until completion
