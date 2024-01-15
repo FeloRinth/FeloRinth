@@ -10,6 +10,7 @@ import { handleError } from '@/store/notifications.js'
 import dayjs from 'dayjs'
 import { isOffline } from '@/helpers/utils'
 import { i18n } from '@/main.js';
+import { forceRefreshRemote } from '@/helpers/update.js'
 const t = i18n.global.t;
 const featuredModpacks = ref({})
 const featuredMods = ref({})
@@ -95,6 +96,8 @@ onUnmounted(() => {
   unlistenProfile()
   unlistenOffline()
 })
+
+await forceRefreshRemote(true)
 </script>
 
 <template>

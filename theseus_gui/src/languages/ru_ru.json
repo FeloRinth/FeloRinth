@@ -110,7 +110,8 @@
     "Offline": "Не в сети",
     "NoRun": "Нет запущенных экземпляров",
     "StopInstance": "Завершить экземпляр",
-    "Logs": "Просмотреть логи"
+    "Logs": "Просмотреть логи",
+    "UpdateAvailable": "Доступно новое обновление"
   },
   "AccountsCard": {
     "MinecraftAccounts": "Аккаунты Minecraft",

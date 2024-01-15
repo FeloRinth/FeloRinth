@@ -110,7 +110,8 @@
     "Offline": "Offline",
     "NoRun": "No instances running",
     "StopInstance": "Stop instance",
-    "Logs": "View logs"
+    "Logs": "View logs",
+    "UpdateAvailable": "New update available"
   },
   "AccountsCard": {
     "MinecraftAccounts": "Minecraft accounts",
