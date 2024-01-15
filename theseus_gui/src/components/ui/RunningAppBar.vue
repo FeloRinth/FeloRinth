@@ -55,6 +55,9 @@
       <span class="circle stopped" />
       <span class="running-text"> {{t('RunningAppBar.NoRun')}} </span>
     </div>
+    <div v-if="updateAvailable">
+      <a :href="hrefGithubLatest"><Button class="download"><DownloadIcon />{{ t('RunningAppBar.UpdateAvailable') }}</Button></a>
+    </div>
   </div>
   <transition name="download">
     <Card v-if="showCard === true && currentLoadingBars.length > 0" ref="card" class="info-card">
@@ -128,6 +131,7 @@ import ProgressBar from '@/components/ui/ProgressBar.vue'
 import { handleError } from '@/store/notifications.js'
 import { mixpanel_track } from '@/helpers/mixpanel'
 import { ChatIcon } from '@/assets/icons'
+import { hrefGithubLatest, updateAvailable } from '@/helpers/update.js'
 
 const router = useRouter()
 const card = ref(null)
@@ -270,6 +274,25 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped lang="scss">
+.download {
+  color: #3e8cde;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-button-bg);
+  padding: var(--gap-sm) var(--gap-lg);
+  background-color: rgba(0, 0, 0, 0.0);
+  text-decoration: none;
+  text-shadow: 0 0 4px rgba(79, 173, 255, 0.5),
+  0 0 8px rgba(14, 98, 204, 0.5),
+  0 0 12px rgba(122, 31, 199, 0.5);
+  transition: color 0.35s ease;
+}
+.download:hover,
+.download:focus,
+.download:active {
+  color: #10fae5;
+  text-shadow: #26065e;
+}
+
 .action-groups {
   display: flex;
   flex-direction: row;

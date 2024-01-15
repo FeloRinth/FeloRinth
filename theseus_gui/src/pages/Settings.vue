@@ -27,6 +27,7 @@ import { version, patch_version, development_build } from '../../package.json'
 import { useLanguage } from '@/store/language.js'
 import { i18n } from '@/main.js';
 import { PirateShip } from '@/assets/render/index.js'
+import { blockDownload, forceRefreshRemote, hrefAstralium, hrefGithubLatest } from '@/helpers/update.js'
 const t = i18n.global.t;
 const pageOptions = ['Home', 'Library']
 
@@ -149,61 +150,7 @@ async function refreshDir() {
   settingsDir.value = settings.value.loaded_config_dir
 }
 
-
-const astraliumHref = "https://www.astralium.su/get/ar"
-const githubHref = "https://github.com/DIDIRUS4/AstralRinth/releases/latest"
-const apiUrl = `https://api.github.com/repos/DIDIRUS4/AstralRinth/releases/latest`
-const failedPattern = `Failed to fetch remote AR releases:`
-const blockdownload = ref(true)
-async function forceRefreshRemote() {
-  fetch(apiUrl)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Failed to fetch releases. Status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      const latestRelease = data.name;
-
-      const releaseData = document.getElementById('releaseData');
-      if (!releaseData) {
-        console.error("Release data element not found.");
-        return;
-      }
-
-      releaseData.textContent = latestRelease;
-
-      const v = `v`;
-      const localVersion = `${v}${version}${patch_version}`;
-      const remoteVersion = `${releaseData.textContent}`;
-
-      if (remoteVersion && remoteVersion.startsWith(localVersion)) {
-        console.log('No updates found.');
-        blockdownload.value = true
-      } else if (remoteVersion && remoteVersion.startsWith(v)) {
-        console.log('New update available');
-        blockdownload.value = false
-      } else {
-        blockdownload.value = true
-      }
-
-      console.log(blockdownload.value)
-    })
-    .catch((error) => {
-      console.log(failedPattern, error)
-      const errorData = document.getElementById('releaseData');
-      if (errorData) {
-        errorData.textContent = `${error.message}`;
-      }
-      blockdownload.value = true
-
-      console.log(blockdownload.value)
-
-    })
-}
-
-await forceRefreshRemote() // Calling when Settings.vue opened
+await forceRefreshRemote(false) // Calling when Settings.vue opened
 </script>
 
 <template>
@@ -625,16 +572,16 @@ await forceRefreshRemote() // Calling when Settings.vue opened
         <label>
           <span class="label__title inl">AstralRinth <PirateShip class="icon-line-fix"/> Version</span>
           <span class="label__description">Modrinth/Theseus version: v{{ version }}. Patch version: v{{ patch_version }} </span>
-          <span class="label__description">{{ t('Settings.LatestAvailable') }} <a class="github" :href="astraliumHref" target="_blank" rel="noopener noreferrer">{{ t('Settings.OurGithub') }}</a></span>
+          <span class="label__description">{{ t('Settings.LatestAvailable') }} <a class="github" :href="hrefAstralium" target="_blank" rel="noopener noreferrer">{{ t('Settings.OurGithub') }}</a></span>
 
           <span class="label__title">Update Checker</span>
 
           <span class="label__description">{{ t('Settings.Remote') }} <p class="cosmic inline-fix" id="releaseData"></p></span>
           <span class="label__description">{{ t('Settings.Local') }} <p class="cosmic inline-fix">v{{ version }}{{ patch_version }}</p></span>
         </label>
-        <a :href="githubHref"><Button :disabled="blockdownload" class="remote-update-fix" color="primary"><DownloadIcon/>{{ t('Settings.DownloadButton') }}
+        <a :href="hrefGithubLatest"><Button :disabled="blockDownload" class="remote-update-fix download"><DownloadIcon/>{{ t('Settings.DownloadButton') }}
         </Button></a>
-        <Button class="icon-line-fix" icon-only @click="forceRefreshRemote">
+        <Button class="icon-line-fix" icon-only @click="forceRefreshRemote(false)">
           <UpdatedIcon/>
         </Button>
       </div>
@@ -682,6 +629,24 @@ await forceRefreshRemote() // Calling when Settings.vue opened
 .cosmic:hover,
 .cosmic:focus,
 .cosmic:active {
+  color: #10fae5;
+  text-shadow: #26065e;
+}
+
+.download {
+  color: #3e8cde;
+  border: none;
+  padding: var(--gap-sm) var(--gap-lg);
+  //background-color: rgba(0, 0, 0, 0.0);
+  text-decoration: none;
+  text-shadow: 0 0 4px rgba(79, 173, 255, 0.5),
+  0 0 8px rgba(14, 98, 204, 0.5),
+  0 0 12px rgba(122, 31, 199, 0.5);
+  transition: color 0.35s ease;
+}
+.download:hover,
+.download:focus,
+.download:active {
   color: #10fae5;
   text-shadow: #26065e;
 }
