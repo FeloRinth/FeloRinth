@@ -67,7 +67,7 @@ export async function forceRefreshRemote(disableElementId, autoUpdate) {
             }
           }
 
-          await downloadBuild(downloadUrl, fileName, "open", true)
+          await downloadBuild(downloadUrl, fileName, os.value, true)
         } else if (os.value.toLowerCase() === 'Windows'.toLowerCase()) {
           for (let i of buildType) {
             if (i.name.endsWith(windowsExtension)) {
@@ -77,7 +77,7 @@ export async function forceRefreshRemote(disableElementId, autoUpdate) {
             }
           }
 
-          await downloadBuild(downloadUrl, fileName, "start", true)
+          await downloadBuild(downloadUrl, fileName, os.value, true)
         } else if (os.value.toLowerCase() === "Linux".toLowerCase()) {
           console.warn(
             "[AR Warning] • Due to some circumstances, we can't fully determine the structure and condition of your Linux OS," +
@@ -89,7 +89,7 @@ export async function forceRefreshRemote(disableElementId, autoUpdate) {
               console.log(i.browser_download_url)
             }
           }
-          await downloadBuild(downloadUrl, fileName, ".", false)
+          await downloadBuild(downloadUrl, fileName, os.value, false)
         }
         buildInstalling.value = false;
         console.log(fileName)
