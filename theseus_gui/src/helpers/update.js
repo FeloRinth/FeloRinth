@@ -5,7 +5,6 @@ import { downloadBuild, getOS } from '@/helpers/utils.js'
 export const blockDownload = ref(true)
 export const buildInstalling = ref(false)
 export const updateAvailable = ref(false)
-export const confirmUpdate = ref(null)
 export const hrefAstralium = 'https://www.astralium.su/get/ar'
 // export const hrefGithubLatest = 'https://github.com/DIDIRUS4/AstralRinth/releases/latest'
 const os = ref('')
@@ -55,7 +54,6 @@ export async function forceRefreshRemote(disableElementId, autoUpdate) {
       console.log('Remote version is', remoteVersion)
       console.log('Operating System is', os.value)
       if (autoUpdate) {
-        confirmUpdate.value.hide()
         buildInstalling.value = true;
         let downloadUrl = undefined
         let fileName = undefined
@@ -100,7 +98,6 @@ export async function forceRefreshRemote(disableElementId, autoUpdate) {
     })
     .catch((error) => {
       console.error(failedPattern, error)
-      confirmUpdate.value.hide()
       if (!disableElementId) {
         const errorData = document.getElementById('releaseData')
         if (errorData) {

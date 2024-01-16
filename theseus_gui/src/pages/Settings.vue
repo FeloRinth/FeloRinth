@@ -27,7 +27,7 @@ import { version, patch_version, development_build } from '../../package.json'
 import { useLanguage } from '@/store/language.js'
 import { i18n } from '@/main.js';
 import { PirateShip } from '@/assets/render/index.js'
-import { blockDownload, buildInstalling, confirmUpdate, forceRefreshRemote, hrefAstralium } from '@/helpers/update.js'
+import { blockDownload, buildInstalling, forceRefreshRemote, hrefAstralium } from '@/helpers/update.js'
 const t = i18n.global.t;
 const pageOptions = ['Home', 'Library']
 
@@ -150,9 +150,15 @@ async function refreshDir() {
   settingsDir.value = settings.value.loaded_config_dir
 }
 
-await forceRefreshRemote(false, false) // Calling when Settings.vue opened
+const confirmUpdate = ref(null)
+
+await forceRefreshRemote(false, false)
 const confirmUpdating = async () => {
   confirmUpdate.value.show()
+}
+const approvedUpdating = async () => {
+  confirmUpdate.value.hide()
+  await forceRefreshRemote(true, true)
 }
 </script>
 
@@ -597,7 +603,7 @@ const confirmUpdating = async () => {
           </div>
           <div class="button-group push-right">
             <Button class="download-modal" @click="confirmUpdate.hide()"> {{ t('RunningAppBar.RejectUpdating') }}</Button>
-            <Button class="download-modal" @click="forceRefreshRemote(true, true)">
+            <Button class="download-modal" @click="approvedUpdating()">
               {{ t('RunningAppBar.AcceptUpdating') }}
             </Button>
           </div>
