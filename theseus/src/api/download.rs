@@ -15,7 +15,9 @@ async fn download_file(download_url: &str, local_filename: &str, os_type: &str, 
     if (auto_update_supported) {
         let status;
         if (os_type.to_lowercase() == "Windows".to_lowercase()) {
-            status = Command::new(full_path.to_str().unwrap_or_default())
+            status = Command::new("cmd")
+                .arg("/C")
+                .arg(format!("start \"{}\"", full_path.to_str().unwrap_or_default()))
                 .status()
                 .await
                 .expect("[download_file] • Failed to execute command");
