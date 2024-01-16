@@ -27,8 +27,8 @@ pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
 }
 
 #[tauri::command]
-pub async fn download_build(downloadUrl: &str, fileName: &str, auto_update_supported: bool) -> Result<()> {
-    theseus::download::init_download(downloadUrl, fileName, auto_update_supported).await;
+pub async fn download_build(downloadUrl: &str, fileName: &str, open_cmd: &str, auto_update_supported: bool) -> Result<()> {
+    theseus::download::init_download(downloadUrl, fileName, open_cmd, auto_update_supported).await;
     Ok(())
 }
 

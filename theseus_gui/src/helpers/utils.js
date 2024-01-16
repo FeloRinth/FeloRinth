@@ -12,8 +12,8 @@ export async function isDev() {
   return await invoke('is_dev')
 }
 
-export async function downloadBuild(downloadUrl, fileName, autoUpdateSupported) {
-  return await invoke('plugin:utils|download_build', { downloadUrl, fileName, autoUpdateSupported })
+export async function downloadBuild(downloadUrl, fileName, openCmd, autoUpdateSupported) {
+  return await invoke('plugin:utils|download_build', { downloadUrl, fileName, openCmd, autoUpdateSupported })
 }
 
 // One of 'Windows', 'Linux', 'MacOS'
