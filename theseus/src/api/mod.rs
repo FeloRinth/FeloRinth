@@ -12,6 +12,7 @@ pub mod profile;
 pub mod safety;
 pub mod settings;
 pub mod tags;
+pub mod download;
 
 pub mod data {
     pub use crate::state::{

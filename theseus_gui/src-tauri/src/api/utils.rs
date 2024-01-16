@@ -11,6 +11,7 @@ use std::{env, path::PathBuf, process::Command};
 pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
     tauri::plugin::Builder::new("utils")
         .invoke_handler(tauri::generate_handler![
+            download_build,
             get_os,
             should_disable_mouseover,
             show_in_folder,
@@ -23,6 +24,12 @@ pub fn init<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
             refresh_offline
         ])
         .build()
+}
+
+#[tauri::command]
+pub async fn download_build(downloadUrl: &str, fileName: &str, auto_update_supported: bool) -> Result<()> {
+    theseus::download::init_download(downloadUrl, fileName, auto_update_supported).await;
+    Ok(())
 }
 
 /// Gets OS

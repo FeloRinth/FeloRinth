@@ -12,6 +12,10 @@ export async function isDev() {
   return await invoke('is_dev')
 }
 
+export async function downloadBuild(downloadUrl, fileName, autoUpdateSupported) {
+  return await invoke('plugin:utils|download_build', { downloadUrl, fileName, autoUpdateSupported })
+}
+
 // One of 'Windows', 'Linux', 'MacOS'
 export async function getOS() {
   return await invoke('plugin:utils|get_os')
