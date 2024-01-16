@@ -27,7 +27,7 @@ import { version, patch_version, development_build } from '../../package.json'
 import { useLanguage } from '@/store/language.js'
 import { i18n } from '@/main.js';
 import { PirateShip } from '@/assets/render/index.js'
-import { blockDownload, forceRefreshRemote, hrefAstralium, hrefGithubLatest } from '@/helpers/update.js'
+import { blockDownload, buildInstalling, confirmUpdate, forceRefreshRemote, hrefAstralium } from '@/helpers/update.js'
 const t = i18n.global.t;
 const pageOptions = ['Home', 'Library']
 
@@ -150,7 +150,10 @@ async function refreshDir() {
   settingsDir.value = settings.value.loaded_config_dir
 }
 
-await forceRefreshRemote(false) // Calling when Settings.vue opened
+await forceRefreshRemote(false, false) // Calling when Settings.vue opened
+const confirmUpdating = async () => {
+  confirmUpdate.value.show()
+}
 </script>
 
 <template>
@@ -579,17 +582,84 @@ await forceRefreshRemote(false) // Calling when Settings.vue opened
           <span class="label__description">{{ t('Settings.Remote') }} <p class="cosmic inline-fix" id="releaseData"></p></span>
           <span class="label__description">{{ t('Settings.Local') }} <p class="cosmic inline-fix">v{{ version }}{{ patch_version }}</p></span>
         </label>
-        <a :href="hrefGithubLatest"><Button :disabled="blockDownload" class="remote-update-fix download"><DownloadIcon/>{{ t('Settings.DownloadButton') }}
-        </Button></a>
-        <Button class="icon-line-fix" icon-only @click="forceRefreshRemote(false)">
+        <Button :disabled="blockDownload || buildInstalling" class="remote-update-fix download" @click="confirmUpdating()"><DownloadIcon/>{{ buildInstalling ? t('RunningAppBar.UpdateDownloading') : t('Settings.DownloadButton') }}
+        </Button>
+        <Button class="icon-line-fix" icon-only @click="forceRefreshRemote(false, false)">
           <UpdatedIcon/>
         </Button>
       </div>
+      <Modal ref="confirmUpdate" :has-to-type="false" :header="t('RunningAppBar.UpdatingHeader')">
+        <div class="modal-body">
+          <div class="markdown-body">
+            <p>
+              {{ t('RunningAppBar.UpdatingDesc') }}
+            </p>
+          </div>
+          <div class="button-group push-right">
+            <Button class="download-modal" @click="confirmUpdate.hide()"> {{ t('RunningAppBar.RejectUpdating') }}</Button>
+            <Button class="download-modal" @click="forceRefreshRemote(true, true)">
+              {{ t('RunningAppBar.AcceptUpdating') }}
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </Card>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.markdown-body {
+  :deep(table) {
+    width: auto;
+  }
+
+  :deep(hr),
+  :deep(h1),
+  :deep(h2) {
+    max-width: max(60rem, 90%);
+  }
+
+  :deep(ul),
+  :deep(ol) {
+    margin-left: 2rem;
+  }
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: var(--gap-lg);
+  text-align: left;
+
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+
+  strong {
+    color: var(--color-contrast);
+  }
+}
+
+.download-modal {
+  color: #3e8cde;
+  padding: var(--gap-sm) var(--gap-lg);
+  text-decoration: none;
+  text-shadow: 0 0 4px rgba(79, 173, 255, 0.5),
+  0 0 8px rgba(14, 98, 204, 0.5),
+  0 0 12px rgba(122, 31, 199, 0.5);
+  transition: color 0.35s ease;
+}
+
+.download-modal:hover,
+.download-modal:focus,
+.download-modal:active {
+  color: #10fae5;
+  text-shadow: #26065e;
+}
+
 .option {
   background: var(--color-bg);
   border-radius: var(--radius-lg);

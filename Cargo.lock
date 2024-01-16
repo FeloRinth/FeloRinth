@@ -4837,6 +4837,7 @@ dependencies = [
  "objc",
  "once_cell",
  "os_info",
+ "reqwest",
  "sentry",
  "sentry-rust-minidump",
  "serde",

@@ -1,9 +1,9 @@
 <template>
   <div class="action-groups">
-<!--    <a href="https://discord.modrinth.com" class="link">-->
+    <!--    <a href="https://discord.modrinth.com" class="link">-->
     <a href="https://www.astralium.su/follow/telegram/astralium" class="link">
       <ChatIcon />
-      <span> {{t('RunningAppBar.GetSupport')}} </span>
+      <span> {{ t('RunningAppBar.GetSupport') }} </span>
     </a>
     <Button
       v-if="currentLoadingBars.length > 0"
@@ -17,7 +17,7 @@
     <div v-if="offline" class="status">
       <span class="circle stopped" />
       <div class="running-text clickable" @click="refreshInternet()">
-        <span> {{t('RunningAppBar.Offline')}} </span>
+        <span> {{ t('RunningAppBar.Offline') }} </span>
       </div>
     </div>
     <div v-if="selectedProfile" class="status">
@@ -53,11 +53,31 @@
     </div>
     <div v-else class="status">
       <span class="circle stopped" />
-      <span class="running-text"> {{t('RunningAppBar.NoRun')}} </span>
+      <span class="running-text"> {{ t('RunningAppBar.NoRun') }} </span>
     </div>
     <div v-if="updateAvailable">
-      <a :href="hrefGithubLatest"><Button class="download"><DownloadIcon />{{ t('RunningAppBar.UpdateAvailable') }}</Button></a>
+      <a>
+        <Button class="download" :disabled="buildInstalling" @click="confirmUpdating()">
+          <DownloadIcon />
+          {{ buildInstalling ? t('RunningAppBar.UpdateDownloading') : t('RunningAppBar.UpdateAvailable') }}
+        </Button>
+      </a>
     </div>
+    <Modal ref="confirmUpdate" :has-to-type="false" :header="t('RunningAppBar.UpdatingHeader')">
+      <div class="modal-body">
+        <div class="markdown-body">
+          <p>
+            {{ t('RunningAppBar.UpdatingDesc') }}
+          </p>
+        </div>
+        <div class="button-group push-right">
+          <Button class="download-modal" @click="confirmUpdate.hide()"> {{ t('RunningAppBar.RejectUpdating') }}</Button>
+          <Button class="download-modal" @click="forceRefreshRemote(true, true)">
+            {{ t('RunningAppBar.AcceptUpdating') }}
+          </Button>
+        </div>
+      </div>
+    </Modal>
   </div>
   <transition name="download">
     <Card v-if="showCard === true && currentLoadingBars.length > 0" ref="card" class="info-card">
@@ -107,31 +127,25 @@
 </template>
 
 <script setup>
-import { i18n } from '@/main.js';
-const t = i18n.global.t;
-import {
-  Button,
-  DownloadIcon,
-  Card,
-  StopCircleIcon,
-  TerminalSquareIcon,
-  DropdownIcon,
-} from 'omorphia'
+import { i18n } from '@/main.js'
+import { Button, Card, DownloadIcon, DropdownIcon, Modal, StopCircleIcon, TerminalSquareIcon } from 'omorphia'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import {
   get_all_running_profiles as getRunningProfiles,
-  kill_by_uuid as killProfile,
   get_uuids_by_profile_path as getProfileProcesses,
+  kill_by_uuid as killProfile
 } from '@/helpers/process'
-import { loading_listener, process_listener, offline_listener } from '@/helpers/events'
+import { loading_listener, offline_listener, process_listener } from '@/helpers/events'
 import { useRouter } from 'vue-router'
 import { progress_bars_list } from '@/helpers/state.js'
-import { refreshOffline, isOffline } from '@/helpers/utils.js'
+import { isOffline, refreshOffline } from '@/helpers/utils.js'
 import ProgressBar from '@/components/ui/ProgressBar.vue'
 import { handleError } from '@/store/notifications.js'
 import { mixpanel_track } from '@/helpers/mixpanel'
 import { ChatIcon } from '@/assets/icons'
-import { hrefGithubLatest, updateAvailable } from '@/helpers/update.js'
+import { buildInstalling, confirmUpdate, forceRefreshRemote, updateAvailable } from '@/helpers/update.js'
+
+const t = i18n.global.t
 
 const router = useRouter()
 const card = ref(null)
@@ -174,7 +188,7 @@ const stop = async (path) => {
     mixpanel_track('InstanceStop', {
       loader: currentProcesses.value[0].metadata.loader,
       game_version: currentProcesses.value[0].metadata.game_version,
-      source: 'AppBar',
+      source: 'AppBar'
     })
   } catch (e) {
     console.error(e)
@@ -193,7 +207,7 @@ const refreshInfo = async () => {
   currentLoadingBars.value = Object.values(await progress_bars_list().catch(handleError)).map(
     (x) => {
       if (x.bar_type.type === 'java_download') {
-        x.title = "Downloading Java" + ' ' + x.bar_type.version
+        x.title = 'Downloading Java' + ' ' + x.bar_type.version
       }
       if (x.bar_type.profile_name) {
         x.title = x.bar_type.profile_name
@@ -271,9 +285,48 @@ onBeforeUnmount(() => {
   unlistenLoading()
   unlistenRefresh()
 })
+
+const confirmUpdating = async () => {
+  confirmUpdate.value.show()
+}
 </script>
 
 <style scoped lang="scss">
+.markdown-body {
+  :deep(table) {
+    width: auto;
+  }
+
+  :deep(hr),
+  :deep(h1),
+  :deep(h2) {
+    max-width: max(60rem, 90%);
+  }
+
+  :deep(ul),
+  :deep(ol) {
+    margin-left: 2rem;
+  }
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: var(--gap-lg);
+  text-align: left;
+
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+
+  strong {
+    color: var(--color-contrast);
+  }
+}
+
 .download {
   color: #3e8cde;
   border-radius: var(--radius-md);
@@ -286,9 +339,26 @@ onBeforeUnmount(() => {
   0 0 12px rgba(122, 31, 199, 0.5);
   transition: color 0.35s ease;
 }
+
 .download:hover,
 .download:focus,
 .download:active {
+  color: #10fae5;
+  text-shadow: #26065e;
+}
+.download-modal {
+  color: #3e8cde;
+  padding: var(--gap-sm) var(--gap-lg);
+  text-decoration: none;
+  text-shadow: 0 0 4px rgba(79, 173, 255, 0.5),
+  0 0 8px rgba(14, 98, 204, 0.5),
+  0 0 12px rgba(122, 31, 199, 0.5);
+  transition: color 0.35s ease;
+}
+
+.download-modal:hover,
+.download-modal:focus,
+.download-modal:active {
   color: #10fae5;
   text-shadow: #26065e;
 }
@@ -304,6 +374,7 @@ onBeforeUnmount(() => {
   transition: transform 0.2s ease-in-out;
   display: flex;
   align-items: center;
+
   &.rotate {
     transform: rotate(180deg);
   }
