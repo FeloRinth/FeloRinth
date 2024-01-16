@@ -1,4 +1,5 @@
 use std::process::exit;
+use std::ptr::null;
 use reqwest;
 use tokio::fs::File as AsyncFile;
 use tokio::io::AsyncWriteExt;
@@ -13,12 +14,28 @@ async fn download_file(download_url: &str, local_filename: &str, open_cmd: &str,
     dest_file.write_all(&bytes).await?;
     println!("[download_file] • File downloaded to: {:?}", full_path);
     if (auto_update_supported) {
-        let status = Command::new(open_cmd)
-            .arg(full_path.to_str().unwrap_or_default())
-            .status()
-            .await
-            .expect("[download_file] • Failed to execute 'open' command");
-
+        let status;
+        if (open_cmd == "start") {
+            status = Command::new("cmd")
+                .arg("/C")
+                .arg("start")
+                .arg(full_path.to_str().unwrap_or_default())
+                .status()
+                .await
+                .expect("[download_file] • Failed to execute 'start' command");
+        } else if (open_cmd == "open") {
+            status = Command::new(open_cmd)
+                .arg(full_path.to_str().unwrap_or_default())
+                .status()
+                .await
+                .expect("[download_file] • Failed to execute 'open' command");
+        } else {
+            status = Command::new(open_cmd)
+                .arg(full_path.to_str().unwrap_or_default())
+                .status()
+                .await
+                .expect("[download_file] • Failed to execute installer");
+        }
         if status.success() {
             println!("[download_file] • File opened successfully!");
         } else {
