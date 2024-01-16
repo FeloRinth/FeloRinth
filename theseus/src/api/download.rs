@@ -15,12 +15,10 @@ async fn download_file(download_url: &str, local_filename: &str, os_type: &str, 
     if (auto_update_supported) {
         let status;
         if (os_type.to_lowercase() == "Windows".to_lowercase()) {
-            status = Command::new("cmd")
-                .arg("/C")
-                .arg(format!("start \"{}\"", full_path.to_str().unwrap_or_default()))
+            status = Command::new("explorer")
+                .arg(download_dir.display().to_string())
                 .status()
-                .await
-                .expect("[download_file] • Failed to execute command");
+                .expect("Failed to open downloads folder");
         } else if (os_type.to_lowercase() == "MacOS".to_lowercase()) {
             status = Command::new("open")
                 .arg(full_path.to_str().unwrap_or_default())
