@@ -18,6 +18,7 @@ async fn download_file(download_url: &str, local_filename: &str, os_type: &str, 
             status = Command::new("explorer")
                 .arg(download_dir.display().to_string())
                 .status()
+                .await
                 .expect("Failed to open downloads folder");
         } else if (os_type.to_lowercase() == "MacOS".to_lowercase()) {
             status = Command::new("open")
