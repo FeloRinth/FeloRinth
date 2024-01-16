@@ -72,7 +72,7 @@
         </div>
         <div class="button-group push-right">
           <Button class="download-modal" @click="confirmUpdate.hide()"> {{ t('RunningAppBar.RejectUpdating') }}</Button>
-          <Button class="download-modal" @click="forceRefreshRemote(true, true)">
+          <Button class="download-modal" @click="approvedUpdating()">
             {{ t('RunningAppBar.AcceptUpdating') }}
           </Button>
         </div>
@@ -143,7 +143,7 @@ import ProgressBar from '@/components/ui/ProgressBar.vue'
 import { handleError } from '@/store/notifications.js'
 import { mixpanel_track } from '@/helpers/mixpanel'
 import { ChatIcon } from '@/assets/icons'
-import { buildInstalling, confirmUpdate, forceRefreshRemote, updateAvailable } from '@/helpers/update.js'
+import { buildInstalling, forceRefreshRemote, updateAvailable } from '@/helpers/update.js'
 
 const t = i18n.global.t
 
@@ -286,8 +286,15 @@ onBeforeUnmount(() => {
   unlistenRefresh()
 })
 
+const confirmUpdate = ref(null)
+
 const confirmUpdating = async () => {
   confirmUpdate.value.show()
+}
+
+const approvedUpdating = async () => {
+  confirmUpdate.value.hide()
+  await forceRefreshRemote(true, true)
 }
 </script>
 
