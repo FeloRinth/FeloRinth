@@ -19,15 +19,9 @@ async fn download_file(download_url: &str, local_filename: &str, os_type: &str, 
                 .arg(download_dir.display().to_string())
                 .status()
                 .await
-                .expect("Failed to open downloads folder");
+                .expect("[download_file] • Failed to open downloads folder");
         } else if (os_type.to_lowercase() == "MacOS".to_lowercase()) {
             status = Command::new("open")
-                .arg(full_path.to_str().unwrap_or_default())
-                .status()
-                .await
-                .expect("[download_file] • Failed to execute command");
-        } else {
-            status = Command::new(".")
                 .arg(full_path.to_str().unwrap_or_default())
                 .status()
                 .await

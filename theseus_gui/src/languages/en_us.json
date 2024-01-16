@@ -115,8 +115,8 @@
     "UpdateDownloading": "Downloading update...",
     "AcceptUpdating": "Approve",
     "RejectUpdating": "Reject",
-    "UpdatingHeader": "Request an update from Github • AstralRinth",
-    "UpdatingDesc": "The launcher will start downloading the update and start installing it, as well as close the running version of the launcher to update to the latest version. Please be prepared for this and save all important data."
+    "UpdatingHeader": "Update request from Github • AstralRinth",
+    "UpdatingDesc": "The launcher will start downloading the update and close the running version of the launcher to update to the latest version. The necessary files are downloaded to the user's standard downloads directory. Please be prepared for this and save all important data."
   },
   "AccountsCard": {
     "MinecraftAccounts": "Minecraft accounts",

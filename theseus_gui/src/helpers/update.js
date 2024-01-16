@@ -80,7 +80,7 @@ export async function forceRefreshRemote(disableElementId, autoUpdate) {
           await downloadBuild(downloadUrl, fileName, os.value, true)
         } else if (os.value.toLowerCase() === "Linux".toLowerCase()) {
           console.warn(
-            "[AR Warning] • Due to some circumstances, we can't fully determine the structure and condition of your Linux OS," +
+            "[AR • Warning] • Due to some circumstances, we can't fully determine the structure and condition of your Linux OS," +
             " so we'll download the latest build for the latest ubuntu, that we've available. Installation is done manually")
           for (let i of buildType) {
             if (i.name.endsWith(linuxExtension)) {
