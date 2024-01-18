@@ -13,15 +13,15 @@ async fn download_file(download_url: &str, local_filename: &str, os_type: &str, 
     let mut dest_file = AsyncFile::create(&full_path).await?;
     dest_file.write_all(&bytes).await?;
     println!("[download_file] • File downloaded to: {:?}", full_path);
-    if (auto_update_supported) {
+    if auto_update_supported {
         let status;
-        if (os_type.to_lowercase() == "Windows".to_lowercase()) {
+        if os_type.to_lowercase() == "Windows".to_lowercase() {
             status = Command::new("explorer")
                 .arg(download_dir.display().to_string())
                 .status()
                 .await
                 .expect("[download_file] • Failed to open downloads folder");
-        } else if (os_type.to_lowercase() == "MacOS".to_lowercase()) {
+        } else if os_type.to_lowercase() == "MacOS".to_lowercase() {
             status = Command::new("open")
                 .arg(full_path.to_str().unwrap_or_default())
                 .status()
