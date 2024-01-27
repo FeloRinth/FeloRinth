@@ -1,7 +1,9 @@
 {
   "Application": {
+    "ToggleSidebar": "Toggle sidebar",
     "CreateProfile": "Create profile",
     "Settings": "Launcher settings",
+    "Support": "Support",
     "InstanceLogs": "Instance logs",
     "Home": "Home",
     "Browse": "Browse",

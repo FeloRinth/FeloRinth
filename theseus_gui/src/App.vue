@@ -14,7 +14,7 @@ import {
   Notifications,
   XIcon,
   Card,
-  TextLogo,
+  // TextLogo,
   PlusIcon,
 } from 'omorphia'
 import { useLoading, useTheming } from '@/store/state'
@@ -51,6 +51,7 @@ import StickyTitleBar from '@/components/ui/tutorial/StickyTitleBar.vue'
 import OnboardingScreen from '@/components/ui/tutorial/OnboardingScreen.vue'
 import { install_from_file } from './helpers/pack'
 import { useLanguage } from '@/store/language.js'
+import AccountsCard from '@/components/ui/AccountsCard.vue'
 
 const themeStore = useTheming()
 const languageStore = useLanguage()
@@ -207,9 +208,9 @@ command_listener(async (e) => {
   }
 })
 
-const toggleSidebar = () => {
-  sidebarOpen.value = !sidebarOpen.value
-}
+// const toggleSidebar = () => {
+//   sidebarOpen.value = !sidebarOpen.value
+// }
 </script>
 
 <template>
@@ -271,24 +272,26 @@ const toggleSidebar = () => {
         '--sidebar-label-opacity': sidebarOpen ? '1' : '0',
       }"
     >
+<!--      <div class="pages-list">-->
+<!--        <div class="square-collapsed-space">-->
+<!--          <Button-->
+<!--            v-tooltip.right="t('Application.ToggleSidebar')"-->
+<!--            transparent-->
+<!--            icon-only-->
+<!--            class="collapsed-button"-->
+<!--            @click="toggleSidebar"-->
+<!--          >-->
+<!--            <PlusIcon />-->
+<!--            <span class="collapsed-button__label">{{ t('Application.ToggleSidebar') }}</span>-->
+<!--          </Button>-->
+<!--        </div>-->
+<!--      </div>-->
       <div class="pages-list">
-        <div class="square-collapsed-space">
-          <Button
-            v-tooltip="'Toggle sidebar'"
-            transparent
-            icon-only
-            class="collapsed-button"
-            @click="toggleSidebar"
-          >
-            <PlusIcon />
-            <span class="collapsed-button__label">Collapse</span>
-          </Button>
+        <suspense>
+        <div class="pages-list">
+          <AccountsCard ref="accounts" mode="small"/>
         </div>
-      </div>
-      <div class="pages-list">
-        <!-- <suspense>
-          <AccountsCard ref="accounts" mode="small" />
-        </suspense> -->
+        </suspense>
         <div class="pages-list">
           <RouterLink v-tooltip.right="t('Application.Home')" to="/" class="btn icon-only collapsed-button">
             <HomeIcon />
@@ -321,16 +324,16 @@ const toggleSidebar = () => {
 <!--      </div>-->
       <div class="settings pages-list">
         <Button
-          v-tooltip.right="'Get Support'"
+          v-tooltip.right="t('Application.Support')"
           transparent
           icon-only
           class="page-item collapsed-button"
           @click="openSupport"
         >
           <ChatIcon />
-          <span class="collapsed-button__label">Support</span>
+          <span class="collapsed-button__label">{{ t('Application.Support') }}</span>
         </Button>
-        <RouterLink :v-tooltip="t('Application.Settings')" to="/settings" class="btn icon-only collapsed-button">
+        <RouterLink v-tooltip.right="t('Application.Settings')" to="/settings" class="btn icon-only collapsed-button">
           <SettingsIcon />
           <span class="collapsed-button__label">{{ t('Application.Settings') }}</span>
         </RouterLink>
@@ -353,7 +356,10 @@ const toggleSidebar = () => {
         <div data-tauri-drag-region class="appbar">
           <section class="navigation-controls">
             <router-link :to="'/'">
-              <TextLogo class="logo" :animate="false" />
+              <img
+                src="../src-tauri/icons/icon.png"
+                class="logo"
+              />
             </router-link>
             <Breadcrumbs after-logo data-tauri-drag-region />
             <!-- <pre><code>{{ JSON.stringify(breadcrumbs.path) }}</code></pre> -->

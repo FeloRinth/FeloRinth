@@ -24,7 +24,7 @@
       position="right"
     >
       <Avatar circle size="sm" :src="auth?.user?.avatar_url" />
-      <template #sign-out> <LogOutIcon /> Sign out </template>
+      <template #sign-out> <LogOutIcon /> {{ t('Settings.SignOut') }} </template>
     </OverflowMenu>
     <OverflowMenu
       v-else
@@ -41,8 +41,8 @@
       direction="up"
       position="right"
     >
-      <Avatar circle size="sm" />
-      <template #sign-in> <LogInIcon /> Sign in </template>
+      <Avatar circle size="sm" src="https://cdn.discordapp.com/attachments/1006329469428043846/1200633903506018434/qzJ1vLioGvxrXAL8.png" />
+      <template #sign-in> <LogInIcon /> {{ t('Settings.SignIn') }} </template>
     </OverflowMenu>
   </div>
 </template>
@@ -56,7 +56,8 @@ import { useModrinthAuth } from '@/store/mr_auth.js'
 
 import ModrinthLoginScreen from '@/components/ui/tutorial/ModrinthLoginScreen.vue'
 import { storeToRefs } from 'pinia'
-
+import { i18n } from '@/main.js';
+const t = i18n.global.t;
 const themeStore = useTheming()
 const mrAuth = useModrinthAuth()
 const { auth } = storeToRefs(mrAuth)

@@ -15,6 +15,7 @@ const localVersion = `${v}${version}${patch_version}`
 const macExtension = `.dmg`
 const windowsExtension = `.msi`
 const linuxExtension = `.deb`
+const blacklistDevBuilds = `DEV_BUILD`
 
 export async function forceRefreshRemote(disableElementId, autoUpdate) {
   fetch(apiUrl)
@@ -60,7 +61,7 @@ export async function forceRefreshRemote(disableElementId, autoUpdate) {
         const buildType = data.assets
         if (os.value.toLowerCase() === 'MacOS'.toLowerCase()) {
           for (let i of buildType) {
-            if (i.name.endsWith(macExtension)) {
+            if (i.name.endsWith(macExtension) && !i.name.startsWith(blacklistDevBuilds)) {
               downloadUrl = i.browser_download_url
               fileName = i.name
               console.log(i.browser_download_url)
@@ -70,7 +71,7 @@ export async function forceRefreshRemote(disableElementId, autoUpdate) {
           await downloadBuild(downloadUrl, fileName, os.value, true)
         } else if (os.value.toLowerCase() === 'Windows'.toLowerCase()) {
           for (let i of buildType) {
-            if (i.name.endsWith(windowsExtension)) {
+            if (i.name.endsWith(windowsExtension) && !i.name.startsWith(blacklistDevBuilds)) {
               downloadUrl = i.browser_download_url
               fileName = i.name
               console.log(i.browser_download_url)
@@ -83,7 +84,7 @@ export async function forceRefreshRemote(disableElementId, autoUpdate) {
             "[AR • Warning] • Due to some circumstances, we can't fully determine the structure and condition of your Linux OS," +
             " so we'll download the latest build for the latest ubuntu, that we've available. Installation is done manually")
           for (let i of buildType) {
-            if (i.name.endsWith(linuxExtension)) {
+            if (i.name.endsWith(linuxExtension) && !i.name.startsWith(blacklistDevBuilds)) {
               downloadUrl = i.browser_download_url
               fileName = i.name
               console.log(i.browser_download_url)

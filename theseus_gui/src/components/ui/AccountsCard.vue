@@ -370,7 +370,7 @@ onUnmounted(() => {
 
 .account-type-no-account {
   display: inline-flex;
-  margin-left: 0.7rem;
+  margin-left: auto;
 }
 
 .account-fix {
@@ -382,7 +382,7 @@ onUnmounted(() => {
   width: max-content;
   gap: 0.5rem;
   display: flex;
-  margin-left: 3rem;
+  margin-left: auto;
 }
 
 .account-buttons-fix {
@@ -450,8 +450,8 @@ onUnmounted(() => {
   gap: 0.5rem;
 }
 
-.option {
-  width: calc(100% - 2.25rem);
+.option { // TODO: Check it later
+  //width: calc(100% - 2.25rem);
   background: var(--color-raised-bg);
   color: var(--color-base);
   box-shadow: none;
