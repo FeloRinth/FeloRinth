@@ -17,7 +17,9 @@ import {
 import { handleError, useTheming } from '@/store/state'
 import { is_dir_writeable, change_config_dir, get, set } from '@/helpers/settings'
 import { get_max_memory } from '@/helpers/jre'
-import { get as getCreds, logout } from '@/helpers/mr_auth.js'
+
+import { useModrinthAuth } from '@/store/mr_auth.js'
+
 import JavaSelector from '@/components/ui/JavaSelector.vue'
 import ModrinthLoginScreen from '@/components/ui/tutorial/ModrinthLoginScreen.vue'
 import { mixpanel_opt_out_tracking, mixpanel_opt_in_tracking } from '@/helpers/mixpanel'
@@ -29,6 +31,8 @@ import { i18n } from '@/main.js';
 import { PirateShip } from '@/assets/render/index.js'
 import { blockDownload, buildInstalling, forceRefreshRemote, hrefAstralium } from '@/helpers/update.js'
 const t = i18n.global.t;
+import { storeToRefs } from 'pinia'
+
 const pageOptions = ['Home', 'Library']
 
 const themeStore = useTheming()
@@ -111,17 +115,13 @@ watch(
   { deep: true }
 )
 
-const credentials = ref(await getCreds().catch(handleError))
+const mrAuth = useModrinthAuth()
+const { auth } = storeToRefs(mrAuth)
 const loginScreenModal = ref()
-
-async function logOut() {
-  await logout().catch(handleError)
-  credentials.value = await getCreds().catch(handleError)
-}
 
 async function signInAfter() {
   loginScreenModal.value.hide()
-  credentials.value = await getCreds().catch(handleError)
+  await mrAuth.get()
 }
 
 async function findLauncherDir() {
@@ -180,12 +180,12 @@ const approvedUpdating = async () => {
       <div class="adjacent-input">
         <label for="theme">
           <span class="label__title">{{t('Settings.ManageAccount')}}</span>
-          <span v-if="credentials" class="label__description">
-            {{t('Settings.YouAreCurrentlyLoggedInAs')}} {{ credentials.user.username }}.
+          <span v-if="auth" class="label__description">
+            {{t('Settings.YouAreCurrentlyLoggedInAs')}} {{ auth?.user.username }}.
           </span>
           <span v-else> {{t('Settings.SignInToYourModrinthAccount')}} </span>
         </label>
-        <button v-if="credentials" class="btn" @click="logOut">
+        <button v-if="auth" class="btn" @click="mrAuth.logout()">
           <LogOutIcon />
           {{t('Settings.SignOut')}}
         </button>
@@ -205,7 +205,7 @@ const approvedUpdating = async () => {
         <div class="iconified-input">
           <BoxIcon />
           <input id="appDir" v-model="settingsDir" type="text" class="input" />
-          <Button @click="findLauncherDir">
+          <Button class="r-btn" @click="findLauncherDir">
             <FolderSearchIcon />
           </Button>
         </div>

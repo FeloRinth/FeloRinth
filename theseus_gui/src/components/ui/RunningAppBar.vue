@@ -9,7 +9,7 @@
       v-if="currentLoadingBars.length > 0"
       ref="infoButton"
       icon-only
-      class="icon-button show-card-icon"
+      class="download icon-button"
       @click="toggleCard()"
     >
       <DownloadIcon />
@@ -35,17 +35,17 @@
           <DropdownIcon />
         </div>
       </div>
-      <Button v-tooltip="t('RunningAppBar.StopInstance')" icon-only class="icon-button stop" @click="stop()">
+      <Button v-tooltip="t('RunningAppBar.StopInstance')" icon-only class="stop icon-button" @click="stop()">
         <StopCircleIcon />
       </Button>
-      <Button v-tooltip="t('RunningAppBar.Logs')" icon-only class="icon-button" @click="goToTerminal()">
+      <Button v-tooltip="t('RunningAppBar.Logs')" icon-only class="utility icon-button" @click="goToTerminal()">
         <TerminalSquareIcon />
       </Button>
       <Button
         v-if="currentLoadingBars.length > 0"
         ref="infoButton"
         icon-only
-        class="icon-button show-card-icon"
+        class="download icon-button"
         @click="toggleCard()"
       >
         <DownloadIcon />
@@ -108,7 +108,7 @@
         <Button
           v-tooltip="t('RunningAppBar.StopInstance')"
           icon-only
-          class="icon-button stop"
+          class="stop icon-button"
           @click.stop="stop(profile.path)"
         >
           <StopCircleIcon />
@@ -116,7 +116,7 @@
         <Button
           v-tooltip="t('RunningAppBar.Logs')"
           icon-only
-          class="icon-button"
+          class="utility icon-button"
           @click.stop="goToTerminal(profile.path)"
         >
           <TerminalSquareIcon />
@@ -431,12 +431,16 @@ const approvedUpdating = async () => {
 .icon-button {
   background-color: rgba(0, 0, 0, 0);
   box-shadow: none;
-  width: 1.25rem !important;
-  height: 1.25rem !important;
 
-  &.stop {
-    --text-color: var(--color-red) !important;
-  }
+  padding: 0 !important;
+}
+
+.stop {
+  color: var(--color-red);
+}
+
+.utility {
+  color: var(--color-contrast);
 }
 
 .info-card {
@@ -498,7 +502,7 @@ const approvedUpdating = async () => {
   }
 }
 
-.show-card-icon {
+.download {
   color: var(--color-brand);
 }
 

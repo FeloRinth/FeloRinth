@@ -265,7 +265,7 @@ const filteredResults = computed(() => {
     <div class="iconified-input">
       <SearchIcon />
       <input v-model="search" type="text" :placeholder="t('GridDisplay.Search')" class="search-input" />
-      <Button @click="() => (search = '')">
+      <Button class="r-btn" @click="() => (search = '')">
         <XIcon />
       </Button>
     </div>

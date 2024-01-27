@@ -20,7 +20,7 @@
           class="text-input"
           autocomplete="off"
         />
-        <Button @click="() => (searchFilter = '')">
+        <Button class="r-btn" @click="() => (searchFilter = '')">
           <XIcon />
         </Button>
       </div>
@@ -42,24 +42,27 @@
       <UpdatedIcon />
       {{t('Instance.Mods.UpdateAll')}}
     </Button>
-
-    <DropdownButton
-      v-if="!isPackLocked"
-      :options="['search', 'from_file']"
-      default-value="search"
-      name="add-content-dropdown"
-      color="primary"
-      @option-click="handleContentOptionClick"
-    >
-      <template #search>
+    <div v-if="!isPackLocked" class="joined-buttons">
+      <Button color="primary" @click="onSearchContent">
         <SearchIcon />
-        <span class="no-wrap"> {{t('Instance.Mods.AddContent')}} </span>
-      </template>
-      <template #from_file>
-        <FolderOpenIcon />
-        <span class="no-wrap"> {{t('Instance.Mods.AddFile')}} </span>
-      </template>
-    </DropdownButton>
+        {{t('Instance.Mods.AddContent')}}
+      </Button>
+      <OverflowMenu
+        :options="[
+          {
+            id: 'file',
+            action: onFileContent,
+          },
+        ]"
+        class="btn btn-primary btn-dropdown-animation icon-only"
+      >
+        <DropdownIcon />
+        <template #file>
+          <FolderOpenIcon />
+          {{t('Instance.Mods.AddFile')}}
+        </template>
+      </OverflowMenu>
+    </div>
   </Card>
   <Pagination
     v-if="projects.length > 0"
@@ -283,23 +286,26 @@
     </div>
     <h3>{{t('Instance.Mods.NoProjectsFound')}}</h3>
     <p class="empty-subtitle">{{t('Instance.Mods.NoProjectFoundDesc')}}</p>
-    <div class="empty-action">
-      <DropdownButton
-        :options="['search', 'from_file']"
-        default-value="search"
-        name="add-content-dropdown-from-empty"
-        color="primary"
-        @option-click="handleContentOptionClick"
+    <div v-if="!isPackLocked" class="joined-buttons">
+      <Button color="primary" @click="onSearchContent">
+        <SearchIcon />
+        {{t('Instance.Mods.AddContent')}}
+      </Button>
+      <OverflowMenu
+        :options="[
+          {
+            id: 'file',
+            action: onFileContent,
+          },
+        ]"
+        class="btn btn-primary btn-dropdown-animation icon-only"
       >
-        <template #search>
-          <SearchIcon />
-          <span class="no-wrap"> {{t('Instance.Mods.AddContent')}} </span>
-        </template>
-        <template #from_file>
+        <DropdownIcon />
+        <template #file>
           <FolderOpenIcon />
-          <span class="no-wrap"> {{t('Instance.Mods.AddFile')}} </span>
+          {{t('Instance.Mods.AddFile')}}
         </template>
-      </DropdownButton>
+      </OverflowMenu>
     </div>
   </div>
   <Pagination
@@ -378,7 +384,6 @@ import {
   FolderOpenIcon,
   Checkbox,
   formatProjectType,
-  DropdownButton,
   Modal,
   XIcon,
   ShareIcon,
@@ -391,6 +396,7 @@ import {
   CodeIcon,
   Pagination,
   DropdownSelect,
+  OverflowMenu,
 } from 'omorphia'
 import { computed, onUnmounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
@@ -845,21 +851,21 @@ const handleRightClick = (event, mod) => {
   }
 }
 
-const handleContentOptionClick = async (args) => {
-  if (args.option === 'search') {
-    await router.push({
-      path: `/browse/${props.instance.metadata.loader === 'vanilla' ? 'datapack' : 'mod'}`,
-      query: { i: props.instance.path },
-    })
-  } else if (args.option === 'from_file') {
-    const newProject = await open({ multiple: true })
-    if (!newProject) return
+const onSearchContent = async () => {
+  await router.push({
+    path: `/browse/${props.instance.metadata.loader === 'vanilla' ? 'datapack' : 'mod'}`,
+    query: { i: props.instance.path },
+  })
+}
 
-    for (const project of newProject) {
-      await add_project_from_path(props.instance.path, project, 'mod').catch(handleError)
-    }
-    initProjects(await get(props.instance.path).catch(handleError))
+const onFileContent = async () => {
+  const newProject = await open({ multiple: true })
+  if (!newProject) return
+
+  for (const project of newProject) {
+    await add_project_from_path(props.instance.path, project, 'mod').catch(handleError)
   }
+  initProjects(await get(props.instance.path).catch(handleError))
 }
 
 watch(selectAll, () => {
@@ -960,9 +966,17 @@ onUnmounted(() => {
   white-space: nowrap;
   align-items: center;
 
-  :deep(.dropdown-row) {
-    .btn {
-      height: 2.5rem !important;
+  :deep {
+    .popup-container {
+      .btn {
+        height: 2.5rem !important;
+      }
+    }
+
+    .dropdown-row {
+      .btn {
+        height: 2.5rem !important;
+      }
     }
   }
 

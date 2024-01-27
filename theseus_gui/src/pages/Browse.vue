@@ -709,7 +709,7 @@ onUnmounted(() => unlistenOffline())
             :placeholder="`${t('Browse.Search')} ${projectType}s...`"
             @input="onSearchChange(1)"
           />
-          <Button @click="() => clearSearch()">
+          <Button class="r-btn" @click="() => clearSearch()">
             <XIcon />
           </Button>
         </div>
@@ -845,13 +845,6 @@ onUnmounted(() => unlistenOffline())
   flex-direction: column;
   margin-bottom: 0 !important;
   min-height: min-content !important;
-}
-
-.iconified-input {
-  input {
-    max-width: none !important;
-    flex-basis: auto;
-  }
 }
 
 .search-panel-container {

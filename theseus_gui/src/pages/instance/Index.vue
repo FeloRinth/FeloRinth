@@ -420,6 +420,7 @@ Button {
     width: 100%;
     color: var(--color-primary);
     box-shadow: none;
+    justify-content: start;
 
     &.router-link-exact-active {
       box-shadow: var(--shadow-inset-lg);

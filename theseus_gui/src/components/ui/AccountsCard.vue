@@ -102,6 +102,7 @@
             v-tooltip="t('AccountsCard.CopyLink')"
             icon-only
             color="raised"
+            class="r-btn"
             @click="() => clipboardWrite(loginUrl)"
           >
             <GlobeIcon />
