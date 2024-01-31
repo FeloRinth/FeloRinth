@@ -347,7 +347,7 @@ command_listener(async (e) => {
           <PlusIcon />
           <span class="collapsed-button__label">{{ t('Application.CreateProfile') }}</span>
         </Button>
-        <AccountDropdown />
+        <AccountDropdown v-tooltip.right="t('Application.ModrinthAccount')"/>
       </div>
     </div>
     <div class="view">
