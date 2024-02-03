@@ -16,9 +16,11 @@ import {
   Card,
   // TextLogo,
   PlusIcon,
+  Avatar,
 } from 'omorphia'
 import { useLoading, useTheming } from '@/store/state'
-// import AccountsCard from './components/ui/AccountsCard.vue'
+import { useInstances } from '@/store/instances'
+import AccountsCard from './components/ui/AccountsCard.vue'
 import AccountDropdown from '@/components/ui/platform/AccountDropdown.vue'
 import InstanceCreationModal from '@/components/ui/InstanceCreationModal.vue'
 import { get } from '@/helpers/settings'
@@ -28,9 +30,13 @@ import SplashScreen from '@/components/ui/SplashScreen.vue'
 import ModrinthLoadingIndicator from '@/components/modrinth-loading-indicator'
 import { handleError, useNotifications } from '@/store/notifications.js'
 import { offline_listener, command_listener, warning_listener } from '@/helpers/events.js'
-import { MinimizeIcon, MaximizeIcon, ChatIcon } from '@/assets/icons'
-import { type } from '@tauri-apps/api/os'
-import { appWindow } from '@tauri-apps/api/window'
+import {
+  MinimizeIcon,
+  MaximizeIcon,
+  ChatIcon,
+  ArrowLeftFromLineIcon,
+  ArrowRightFromLineIcon,
+} from '@/assets/icons'
 import { isDev, getOS, isOffline, showLauncherLogsFolder } from '@/helpers/utils.js'
 import {
   mixpanel_track,
@@ -40,18 +46,22 @@ import {
 } from '@/helpers/mixpanel.js'
 import { useDisableClicks } from '@/composables/click.js'
 import { openExternal } from '@/helpers/external.js'
+import { await_sync, check_safe_loading_bars_complete } from '@/helpers/state.js'
+import { install_from_file } from '@/helpers/pack.js'
+import { iconPathAsUrl } from '@/helpers/icon'
+
+import URLConfirmModal from '@/components/ui/URLConfirmModal.vue'
+import StickyTitleBar from '@/components/ui/tutorial/StickyTitleBar.vue'
+import OnboardingScreen from '@/components/ui/tutorial/OnboardingScreen.vue'
+
 import { saveWindowState, StateFlags } from 'tauri-plugin-window-state-api'
 import { getVersion } from '@tauri-apps/api/app'
 import { window as TauriWindow } from '@tauri-apps/api'
 import { TauriEvent } from '@tauri-apps/api/event'
-import { await_sync, check_safe_loading_bars_complete } from './helpers/state.js'
 import { confirm } from '@tauri-apps/api/dialog'
-import URLConfirmModal from '@/components/ui/URLConfirmModal.vue'
-import StickyTitleBar from '@/components/ui/tutorial/StickyTitleBar.vue'
-import OnboardingScreen from '@/components/ui/tutorial/OnboardingScreen.vue'
-import { install_from_file } from './helpers/pack'
-import { useLanguage } from '@/store/language.js'
-import AccountsCard from '@/components/ui/AccountsCard.vue'
+import { type } from '@tauri-apps/api/os'
+import { appWindow } from '@tauri-apps/api/window'
+import { storeToRefs } from 'pinia'
 
 const themeStore = useTheming()
 const languageStore = useLanguage()
@@ -70,6 +80,9 @@ const onboardingVideo = ref()
 
 const failureText = ref(null)
 const os = ref('')
+
+const instances = useInstances()
+const { instancesByPlayed } = storeToRefs(instances)
 
 defineExpose({
   initialize: async () => {
@@ -286,6 +299,19 @@ command_listener(async (e) => {
 <!--          </Button>-->
 <!--        </div>-->
 <!--      </div>-->
+<!--      <div class="pages-list">-->
+<!--        <div class="square-collapsed-space">-->
+<!--          <Button-->
+<!--            transparent-->
+<!--            icon-only-->
+<!--            class="collapsed-button non-collapse"-->
+<!--            @click="toggleSidebar"-->
+<!--          >-->
+<!--            <ArrowRightFromLineIcon v-if="!sidebarOpen" />-->
+<!--            <ArrowLeftFromLineIcon v-else />-->
+<!--          </Button>-->
+<!--        </div>-->
+<!--      </div>-->
       <div class="pages-list">
         <suspense>
         <div class="pages-list">
@@ -317,11 +343,25 @@ command_listener(async (e) => {
           </suspense>
         </div>
       </div>
-<!--      <div class="instances pages-list">-->
-<!--        <RouterLink v-tooltip="'Meow'" to="/undefined" class="btn icon-only collapsed-button">-->
-<!--          Meow-->
-<!--        </RouterLink>-->
-<!--      </div>-->
+      <div class="divider">
+        <hr />
+      </div>
+      <div class="instances pages-list">
+        <RouterLink
+          v-for="instance in instancesByPlayed"
+          :key="instance.id"
+          v-tooltip="instance.metadata.name"
+          :to="`/instance/${encodeURIComponent(instance.path)}`"
+          class="btn icon-only collapsed-button"
+        >
+          <Avatar
+            class="collapsed-button__icon"
+            :src="iconPathAsUrl(instance.metadata?.icon)"
+            size="xs"
+          />
+          <span class="collapsed-button__label">{{ instance.metadata.name }}</span>
+        </RouterLink>
+      </div>
       <div class="settings pages-list">
         <Button
           v-tooltip.right="t('Application.Support')"
@@ -362,7 +402,6 @@ command_listener(async (e) => {
               />
             </router-link>
             <Breadcrumbs after-logo data-tauri-drag-region />
-            <!-- <pre><code>{{ JSON.stringify(breadcrumbs.path) }}</code></pre> -->
           </section>
           <section class="mod-stats">
             <Suspense>
@@ -470,6 +509,8 @@ command_listener(async (e) => {
 
 .container {
   --appbar-height: 4.5rem;
+
+  --sidebar-gap: 0.35rem;
 
   --sidebar-width: 4.5rem;
   --sidebar-open-width: 15rem;
@@ -606,9 +647,34 @@ command_listener(async (e) => {
   }
 }
 
+.divider {
+  height: auto;
+  width: 100%;
+
+  hr {
+    background-color: var(--color-button-bg);
+    border: none;
+    color: var(--color-button-bg);
+
+    height: 1px;
+    width: 100%;
+
+    margin: 0;
+  }
+
+  margin-top: var(--sidebar-gap);
+  // div should always have + 1 --sidebar-gap margin to the bottom to be equal
+  margin-bottom: calc(var(--sidebar-gap) * 2);
+
+  padding-left: var(--sidebar-padding);
+  padding-right: var(--sidebar-padding);
+}
+
 .instances {
-  height: 100%;
-  flex-grow: 1;
+  flex: 1;
+
+  flex-flow: column wrap; // This hides any elements that aren't fully visible
+  overflow: hidden;
 }
 
 .pages-list {
@@ -619,7 +685,7 @@ command_listener(async (e) => {
 
   width: 100%;
 
-  gap: 0.35rem;
+  gap: var(--sidebar-gap);
 
   .page-item,
   a {
@@ -652,33 +718,44 @@ command_listener(async (e) => {
   }
 }
 
-.collapsed-button {
-  justify-content: flex-start;
-
-  // width: var(--sidebar-icon-size);
-  height: var(--sidebar-button-size);
-  width: 100%;
-
-  padding: var(--sidebar-padding) !important;
-  border-radius: 99999px;
-  box-shadow: none;
-
-  white-space: nowrap;
-  overflow: hidden;
-
-  transition: all ease-in-out 0.1s;
-
-  .collapsed-button__icon,
-  svg {
-    width: var(--sidebar-icon-size);
-    height: var(--sidebar-icon-size);
-
-    flex-shrink: 0;
+:deep {
+  .non-collapse {
+    width: var(--sidebar-button-size) !important;
   }
 
-  .collapsed-button__label {
-    opacity: var(--sidebar-label-opacity);
+  .collapsed-button {
+    justify-content: flex-start;
+
+    // width: var(--sidebar-icon-size);
+    height: var(--sidebar-button-size);
+    width: 100%;
+
+    flex-shrink: 0;
+
+    padding: var(--sidebar-padding) !important;
+    border-radius: 99999px;
+    box-shadow: none;
+
+    white-space: nowrap;
+    overflow: hidden;
+
     transition: all ease-in-out 0.1s;
+
+    .collapsed-button__icon,
+    svg {
+      width: var(--sidebar-icon-size) !important;
+      height: var(--sidebar-icon-size) !important;
+
+      flex-shrink: 0;
+
+      border-radius: var(--radius-xs);
+    }
+
+    .collapsed-button__label {
+      word-spacing: normal; // Why is this even needed?
+      opacity: var(--sidebar-label-opacity);
+      transition: all ease-in-out 0.1s;
+    }
   }
 }
 

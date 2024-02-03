@@ -1,17 +1,17 @@
 <script setup>
-import { ref, onUnmounted, shallowRef, computed } from 'vue'
+import { ref, onUnmounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import RowDisplay from '@/components/RowDisplay.vue'
-import { list } from '@/helpers/profile.js'
 import { offline_listener, profile_listener } from '@/helpers/events'
 import { useBreadcrumbs } from '@/store/breadcrumbs'
 import { useFetch } from '@/helpers/fetch.js'
-import { handleError } from '@/store/notifications.js'
-import dayjs from 'dayjs'
 import { isOffline } from '@/helpers/utils'
 import { i18n } from '@/main.js';
 import { forceRefreshRemote } from '@/helpers/update.js'
 const t = i18n.global.t;
+import { useInstances } from '@/store/instances'
+import { storeToRefs } from 'pinia'
+
 const featuredModpacks = ref({})
 const featuredMods = ref({})
 const filter = ref('')
@@ -21,18 +21,17 @@ const breadcrumbs = useBreadcrumbs()
 
 breadcrumbs.setRootContext({ name: 'Home', link: route.path })
 
-const recentInstances = shallowRef([])
-
 const offline = ref(await isOffline())
 
-const getInstances = async () => {
-  const profiles = await list(true).catch(handleError)
-  recentInstances.value = Object.values(profiles).sort((a, b) => {
-    return dayjs(b.metadata.last_played ?? 0).diff(dayjs(a.metadata.last_played ?? 0))
-  })
+const instancesStore = useInstances()
+const { instancesByPlayed } = storeToRefs(instancesStore)
 
+const getInstances = async () => {
+  await instancesStore.refreshInstances()
+
+  // filter? TODO: Change this to be reactive along with fetching the rest.
   let filters = []
-  for (const instance of recentInstances.value) {
+  for (const instance of instancesByPlayed.value) {
     if (instance.metadata.linked_data && instance.metadata.linked_data.project_id) {
       filters.push(`NOT"project_id"="${instance.metadata.linked_data.project_id}"`)
     }
@@ -86,7 +85,7 @@ const unlistenOffline = await offline_listener(async (b) => {
 // computed sums of recentInstances, featuredModpacks, featuredMods, treating them as arrays if they are not
 const total = computed(() => {
   return (
-    (recentInstances.value?.length ?? 0) +
+    (instancesByPlayed.value?.length ?? 0) +
     (featuredModpacks.value?.length ?? 0) +
     (featuredMods.value?.length ?? 0)
   )
@@ -108,7 +107,7 @@ await forceRefreshRemote(true)
         {
           label: t('Instance.Index.JumpBackIn'),
           route: '/library',
-          instances: recentInstances,
+          instances: instancesByPlayed,
           downloaded: true,
         },
         {
