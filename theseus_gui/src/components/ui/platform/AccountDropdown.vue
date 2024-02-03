@@ -8,12 +8,15 @@
       <ModrinthLoginScreen :modal="true" :prev-page="signInAfter" :next-page="signInAfter" />
     </Modal>
     <PopoutMenu class="btn btn-transparent collapsed-button" direction="up" position="right">
-      <Avatar class="collapsed-button__icon" circle size="sm" :src="auth?.user?.avatar_url" />
+      <Avatar class="collapsed-button__icon" circle size="sm" :src="accountImage" />
       <span class="collapsed-button__label">
         <template v-if="auth?.user">
+          {{ getAvatarImage(auth) }}
           {{ auth.user.username }}
         </template>
-        <template v-else> {{ t('Settings.SignIn') }} </template>
+        <template v-else>
+          {{ getAvatarImage(auth) }}
+          {{ t('Application.ModrinthAccount') }} </template>
       </span>
       <template #menu>
         <div class="selection-menu">
@@ -52,12 +55,21 @@ const t = i18n.global.t;
 const themeStore = useTheming()
 const mrAuth = useModrinthAuth()
 const { auth } = storeToRefs(mrAuth)
+const accountImage = ref(null)
 
 const modrinthLoginModal = ref(null)
 
 const signInAfter = async () => {
   modrinthLoginModal.value?.hide()
   await mrAuth.get()
+}
+
+const getAvatarImage = (auth) => {
+  if (auth?.user) {
+    accountImage.value = auth?.user?.avatar_url;
+  } else {
+    accountImage.value = `https://cdn.discordapp.com/attachments/1006329469428043846/1200633903506018434/qzJ1vLioGvxrXAL8.png`
+  }
 }
 </script>
 

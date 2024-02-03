@@ -1,21 +1,21 @@
 <template>
-  <div
-    v-if="mode !== 'isolated'"
-    ref="button"
-    v-tooltip.right="t('AccountsCard.MinecraftAccounts')"
-    class="button-base avatar-button"
-    :class="{ expanded: mode === 'expanded' }"
-    @click="showCard = !showCard"
-  >
-    <Avatar
-      :size="mode === 'expanded' ? 'xs' : 'sm'"
-      :src="
+    <Button
+      v-if="mode !== 'isolated'"
+      v-tooltip.right="t('AccountsCard.MinecraftAccounts')"
+      class="btn btn-transparent collapsed-button"
+      @click="showCard = !showCard"
+    >
+      <Avatar
+        size="xs"
+        class="collapsed-button__icon"
+        :src="
         selectedAccount
           ? `https://mc-heads.net/avatar/${selectedAccount.username}/128`
           : 'https://launcher-files.modrinth.com/assets/steve_head.png'
       "
-    />
-  </div>
+      />
+      <span class="collapsed-button__label">{{ t('AccountsCard.MinecraftAccounts') }}</span>
+    </Button>
   <transition name="fade">
     <Card
       v-if="showCard || mode === 'isolated'"
@@ -31,8 +31,9 @@
           </h4>
           <p>{{ t('AccountsCard.Active') }}</p>
         </div>
-        <Button v-tooltip="t('AccountsCard.Logout')" class="trash-icon-selected-fix" icon-only color="raised" @click="logout(selectedAccount.id)">
-          <TrashIcon/>
+        <Button v-tooltip="t('AccountsCard.Logout')" class="trash-icon-selected-fix" icon-only color="raised"
+                @click="logout(selectedAccount.id)">
+          <TrashIcon />
         </Button>
       </div>
       <div v-else-if="!selectedAccount && displayAccounts.length > 0" class="logged-out no-account">
@@ -41,12 +42,12 @@
       <div v-else class="logged-out no-account">
         <h4>{{ t('AccountsCard.NoAccount') }}</h4>
         <div class="account-no-account-fix">
-        <Button v-tooltip="t('AccountsCard.LoginLicense')" icon-only color="secondary" @click="login()">
-          <Microsoft class="account-type-no-account"/>
-        </Button>
-        <Button v-tooltip="t('AccountsCard.LoginOffline')" icon-only color="secondary" @click="loginOffline()">
-          <Pirate class="account-type-no-account"/>
-        </Button>
+          <Button v-tooltip="t('AccountsCard.LoginLicense')" icon-only color="secondary" @click="login()">
+            <Microsoft class="account-type-no-account" />
+          </Button>
+          <Button v-tooltip="t('AccountsCard.LoginOffline')" icon-only color="secondary" @click="loginOffline()">
+            <Pirate class="account-type-no-account" />
+          </Button>
         </div>
       </div>
 
@@ -58,7 +59,8 @@
               <component :is="printAccountType(account)" class="account-type" />
             </p>
           </Button>
-          <Button v-tooltip="t('AccountsCard.Logout')" class="account-buttons-fix" icon-only @click="logout(account.id)">
+          <Button v-tooltip="t('AccountsCard.Logout')" class="account-buttons-fix" icon-only
+                  @click="logout(account.id)">
             <TrashIcon />
           </Button>
         </div>
@@ -139,7 +141,17 @@
 
 <script setup>
 import { i18n } from '@/main.js'
-import { Avatar, Button, Card, ClipboardCopyIcon, GlobeIcon, LogInIcon, Modal, PlusIcon, TrashIcon } from 'omorphia'
+import {
+  Avatar,
+  Button,
+  Card,
+  ClipboardCopyIcon,
+  GlobeIcon,
+  LogInIcon,
+  Modal,
+  PlusIcon,
+  TrashIcon
+} from 'omorphia'
 
 import { computed, onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue'
 import {
@@ -155,7 +167,7 @@ import { useTheming } from '@/store/theme.js'
 import { mixpanel_track } from '@/helpers/mixpanel'
 import QrcodeVue from 'qrcode.vue'
 import { process_listener } from '@/helpers/events'
-import { Pirate, Microsoft} from '@/assets/render/index.js'
+import { Pirate, Microsoft } from '@/assets/render/index.js'
 
 const t = i18n.global.t
 
@@ -398,11 +410,12 @@ onUnmounted(() => {
 
 .account-card {
   width: min-content; // Change this percent value for rescale AccountsCard.vue window
-  position: absolute;
+  position: initial;
   display: flex;
   flex-direction: column;
   top: 0.5rem;
-  left: 5.5rem;
+  left: auto;
+  margin-top: inherit;
   z-index: 11;
   gap: 0.5rem;
   padding: 1rem;
@@ -410,7 +423,7 @@ onUnmounted(() => {
   user-select: none;
   -ms-user-select: none;
   -webkit-user-select: none;
-  max-height: 98vh;
+  max-height: 40vh;
   overflow-y: auto;
 
   &::-webkit-scrollbar-track {

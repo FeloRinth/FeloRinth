@@ -1,22 +1,19 @@
 <script setup>
-import { i18n } from '@/main.js';
-const t = i18n.global.t;
-
+import { i18n } from '@/main.js'
 import { computed, onMounted, ref, watch } from 'vue'
-import { RouterView, RouterLink, useRouter, useRoute } from 'vue-router'
+import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import {
-  HomeIcon,
-  SearchIcon,
-  LibraryIcon,
-  SettingsIcon,
-  FileIcon,
-  Button,
-  Notifications,
-  XIcon,
-  Card,
-  // TextLogo,
-  PlusIcon,
   Avatar,
+  Button,
+  Card,
+  FileIcon,
+  HomeIcon,
+  LibraryIcon,
+  Notifications,
+  PlusIcon,
+  SearchIcon,
+  SettingsIcon,
+  XIcon
 } from 'omorphia'
 import { useLoading, useTheming } from '@/store/state'
 import { useInstances } from '@/store/instances'
@@ -29,21 +26,10 @@ import RunningAppBar from '@/components/ui/RunningAppBar.vue'
 import SplashScreen from '@/components/ui/SplashScreen.vue'
 import ModrinthLoadingIndicator from '@/components/modrinth-loading-indicator'
 import { handleError, useNotifications } from '@/store/notifications.js'
-import { offline_listener, command_listener, warning_listener } from '@/helpers/events.js'
-import {
-  MinimizeIcon,
-  MaximizeIcon,
-  ChatIcon,
-  ArrowLeftFromLineIcon,
-  ArrowRightFromLineIcon,
-} from '@/assets/icons'
-import { isDev, getOS, isOffline, showLauncherLogsFolder } from '@/helpers/utils.js'
-import {
-  mixpanel_track,
-  mixpanel_init,
-  mixpanel_opt_out_tracking,
-  mixpanel_is_loaded,
-} from '@/helpers/mixpanel.js'
+import { command_listener, offline_listener, warning_listener } from '@/helpers/events.js'
+import { ArrowLeftFromLineIcon, ArrowRightFromLineIcon, ChatIcon, MaximizeIcon, MinimizeIcon } from '@/assets/icons'
+import { getOS, isDev, isOffline, showLauncherLogsFolder } from '@/helpers/utils.js'
+import { mixpanel_init, mixpanel_is_loaded, mixpanel_opt_out_tracking, mixpanel_track } from '@/helpers/mixpanel.js'
 import { useDisableClicks } from '@/composables/click.js'
 import { openExternal } from '@/helpers/external.js'
 import { await_sync, check_safe_loading_bars_complete } from '@/helpers/state.js'
@@ -62,6 +48,9 @@ import { confirm } from '@tauri-apps/api/dialog'
 import { type } from '@tauri-apps/api/os'
 import { appWindow } from '@tauri-apps/api/window'
 import { storeToRefs } from 'pinia'
+import { useLanguage } from '@/store/language.js'
+
+const t = i18n.global.t
 
 const themeStore = useTheming()
 const languageStore = useLanguage()
@@ -87,7 +76,15 @@ const { instancesByPlayed } = storeToRefs(instances)
 defineExpose({
   initialize: async () => {
     isLoading.value = false
-    const { native_decorations, theme, language, opt_out_analytics, collapsed_navigation, advanced_rendering, fully_onboarded } =
+    const {
+      native_decorations,
+      theme,
+      language,
+      opt_out_analytics,
+      collapsed_navigation,
+      advanced_rendering,
+      fully_onboarded
+    } =
       await get()
     // video should play if the user is not on linux, and has not onboarded
     os.value = await getOS()
@@ -97,7 +94,7 @@ defineExpose({
     showOnboarding.value = !fully_onboarded
 
     nativeDecorations.value = native_decorations
-    if (os.value !== "MacOS") appWindow.setDecorations(native_decorations)
+    if (os.value !== 'MacOS') appWindow.setDecorations(native_decorations)
 
     themeStore.setThemeState(theme)
     languageStore.setLanguageState(language)
@@ -106,7 +103,7 @@ defineExpose({
 
     mixpanel_init('014c7d6a336d0efaefe3aca91063748d', { debug: dev, persistence: 'localStorage' })
     if (opt_out_analytics) {
-      console.info("[AR • Hard Disable Patch] • OPT_OUT_ANALYTICS (DISABLED) status is ", opt_out_analytics)
+      console.info('[AR • Hard Disable Patch] • OPT_OUT_ANALYTICS (DISABLED) status is ', opt_out_analytics)
       mixpanel_opt_out_tracking()
     }
     mixpanel_track('Launched', { version, dev, fully_onboarded })
@@ -128,7 +125,7 @@ defineExpose({
       notificationsWrapper.value.addNotification({
         title: 'Warning',
         text: e.message,
-        type: 'warn',
+        type: 'warn'
       })
     )
 
@@ -140,7 +137,7 @@ defineExpose({
     isLoading.value = false
     failureText.value = e
     os.value = await getOS()
-  },
+  }
 })
 
 const confirmClose = async () => {
@@ -148,7 +145,7 @@ const confirmClose = async () => {
     'An action is currently in progress. Are you sure you want to exit?',
     {
       title: 'Modrinth',
-      type: 'warning',
+      type: 'warning'
     }
   )
   return confirmed
@@ -164,7 +161,7 @@ const handleClose = async () => {
   // (Exception: if the user is changing config directory, which takes control of the state, and it's taking a significant amount of time for some reason)
   const isSafe = await Promise.race([
     check_safe_loading_bars_complete(),
-    new Promise((r) => setTimeout(r, 2000)),
+    new Promise((r) => setTimeout(r, 2000))
   ])
   if (!isSafe) {
     const response = await confirmClose()
@@ -204,7 +201,7 @@ watch(notificationsWrapper, () => {
 
 useDisableClicks(document, window)
 
-// const accounts = ref(null)
+const accounts = ref(null)
 
 command_listener(async (e) => {
   if (e.event === 'RunMRPack') {
@@ -212,7 +209,7 @@ command_listener(async (e) => {
     if (e.path.endsWith('.mrpack')) {
       await install_from_file(e.path).catch(handleError)
       mixpanel_track('InstanceCreate', {
-        source: 'CreationModalFileDrop',
+        source: 'CreationModalFileDrop'
       })
     }
   } else {
@@ -221,9 +218,9 @@ command_listener(async (e) => {
   }
 })
 
-// const toggleSidebar = () => {
-//   sidebarOpen.value = !sidebarOpen.value
-// }
+const toggleSidebar = () => {
+  sidebarOpen.value = !sidebarOpen.value
+}
 </script>
 
 <template>
@@ -269,7 +266,10 @@ command_listener(async (e) => {
         </Card>
 
         <div class="button-row push-right">
-          <Button @click="showLauncherLogsFolder"><FileIcon />Open launcher logs</Button>
+          <Button @click="showLauncherLogsFolder">
+            <FileIcon />
+            Open launcher logs
+          </Button>
         </div>
       </Card>
     </div>
@@ -285,38 +285,22 @@ command_listener(async (e) => {
         '--sidebar-label-opacity': sidebarOpen ? '1' : '0',
       }"
     >
-<!--      <div class="pages-list">-->
-<!--        <div class="square-collapsed-space">-->
-<!--          <Button-->
-<!--            v-tooltip.right="t('Application.ToggleSidebar')"-->
-<!--            transparent-->
-<!--            icon-only-->
-<!--            class="collapsed-button"-->
-<!--            @click="toggleSidebar"-->
-<!--          >-->
-<!--            <PlusIcon />-->
-<!--            <span class="collapsed-button__label">{{ t('Application.ToggleSidebar') }}</span>-->
-<!--          </Button>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--      <div class="pages-list">-->
-<!--        <div class="square-collapsed-space">-->
-<!--          <Button-->
-<!--            transparent-->
-<!--            icon-only-->
-<!--            class="collapsed-button non-collapse"-->
-<!--            @click="toggleSidebar"-->
-<!--          >-->
-<!--            <ArrowRightFromLineIcon v-if="!sidebarOpen" />-->
-<!--            <ArrowLeftFromLineIcon v-else />-->
-<!--          </Button>-->
-<!--        </div>-->
-<!--      </div>-->
+      <div class="pages-list">
+        <div class="square-collapsed-space">
+          <Button
+            transparent
+            icon-only
+            class="collapsed-button non-collapse"
+            @click="toggleSidebar"
+          >
+            <ArrowRightFromLineIcon v-if="!sidebarOpen" />
+            <ArrowLeftFromLineIcon v-else />
+          </Button>
+        </div>
+      </div>
       <div class="pages-list">
         <suspense>
-        <div class="pages-list">
-          <AccountsCard ref="accounts" mode="small"/>
-        </div>
+          <AccountsCard ref="accounts" mode="small" />
         </suspense>
         <div class="pages-list">
           <RouterLink v-tooltip.right="t('Application.Home')" to="/" class="btn icon-only collapsed-button">
@@ -350,7 +334,7 @@ command_listener(async (e) => {
         <RouterLink
           v-for="instance in instancesByPlayed"
           :key="instance.id"
-          v-tooltip="instance.metadata.name"
+          v-tooltip.right="instance.metadata.name"
           :to="`/instance/${encodeURIComponent(instance.path)}`"
           class="btn icon-only collapsed-button"
         >
@@ -361,6 +345,9 @@ command_listener(async (e) => {
           />
           <span class="collapsed-button__label">{{ instance.metadata.name }}</span>
         </RouterLink>
+      </div>
+      <div class="divider">
+        <hr />
       </div>
       <div class="settings pages-list">
         <Button
@@ -387,7 +374,7 @@ command_listener(async (e) => {
           <PlusIcon />
           <span class="collapsed-button__label">{{ t('Application.CreateProfile') }}</span>
         </Button>
-        <AccountDropdown v-tooltip.right="t('Application.ModrinthAccount')"/>
+        <AccountDropdown v-tooltip.right="t('Application.ModrinthAccount')" />
       </div>
     </div>
     <div class="view">

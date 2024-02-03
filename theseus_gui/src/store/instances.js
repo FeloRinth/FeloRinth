@@ -19,15 +19,14 @@ export const useInstances = defineStore('instancesStore', () => {
 
   const setInstances = async () => {
     try {
-      const p = await list(true)
-      instances.value = p
-    } catch (error) {
+      instances.value = await list(true)
+    } catch (error) { // < - Mark '*' here
       handleError(error)
     }
   }
 
   onMounted(async () => {
-    await setInstances()
+    // await setInstances() // TODO: Check it later (Marked as *)
   })
 
   const refreshInstances = async () => {
