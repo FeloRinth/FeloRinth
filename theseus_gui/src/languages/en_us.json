@@ -314,7 +314,9 @@
       "TypeLogFilter": "Type to filter logs...",
       "ShareLog": "Share Log",
       "InstanceLog": "Instance Log",
-      "ShareText": "Check out this log from an instance on the AstralRinth App"
+      "ShareText": "Check out this log from an instance on the AstralRinth App",
+      "NoLiveGame": "No live game detected.",
+      "StartYourGame": "Start your game to proceed."
     }
   },
   "RowDisplay": {

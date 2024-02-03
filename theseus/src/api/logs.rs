@@ -229,7 +229,8 @@ pub async fn delete_logs_by_filename(
 
     let logs_folder = DirectoryInfo::profile_logs_dir(&profile_path).await?;
     let path = logs_folder.join(filename);
-    io::remove_dir_all(&path).await?;
+    io::remove_file(&path).await?;
+    tracing::info!("Removed {:?}", &path);
     Ok(())
 }
 

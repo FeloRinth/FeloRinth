@@ -116,7 +116,8 @@ import { ofetch } from 'ofetch'
 
 import { RecycleScroller } from 'vue-virtual-scroller'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
-
+import { i18n } from '@/main.js';
+const t = i18n.global.t;
 dayjs.extend(isToday)
 dayjs.extend(isYesterday)
 
@@ -139,7 +140,7 @@ const props = defineProps({
 
 const currentLiveLog = ref(null)
 const currentLiveLogCursor = ref(0)
-const emptyText = ['No live game detected.', 'Start your game to proceed.']
+const emptyText = [t('Instance.Logs.NoLiveGame'), t('Instance.Logs.StartYourGame')]
 
 const logs = ref([])
 await setLogs()

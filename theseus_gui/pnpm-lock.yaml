@@ -71,8 +71,8 @@ devDependencies:
     specifier: ^8.10.0
     version: 8.10.0(eslint@8.56.0)
   eslint-plugin-vue:
-    specifier: ^9.21.0
-    version: 9.21.0(eslint@8.56.0)
+    specifier: ^9.21.1
+    version: 9.21.1(eslint@8.56.0)
   prettier:
     specifier: ^2.8.8
     version: 2.8.8
@@ -124,7 +124,7 @@ packages:
       vue: 3.4.15
     dev: false
 
-  /@codemirror/autocomplete@6.12.0(@codemirror/language@6.10.0)(@codemirror/state@6.4.0)(@codemirror/view@6.23.1)(@lezer/common@1.2.1):
+  /@codemirror/autocomplete@6.12.0(@codemirror/language@6.10.1)(@codemirror/state@6.4.0)(@codemirror/view@6.23.1)(@lezer/common@1.2.1):
     resolution: {integrity: sha512-r4IjdYFthwbCQyvqnSlx0WBHRHi8nBvU+WjJxFUij81qsBfhNudf/XKKmmC2j3m0LaOYUQTf3qiEK1J8lO1sdg==}
     peerDependencies:
       '@codemirror/language': ^6.0.0
@@ -132,7 +132,7 @@ packages:
       '@codemirror/view': ^6.0.0
       '@lezer/common': ^1.0.0
     dependencies:
-      '@codemirror/language': 6.10.0
+      '@codemirror/language': 6.10.1
       '@codemirror/state': 6.4.0
       '@codemirror/view': 6.23.1
       '@lezer/common': 1.2.1
@@ -141,7 +141,7 @@ packages:
   /@codemirror/commands@6.3.3:
     resolution: {integrity: sha512-dO4hcF0fGT9tu1Pj1D2PvGvxjeGkbC6RGcZw6Qs74TH+Ed1gw98jmUgd2axWvIZEqTeTuFrg1lEB1KV6cK9h1A==}
     dependencies:
-      '@codemirror/language': 6.10.0
+      '@codemirror/language': 6.10.1
       '@codemirror/state': 6.4.0
       '@codemirror/view': 6.23.1
       '@lezer/common': 1.2.1
@@ -150,8 +150,8 @@ packages:
   /@codemirror/lang-css@6.2.1(@codemirror/view@6.23.1):
     resolution: {integrity: sha512-/UNWDNV5Viwi/1lpr/dIXJNWiwDxpw13I4pTUAsNxZdg6E0mI2kTQb0P2iHczg1Tu+H4EBgJR+hYhKiHKko7qg==}
     dependencies:
-      '@codemirror/autocomplete': 6.12.0(@codemirror/language@6.10.0)(@codemirror/state@6.4.0)(@codemirror/view@6.23.1)(@lezer/common@1.2.1)
-      '@codemirror/language': 6.10.0
+      '@codemirror/autocomplete': 6.12.0(@codemirror/language@6.10.1)(@codemirror/state@6.4.0)(@codemirror/view@6.23.1)(@lezer/common@1.2.1)
+      '@codemirror/language': 6.10.1
       '@codemirror/state': 6.4.0
       '@lezer/common': 1.2.1
       '@lezer/css': 1.1.7
@@ -162,10 +162,10 @@ packages:
   /@codemirror/lang-html@6.4.8:
     resolution: {integrity: sha512-tE2YK7wDlb9ZpAH6mpTPiYm6rhfdQKVDa5r9IwIFlwwgvVaKsCfuKKZoJGWsmMZIf3FQAuJ5CHMPLymOtg1hXw==}
     dependencies:
-      '@codemirror/autocomplete': 6.12.0(@codemirror/language@6.10.0)(@codemirror/state@6.4.0)(@codemirror/view@6.23.1)(@lezer/common@1.2.1)
+      '@codemirror/autocomplete': 6.12.0(@codemirror/language@6.10.1)(@codemirror/state@6.4.0)(@codemirror/view@6.23.1)(@lezer/common@1.2.1)
       '@codemirror/lang-css': 6.2.1(@codemirror/view@6.23.1)
       '@codemirror/lang-javascript': 6.2.1
-      '@codemirror/language': 6.10.0
+      '@codemirror/language': 6.10.1
       '@codemirror/state': 6.4.0
       '@codemirror/view': 6.23.1
       '@lezer/common': 1.2.1
@@ -176,8 +176,8 @@ packages:
   /@codemirror/lang-javascript@6.2.1:
     resolution: {integrity: sha512-jlFOXTejVyiQCW3EQwvKH0m99bUYIw40oPmFjSX2VS78yzfe0HELZ+NEo9Yfo1MkGRpGlj3Gnu4rdxV1EnAs5A==}
     dependencies:
-      '@codemirror/autocomplete': 6.12.0(@codemirror/language@6.10.0)(@codemirror/state@6.4.0)(@codemirror/view@6.23.1)(@lezer/common@1.2.1)
-      '@codemirror/language': 6.10.0
+      '@codemirror/autocomplete': 6.12.0(@codemirror/language@6.10.1)(@codemirror/state@6.4.0)(@codemirror/view@6.23.1)(@lezer/common@1.2.1)
+      '@codemirror/language': 6.10.1
       '@codemirror/lint': 6.5.0
       '@codemirror/state': 6.4.0
       '@codemirror/view': 6.23.1
@@ -188,17 +188,17 @@ packages:
   /@codemirror/lang-markdown@6.2.4:
     resolution: {integrity: sha512-UghkA1vSMs8bT7RSZM6vsIocigyah2bV00eRQuZy76401UmFZdsTsbQNBGdyxRQDOLeEvF5iFwap0BM8LKyd+g==}
     dependencies:
-      '@codemirror/autocomplete': 6.12.0(@codemirror/language@6.10.0)(@codemirror/state@6.4.0)(@codemirror/view@6.23.1)(@lezer/common@1.2.1)
+      '@codemirror/autocomplete': 6.12.0(@codemirror/language@6.10.1)(@codemirror/state@6.4.0)(@codemirror/view@6.23.1)(@lezer/common@1.2.1)
       '@codemirror/lang-html': 6.4.8
-      '@codemirror/language': 6.10.0
+      '@codemirror/language': 6.10.1
       '@codemirror/state': 6.4.0
       '@codemirror/view': 6.23.1
       '@lezer/common': 1.2.1
       '@lezer/markdown': 1.2.0
     dev: false
 
-  /@codemirror/language@6.10.0:
-    resolution: {integrity: sha512-2vaNn9aPGCRFKWcHPFksctzJ8yS5p7YoaT+jHpc0UGKzNuAIx4qy6R5wiqbP+heEEdyaABA582mNqSHzSoYdmg==}
+  /@codemirror/language@6.10.1:
+    resolution: {integrity: sha512-5GrXzrhq6k+gL5fjkAwt90nYDmjlzTIJV8THnxNFtNKWotMIlzzN+CpqxqwXOECnUdOndmSeWntVrVcv5axWRQ==}
     dependencies:
       '@codemirror/state': 6.4.0
       '@codemirror/view': 6.23.1
@@ -449,7 +449,7 @@ packages:
       debug: 4.3.4
       espree: 9.6.1
       globals: 13.24.0
-      ignore: 5.3.0
+      ignore: 5.3.1
       import-fresh: 3.3.0
       js-yaml: 4.1.0
       minimatch: 3.1.2
@@ -1229,8 +1229,8 @@ packages:
       eslint: 8.56.0
     dev: true
 
-  /eslint-plugin-vue@9.21.0(eslint@8.56.0):
-    resolution: {integrity: sha512-B3NgZRtbi9kSl7M0x/PqhSMk7ULJUwWxQpTvM8b2Z6gNTORK0YSt5v1vzwY84oMs/2+3BWH5XmTepaQebcJwfA==}
+  /eslint-plugin-vue@9.21.1(eslint@8.56.0):
+    resolution: {integrity: sha512-XVtI7z39yOVBFJyi8Ljbn7kY9yHzznKXL02qQYn+ta63Iy4A9JFBw6o4OSB9hyD2++tVT+su9kQqetUyCCwhjw==}
     engines: {node: ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^6.2.0 || ^7.0.0 || ^8.0.0
@@ -1290,7 +1290,7 @@ packages:
       glob-parent: 6.0.2
       globals: 13.24.0
       graphemer: 1.4.0
-      ignore: 5.3.0
+      ignore: 5.3.1
       imurmurhash: 0.1.4
       is-glob: 4.0.3
       is-path-inside: 3.0.3
@@ -1468,8 +1468,8 @@ packages:
     engines: {node: '>=12.0.0'}
     dev: false
 
-  /ignore@5.3.0:
-    resolution: {integrity: sha512-g7dmpshy+gD7mh88OC9NwSGTKoc3kyLAZQRU1mt53Aw/vnvfXnbC+F/7F7QoYVKbV+KNvJx8wArewKy1vXMtlg==}
+  /ignore@5.3.1:
+    resolution: {integrity: sha512-5Fytz/IraMjqpwfd34ke28PTVMjZjJG2MPn5t7OE4eUCUNf8BAa7b5WUS9/Qvr6mwOQS7Mk6vdsMno5he+T8Xw==}
     engines: {node: '>= 4'}
     dev: true
 
@@ -1689,7 +1689,7 @@ packages:
     dependencies:
       '@codemirror/commands': 6.3.3
       '@codemirror/lang-markdown': 6.2.4
-      '@codemirror/language': 6.10.0
+      '@codemirror/language': 6.10.1
       '@codemirror/state': 6.4.0
       '@codemirror/view': 6.23.1
       apexcharts: 3.45.2
@@ -1783,7 +1783,7 @@ packages:
     dependencies:
       '@vue/devtools-api': 6.5.1
       vue: 3.4.15
-      vue-demi: 0.14.6(vue@3.4.15)
+      vue-demi: 0.14.7(vue@3.4.15)
     dev: false
 
   /postcss-selector-parser@6.0.15:
@@ -2111,8 +2111,8 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vue-demi@0.14.6(vue@3.4.15):
-    resolution: {integrity: sha512-8QA7wrYSHKaYgUxDA5ZC24w+eHm3sYCbp0EzcDwKqN3p6HqtTCGR/GVsPyZW92unff4UlcSh++lmqDWN3ZIq4w==}
+  /vue-demi@0.14.7(vue@3.4.15):
+    resolution: {integrity: sha512-EOG8KXDQNwkJILkx/gPcoL/7vH+hORoBaKgGe+6W7VFMvCYJfmF2dGbvgDroVnI8LU7/kTu8mbjRZGBU1z9NTA==}
     engines: {node: '>=12'}
     hasBin: true
     requiresBuild: true
