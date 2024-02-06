@@ -345,6 +345,10 @@ const approvedUpdating = async () => {
   0 0 8px rgba(14, 98, 204, 0.5),
   0 0 12px rgba(122, 31, 199, 0.5);
   transition: color 0.35s ease;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .download:hover,
