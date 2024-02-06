@@ -616,7 +616,7 @@ const toggleSidebar = () => {
 }
 
 .square-collapsed-space {
-  margin-top: 1.25rem;
+  margin-top: 1rem;
   height: var(--appbar-height);
   width: 100%;
 
