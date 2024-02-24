@@ -4,7 +4,12 @@
       v-if="props.afterLogo && breadcrumbContext.routeBreadcrumbs.value?.length > 0"
       class="breadcrumbs__item"
     >
-      <ChevronRightIcon class="chevron" />
+      <Button class="chevron-btn" @click="$router.back()">
+        <ChevronLeftIcon />
+      </Button>
+      <Button class="chevron-btn" @click="$router.forward()">
+        <ChevronRightIcon />
+      </Button>
     </div>
     <div
       v-for="breadcrumb in breadcrumbContext.routeBreadcrumbs.value"
@@ -29,7 +34,7 @@
 </template>
 
 <script setup>
-import { ChevronRightIcon } from 'omorphia'
+import { ChevronRightIcon, ChevronLeftIcon } from 'omorphia'
 import { useBreadcrumbs, useBreadcrumbContext } from '@/store/breadcrumbs'
 import { useRoute } from 'vue-router'
 
@@ -58,6 +63,31 @@ const breadcrumbName = (bcn) => {
 </script>
 
 <style scoped lang="scss">
+.chevron-btn {
+  color: #3e8cde;
+  border-radius: var(--radius-md);
+  border: var(--color-button-bg);
+  //padding: var(--gap-sm) var(--gap-lg);
+  padding: 0.25rem;
+  background-color: rgba(0, 0, 0, 0.0);
+  text-decoration: none;
+  text-shadow: 0 0 4px rgba(79, 173, 255, 0.5),
+  0 0 8px rgba(14, 98, 204, 0.5),
+  0 0 12px rgba(122, 31, 199, 0.5);
+  transition: color 0.35s ease;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0.25rem;
+}
+
+.chevron-btn:hover,
+.chevron-btn:focus,
+.chevron-btn:active {
+  color: #10fae5;
+  text-shadow: #26065e;
+}
+
 .breadcrumbs {
   display: flex;
   flex-direction: row;
@@ -69,7 +99,10 @@ const breadcrumbName = (bcn) => {
     margin: auto 0;
 
     .chevron {
-      margin: auto 0.5rem;
+      margin: 0.15rem;
+    }
+    .chevron-button {
+      opacity: 0;
     }
 
     a {

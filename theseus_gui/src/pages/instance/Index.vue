@@ -94,7 +94,7 @@
     </div>
   </div>
   <ContextMenu ref="options" @option-clicked="handleOptionsClick">
-    <template #play> <PlayIcon /> {{t('Instance.Index.PLay')}} </template>
+    <template #play> <PlayIcon /> {{t('Instance.Index.Play')}} </template>
     <template #stop> <StopCircleIcon /> {{t('Instance.Index.Stop')}} </template>
     <template #add_content> <PlusIcon /> {{t('Instance.Index.AddContent')}} </template>
     <template #edit> <EditIcon /> {{t('Instance.Index.Edit')}} </template>
