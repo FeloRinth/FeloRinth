@@ -46,15 +46,20 @@ const props = defineProps({
 })
 
 const breadcrumbData = useBreadcrumbs()
-const breadcrumbs = computed(() => {
-  const additionalContext =
-    route.meta.useContext === true
-      ? breadcrumbData.context
-      : route.meta.useRootContext === true
-        ? breadcrumbData.rootContext
-        : null
-  return additionalContext ? [additionalContext, ...route.meta.breadcrumb] : route.meta.breadcrumb
+
+const route = useRoute()
+const breadcrumbContext = useBreadcrumbContext(route)
+
+breadcrumbData.$subscribe(() => {
+  breadcrumbData?.resetToNames(breadcrumbContext.routeBreadcrumbs.value)
 })
+
+const breadcrumbName = (bcn) => {
+  if (bcn.charAt(0) === '?') {
+    return breadcrumbData.getName(bcn.slice(1))
+  }
+  return bcn
+}
 </script>
 
 <style scoped lang="scss">
