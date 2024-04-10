@@ -48,7 +48,7 @@ async function deleteProfile(modal) {
   if (currentDeleteInstance.value) {
     modal.hide()
     instanceComponents.value = instanceComponents.value.filter(
-      (x) => x.instance.path !== currentDeleteInstance.value
+      (x) => x.instance.path !== currentDeleteInstance.value,
     )
     await remove(currentDeleteInstance.value).catch(handleError)
   }
@@ -91,7 +91,7 @@ const handleRightClick = (event, profilePathId) => {
             color: 'primary',
           },
           ...baseOptions,
-        ]
+        ],
   )
 }
 

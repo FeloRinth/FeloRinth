@@ -76,7 +76,7 @@ const install = async (e) => {
   installing.value = true
   const versions = await useFetch(
     `https://api.modrinth.com/v2/project/${props.project.project_id}/version`,
-    'project versions'
+    'project versions',
   )
 
   if (props.project.project_type === 'modpack') {
@@ -93,7 +93,7 @@ const install = async (e) => {
         props.project.project_id,
         versions[0].id,
         props.project.title,
-        props.project.icon_url
+        props.project.icon_url,
       ).catch(handleError)
       installing.value = false
     } else
@@ -101,7 +101,7 @@ const install = async (e) => {
         props.project.project_id,
         versions[0].id,
         props.project.title,
-        props.project.icon_url
+        props.project.icon_url,
       )
   } else {
     props.modInstallModal.show(props.project.project_id, versions)

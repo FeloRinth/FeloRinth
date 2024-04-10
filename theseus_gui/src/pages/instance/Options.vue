@@ -605,7 +605,7 @@ const availableGroups = ref([
   ...new Set(
     instancesList.reduce((acc, obj) => {
       return acc.concat(obj.metadata.groups)
-    }, [])
+    }, []),
   ),
 ])
 
@@ -650,7 +650,9 @@ const javaArgs = ref((javaSettings.extra_arguments ?? globalSettings.custom_java
 
 const overrideEnvVars = ref(!!javaSettings.custom_env_args)
 const envVars = ref(
-  (javaSettings.custom_env_args ?? globalSettings.custom_env_args).map((x) => x.join('=')).join(' ')
+  (javaSettings.custom_env_args ?? globalSettings.custom_env_args)
+    .map((x) => x.join('='))
+    .join(' '),
 )
 
 const overrideMemorySettings = ref(!!props.instance.memory)
@@ -697,7 +699,7 @@ watch(
   async () => {
     await edit(props.instance.path, editProfileObject.value)
   },
-  { deep: true }
+  { deep: true },
 )
 
 const getLocalVersion = (path) => {
@@ -725,7 +727,7 @@ const editProfileObject = computed(() => {
       editProfile.java.override_version = javaInstall.value
       editProfile.java.override_version.path = editProfile.java.override_version.path.replace(
         'java.exe',
-        'javaw.exe'
+        'javaw.exe',
       )
     }
   }
@@ -857,7 +859,7 @@ const [
     .then((value) =>
       value
         .filter((item) => item.supported_project_types.includes('modpack'))
-        .map((item) => item.name.toLowerCase())
+        .map((item) => item.name.toLowerCase()),
     )
     .then(ref)
     .catch(handleError),
@@ -902,8 +904,8 @@ const selectableLoaderVersions = computed(() => {
 })
 const loaderVersionIndex = ref(
   selectableLoaderVersions.value.findIndex(
-    (x) => x.id === props.instance.metadata.loader_version?.id
-  )
+    (x) => x.id === props.instance.metadata.loader_version?.id,
+  ),
 )
 
 const isValid = computed(() => {

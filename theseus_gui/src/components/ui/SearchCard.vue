@@ -139,7 +139,7 @@ async function install() {
   installing.value = true
   const versions = await useFetch(
     `https://api.modrinth.com/v2/project/${props.project.project_id}/version`,
-    'project versions'
+    'project versions',
   )
   let queuedVersionData
 
@@ -149,7 +149,8 @@ async function install() {
     queuedVersionData = versions.find(
       (v) =>
         v.game_versions.includes(props.instance.metadata.game_version) &&
-        (props.project.project_type !== 'mod' || v.loaders.includes(props.instance.metadata.loader))
+        (props.project.project_type !== 'mod' ||
+          v.loaders.includes(props.instance.metadata.loader)),
     )
   }
 
@@ -165,7 +166,7 @@ async function install() {
         props.project.project_id,
         queuedVersionData.id,
         props.project.title,
-        props.project.icon_url
+        props.project.icon_url,
       ).catch(handleError)
 
       mixpanel_track('PackInstall', {
@@ -179,7 +180,7 @@ async function install() {
         props.project.project_id,
         queuedVersionData.id,
         props.project.title,
-        props.project.icon_url
+        props.project.icon_url,
       )
     }
   } else {
@@ -191,7 +192,7 @@ async function install() {
           versions,
           () => (installed.value = true),
           props.project.project_id,
-          props.project.project_type
+          props.project.project_type,
         )
         installing.value = false
         return
@@ -214,7 +215,7 @@ async function install() {
         props.project.project_id,
         versions,
         props.project.title,
-        props.project.project_type
+        props.project.project_type,
       )
       installing.value = false
       return

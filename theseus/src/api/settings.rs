@@ -1,7 +1,6 @@
 //! Theseus profile management interface
 
-use std::path::{PathBuf, Path};
-// use async_recursion::async_recursion;
+use std::path::{Path, PathBuf};
 use tokio::fs;
 
 use io::IOError;
@@ -11,7 +10,7 @@ use crate::{
     event::emit::{emit_loading, init_loading},
     prelude::DirectoryInfo,
     state::{self, Profiles},
-    util::{io, fetch},
+    util::{fetch, io},
 };
 pub use crate::{
     state::{
@@ -169,7 +168,6 @@ pub async fn set_config_dir(new_config_dir: PathBuf) -> crate::Result<()> {
     let old_config_dir =
         state_write.directories.config_dir.read().await.clone();
 
-
     // Reset file watcher
     tracing::trace!("Reset file watcher");
     let file_watcher = state::init_watcher().await?;
@@ -185,13 +183,17 @@ pub async fn set_config_dir(new_config_dir: PathBuf) -> crate::Result<()> {
         .await
         .map_err(|e| IOError::with_path(e, &old_config_dir))?
     {
-
         let entry_path = entry.path();
         if let Some(file_name) = entry_path.file_name() {
             // We are only moving the profiles and metadata folders
-            if file_name == state::PROFILES_FOLDER_NAME || file_name == state::METADATA_FOLDER_NAME {
+            if file_name == state::PROFILES_FOLDER_NAME
+                || file_name == state::METADATA_FOLDER_NAME
+            {
                 if across_drives {
-                    entries.extend(crate::pack::import::get_all_subfiles(&entry_path).await?);
+                    entries.extend(
+                        crate::pack::import::get_all_subfiles(&entry_path)
+                            .await?,
+                    );
                     deletable_entries.push(entry_path.clone());
                 } else {
                     entries.push(entry_path.clone());
@@ -211,8 +213,7 @@ pub async fn set_config_dir(new_config_dir: PathBuf) -> crate::Result<()> {
         } else {
             io::rename(entry_path.clone(), new_path.clone()).await?;
         }
-        emit_loading(&loading_bar, 80.0 * (1.0 / num_entries), None)
-            .await?;
+        emit_loading(&loading_bar, 80.0 * (1.0 / num_entries), None).await?;
     }
 
     tracing::trace!("Setting configuration setting");
@@ -259,7 +260,8 @@ pub async fn set_config_dir(new_config_dir: PathBuf) -> crate::Result<()> {
             &loading_bar,
             10.0 * (1.0 / deletable_entries_len as f64),
             None,
-        ).await?;
+        )
+        .await?;
     }
 
     // Reset file watcher
@@ -287,7 +289,6 @@ fn is_different_drive(path1: &Path, path2: &Path) -> bool {
     let root2 = path2.components().next();
     root1 != root2
 }
-
 
 pub async fn is_dir_writeable(new_config_dir: PathBuf) -> crate::Result<bool> {
     let temp_path = new_config_dir.join(".tmp");

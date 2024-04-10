@@ -226,7 +226,7 @@ async function getLiveStdLog() {
     } else {
       const logCursor = await get_latest_log_cursor(
         props.instance.path,
-        currentLiveLogCursor.value
+        currentLiveLogCursor.value,
       ).catch(handleError)
       if (logCursor.new_file) {
         currentLiveLog.value = ''
@@ -249,7 +249,7 @@ async function getLogs() {
         log.filename !== 'latest_stdout.log' &&
         log.filename !== 'latest_stdout' &&
         log.stdout !== '' &&
-        log.filename.includes('.log')
+        log.filename.includes('.log'),
     )
     .map((log) => {
       log.name = log.filename || 'Unknown'
@@ -292,7 +292,7 @@ watch(selectedLogIndex, async (newIndex) => {
     logs.value[newIndex].stdout = 'Loading...'
     logs.value[newIndex].stdout = await get_output_by_filename(
       props.instance.path,
-      logs.value[newIndex].filename
+      logs.value[newIndex].filename,
     ).catch(handleError)
   }
 })
@@ -308,7 +308,7 @@ const deleteLog = async () => {
     let deleteIndex = selectedLogIndex.value
     selectedLogIndex.value = deleteIndex - 1
     await delete_logs_by_filename(props.instance.path, logs.value[deleteIndex].filename).catch(
-      handleError
+      handleError,
     )
     await setLogs()
   }

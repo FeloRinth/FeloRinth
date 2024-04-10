@@ -89,7 +89,7 @@ defineExpose({
     selectedVersions,
     extMarkInstalled,
     projectIdVal,
-    projectTypeVal
+    projectTypeVal,
   ) => {
     instance.value = instanceVal
     projectTitle.value = projectTitleVal

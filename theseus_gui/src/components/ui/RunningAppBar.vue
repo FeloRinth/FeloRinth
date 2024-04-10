@@ -217,7 +217,7 @@ const refreshInfo = async () => {
       }
 
       return x
-    }
+    },
   )
   if (currentLoadingBars.value.length === 0) {
     showCard.value = false

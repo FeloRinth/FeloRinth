@@ -254,11 +254,11 @@ watch(
       version.value = props.versions.find((version) => version.id === route.params.version)
       breadcrumbs.setName('Version', version.value.name)
     }
-  }
+  },
 )
 
 const author = computed(() =>
-  props.members.find((member) => member.user.id === version.value.author_id)
+  props.members.find((member) => member.user.id === version.value.author_id),
 )
 
 const displayDependencies = computed(() =>
@@ -266,7 +266,7 @@ const displayDependencies = computed(() =>
     const version = props.dependencies.versions.find((obj) => obj.id === dependency.version_id)
     if (version) {
       const project = props.dependencies.projects.find(
-        (obj) => obj.id === version.project_id || obj.id === dependency.project_id
+        (obj) => obj.id === version.project_id || obj.id === dependency.project_id,
       )
       return {
         icon: project?.icon_url,
@@ -293,7 +293,7 @@ const displayDependencies = computed(() =>
         }
       }
     }
-  })
+  }),
 )
 </script>
 
