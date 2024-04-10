@@ -2,8 +2,8 @@
   "name": "theseus_gui",
   "private": true,
   "version": "0.6.3",
-  "patch_version": "23 • Beta",
-  "development_build": false,
+  "patch_version": "24 • Beta",
+  "development_build": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
