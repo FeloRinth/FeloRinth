@@ -34,7 +34,6 @@ import { handleError } from '@/store/notifications.js'
 // import ModrinthLoginScreen from '@/components/ui/tutorial/ModrinthLoginScreen.vue'
 // import PreImportScreen from '@/components/ui/tutorial/PreImportScreen.vue'
 
-const phase = ref(0)
 const page = ref(1)
 
 const props = defineProps({
@@ -135,7 +134,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div v-if="phase === 0" class="onboarding">
+  <div class="onboarding">
     <StickyTitleBar />
     <GalleryImage
       v-if="page === 1"

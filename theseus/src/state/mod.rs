@@ -13,7 +13,6 @@ use tokio::sync::{OnceCell, RwLock, Semaphore};
 use crate::event::emit::{emit_loading, emit_offline, init_loading_unsafe};
 use crate::event::LoadingBarType;
 use crate::loading_join;
-use crate::state::users::Users;
 use crate::util::fetch::{self, FetchSemaphore, IoSemaphore};
 
 pub use self::auth_task::*;
@@ -40,11 +39,8 @@ mod settings;
 
 mod projects;
 
-mod users;
-
 mod children;
-
-mod auth_task;
+pub use self::children::*;
 
 mod tags;
 
@@ -53,6 +49,9 @@ mod java_globals;
 mod safe_processes;
 
 pub(crate) mod discord;
+
+mod minecraft_auth;
+pub use self::minecraft_auth::*;
 
 mod mr_auth;
 
@@ -89,9 +88,7 @@ pub struct State {
     /// Launcher processes that should be safely exited on shutdown
     pub(crate) safety_processes: RwLock<SafeProcesses>,
     /// Launcher user account info
-    pub(crate) users: RwLock<Users>,
-    /// Authentication flow
-    pub auth_flow: RwLock<AuthTask>,
+    pub(crate) users: RwLock<MinecraftAuthStore>,
     /// Modrinth Credentials Store
     pub credentials: RwLock<CredentialsStore>,
     /// Modrinth auth flow
@@ -172,7 +169,7 @@ impl State {
             &fetch_semaphore,
             &CredentialsStore(None),
         );
-        let users_fut = Users::init(&directories, &io_semaphore);
+        let users_fut = MinecraftAuthStore::init(&directories, &io_semaphore);
         let creds_fut = CredentialsStore::init(&directories, &io_semaphore);
         // Launcher data
         let (metadata, profiles, tags, users, creds) = loading_join! {
@@ -184,7 +181,6 @@ impl State {
             creds_fut,
         }?;
 
-        let auth_flow = AuthTask::new();
         let safety_processes = SafeProcesses::new();
 
         let discord_rpc = DiscordGuard::init(is_offline).await?;
@@ -219,7 +215,6 @@ impl State {
             profiles: RwLock::new(profiles),
             users: RwLock::new(users),
             children: RwLock::new(children),
-            auth_flow: RwLock::new(auth_flow),
             credentials: RwLock::new(creds),
             tags: RwLock::new(tags),
             discord_rpc,
@@ -253,11 +248,9 @@ impl State {
                     let res2 = Tags::update();
                     let res3 = Metadata::update();
                     let res4 = Profiles::update_projects();
-                    let res5 = Settings::update_java();
                     let res6 = CredentialsStore::update_creds();
-                    let res7 = Settings::update_default_user();
 
-                    let _ = join!(res1, res2, res3, res4, res5, res6, res7);
+                    let _ = join!(res1, res2, res3, res4, res6);
                 }
             }
         });

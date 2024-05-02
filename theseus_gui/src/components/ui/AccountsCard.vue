@@ -158,14 +158,12 @@ import {
   authenticate_await_completion,
   authenticate_begin_flow,
   offline_authenticate_await_completion,
+  login as login_flow,
   remove_user,
   users
 } from '@/helpers/auth'
-import { get, set } from '@/helpers/settings'
 import { handleError } from '@/store/state.js'
-import { useTheming } from '@/store/theme.js'
 import { mixpanel_track } from '@/helpers/mixpanel'
-import QrcodeVue from 'qrcode.vue'
 import { process_listener } from '@/helpers/events'
 import { Pirate, Microsoft } from '@/assets/render/index.js'
 
@@ -195,7 +193,7 @@ const unexpectedErrorModal = ref(null)
 const playerName = ref('')
 
 async function refreshValues() {
-  settings.value = await get().catch(handleError)
+  defaultUser.value = await get_default_user().catch(handleError)
   accounts.value = await users().catch(handleError)
 }
 
@@ -205,16 +203,16 @@ defineExpose({
 await refreshValues()
 
 const displayAccounts = computed(() =>
-  accounts.value.filter((account) => settings.value.default_user !== account.id),
+  accounts.value.filter((account) => defaultUser.value !== account.id),
 )
 
 const selectedAccount = computed(() =>
-  accounts.value.find((account) => account.id === settings.value.default_user),
+  accounts.value.find((account) => account.id === defaultUser.value),
 )
 
 async function setAccount(account) {
-  settings.value.default_user = account.id
-  await set(settings.value).catch(handleError)
+  defaultUser.value = account.id
+  await set_default_user(account.id).catch(handleError)
   emit('change')
 }
 
@@ -231,7 +229,7 @@ const clipboardWrite = async (a) => {
 }
 
 async function login() {
-  const loginSuccess = await authenticate_begin_flow().catch(handleError)
+  const loginSuccess = await login_flow().catch(handleError)
 
   loginModal.value.show()
   loginCode.value = loginSuccess.user_code
@@ -252,7 +250,6 @@ async function login() {
     await refreshValues()
   }
 
-  loginModal.value.hide()
   mixpanel_track('AccountLogIn')
 }
 

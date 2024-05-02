@@ -34,6 +34,7 @@ import { useFetch } from '@/helpers/fetch.js'
 import { install as pack_install } from '@/helpers/pack.js'
 import { useTheming } from '@/store/theme.js'
 import { mixpanel_track } from '@/helpers/mixpanel'
+import { handleSevereError } from '@/store/error.js'
 import { i18n } from '@/main.js';
 const t = i18n.global.t;
 const router = useRouter()
@@ -134,7 +135,7 @@ const handleProjectClick = (event, passedInstance) => {
 const handleOptionsClick = async (args) => {
   switch (args.option) {
     case 'play':
-      await run(args.item.path).catch(handleError)
+      await run(args.item.path).catch(handleSevereError)
       mixpanel_track('InstanceStart', {
         loader: args.item.metadata.loader,
         game_version: args.item.metadata.game_version,

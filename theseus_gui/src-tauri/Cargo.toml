@@ -1,6 +1,6 @@
 [package]
 name = "theseus_gui"
-version = "0.6.3"
+version = "0.7.2"
 description = "AstralRinth Software"
 authors = ["didirus"]
 license = "The night pirate"

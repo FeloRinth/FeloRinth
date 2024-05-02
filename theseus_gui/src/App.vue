@@ -24,6 +24,7 @@ import { get } from '@/helpers/settings'
 import Breadcrumbs from '@/components/ui/Breadcrumbs.vue'
 import RunningAppBar from '@/components/ui/RunningAppBar.vue'
 import SplashScreen from '@/components/ui/SplashScreen.vue'
+import ErrorModal from '@/components/ui/ErrorModal.vue'
 import ModrinthLoadingIndicator from '@/components/modrinth-loading-indicator'
 import { handleError, useNotifications } from '@/store/notifications.js'
 import { command_listener, offline_listener, warning_listener } from '@/helpers/events.js'
@@ -45,12 +46,10 @@ import { getVersion } from '@tauri-apps/api/app'
 import { window as TauriWindow } from '@tauri-apps/api'
 import { TauriEvent } from '@tauri-apps/api/event'
 import { confirm } from '@tauri-apps/api/dialog'
-import { type } from '@tauri-apps/api/os'
-import { appWindow } from '@tauri-apps/api/window'
-import { storeToRefs } from 'pinia'
-import { useLanguage } from '@/store/language.js'
-
-const t = i18n.global.t
+import URLConfirmModal from '@/components/ui/URLConfirmModal.vue'
+import OnboardingScreen from '@/components/ui/tutorial/OnboardingScreen.vue'
+import { install_from_file } from './helpers/pack'
+import { useError } from '@/store/error.js'
 
 const themeStore = useTheming()
 const languageStore = useLanguage()
@@ -58,7 +57,6 @@ const languageStore = useLanguage()
 const urlModal = ref(null)
 const isLoading = ref(true)
 
-const videoPlaying = ref(false)
 const offline = ref(false)
 const showOnboarding = ref(false)
 const nativeDecorations = ref(false)
@@ -88,7 +86,6 @@ defineExpose({
       await get()
     // video should play if the user is not on linux, and has not onboarded
     os.value = await getOS()
-    videoPlaying.value = !fully_onboarded && os.value !== 'Linux'
     const dev = await isDev()
     const version = await getVersion()
     showOnboarding.value = !fully_onboarded
@@ -193,13 +190,58 @@ const isOnBrowse = computed(() => route.path.startsWith('/browse'))
 const loading = useLoading()
 
 const notifications = useNotifications()
-const notificationsWrapper = ref(null)
+const notificationsWrapper = ref()
 
 watch(notificationsWrapper, () => {
   notifications.setNotifs(notificationsWrapper.value)
 })
 
-useDisableClicks(document, window)
+const error = useError()
+const errorModal = ref()
+
+watch(errorModal, () => {
+  error.setErrorModal(errorModal.value)
+})
+
+document.querySelector('body').addEventListener('click', function (e) {
+  let target = e.target
+  while (target != null) {
+    if (target.matches('a')) {
+      if (
+        target.href &&
+        ['http://', 'https://', 'mailto:', 'tel:'].some((v) => target.href.startsWith(v)) &&
+        !target.classList.contains('router-link-active') &&
+        !target.href.startsWith('http://localhost') &&
+        !target.href.startsWith('https://tauri.localhost')
+      ) {
+        window.__TAURI_INVOKE__('tauri', {
+          __tauriModule: 'Shell',
+          message: {
+            cmd: 'open',
+            path: target.href,
+          },
+        })
+      }
+      e.preventDefault()
+      break
+    }
+    target = target.parentElement
+  }
+})
+
+document.querySelector('body').addEventListener('auxclick', function (e) {
+  // disables middle click -> new tab
+  if (e.button === 1) {
+    e.preventDefault()
+    // instead do a left click
+    const event = new MouseEvent('click', {
+      view: window,
+      bubbles: true,
+      cancelable: true,
+    })
+    e.target.dispatchEvent(event)
+  }
+})
 
 const accounts = ref(null)
 
@@ -224,15 +266,6 @@ const toggleSidebar = () => {
 </script>
 
 <template>
-  <StickyTitleBar v-if="videoPlaying" />
-  <video
-    v-if="videoPlaying"
-    ref="onboardingVideo"
-    class="video"
-    src="@/assets/video.mp4"
-    autoplay
-    @ended="videoPlaying = false"
-  />
   <div v-if="failureText" class="failure dark-mode">
     <div class="appbar-failure dark-mode">
       <Button v-if="os != 'MacOS'" icon-only @click="TauriWindow.getCurrent().close()">
@@ -274,7 +307,7 @@ const toggleSidebar = () => {
       </Card>
     </div>
   </div>
-  <SplashScreen v-else-if="!videoPlaying && isLoading" app-loading />
+  <SplashScreen v-else-if="isLoading" app-loading />
   <OnboardingScreen v-else-if="showOnboarding" :finish="() => (showOnboarding = false)" />
   <div v-else class="container">
     <div
@@ -434,6 +467,7 @@ const toggleSidebar = () => {
   </div>
   <URLConfirmModal ref="urlModal" />
   <Notifications ref="notificationsWrapper" />
+  <ErrorModal ref="errorModal" />
 </template>
 
 <style lang="scss" scoped>

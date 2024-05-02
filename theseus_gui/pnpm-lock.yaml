@@ -896,7 +896,6 @@ packages:
   floating-vue@2.0.0:
     resolution: {integrity: sha512-YSffLYOjoaaPPBZc7VQR2qMCQ7xeXuh7i8a2u8WOdSmkjTtKtZpj2aaJnLtZRHmehrMHyCgtSxLu8jFNNX2sVw==}
     peerDependencies:
-      '@nuxt/kit': ^3.2.0
       vue: ^3.2.0
     peerDependenciesMeta:
       '@nuxt/kit':

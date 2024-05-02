@@ -153,6 +153,7 @@ import ContextMenu from '@/components/ui/ContextMenu.vue'
 import { mixpanel_track } from '@/helpers/mixpanel'
 import { convertFileSrc } from '@tauri-apps/api/tauri'
 import { useFetch } from '@/helpers/fetch'
+import { handleSevereError } from '@/store/error.js'
 import { i18n } from '@/main.js';
 const t = i18n.global.t;
 import { useInstances } from '@/store/instances'
@@ -206,7 +207,7 @@ const options = ref(null)
 
 const startInstance = async (context) => {
   loading.value = true
-  uuid.value = await run(route.params.id).catch(handleError)
+  uuid.value = await run(route.params.id).catch(handleSevereError)
   loading.value = false
   playing.value = true
 
