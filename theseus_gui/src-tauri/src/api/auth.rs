@@ -21,7 +21,7 @@ pub fn init<R: tauri::Runtime>() -> TauriPlugin<R> {
 /// This is custom function from Astralium Org.
 #[tauri::command]
 pub async fn offline_auth_authenticate_begin(name: &str) -> Result<Credentials> {
-    let credentials = hydra::complete::wait_offline_finish(name).await?;
+    let credentials = minecraft_auth::wait_offline_finish(name).await?;
     Ok(credentials)
 }
 
@@ -49,7 +49,7 @@ pub async fn auth_login(app: tauri::AppHandle) -> Result<Option<Credentials>> {
             },
         )?),
     )
-    .title("Sign into Modrinth")
+    .title("Sign into Microsoft Account")
     .always_on_top(true)
     .center()
     .build()?;

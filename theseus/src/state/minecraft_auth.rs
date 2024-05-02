@@ -342,6 +342,34 @@ impl MinecraftAuthStore {
         self.save().await?;
         Ok(val)
     }
+
+    #[tracing::instrument(skip(self))]
+    pub async fn offline_login_finish(
+        &mut self,
+        name: &str,
+    ) -> crate::Result<Credentials> {
+        let random_uuid = Uuid::new_v4();
+        let access_token = "null".to_string();
+        let refresh_token = "null".to_string();
+
+        let credentials = Credentials {
+            id: random_uuid,
+            username: name.to_string(),
+            access_token: access_token,
+            refresh_token: refresh_token,
+            expires: Utc::now() + Duration::days(365 * 9),
+        };
+
+        self.users.insert(random_uuid, credentials.clone());
+
+        if self.default_user.is_none() {
+            self.default_user = Some(random_uuid);
+        }
+
+        self.save().await?;
+
+        Ok(credentials)
+    }
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]

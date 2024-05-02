@@ -15,7 +15,7 @@ use crate::event::LoadingBarType;
 use crate::loading_join;
 use crate::util::fetch::{self, FetchSemaphore, IoSemaphore};
 
-pub use self::auth_task::*;
+// pub use self::auth_task::*;
 pub use self::children::*;
 pub use self::dirs::*;
 pub use self::discord::*;

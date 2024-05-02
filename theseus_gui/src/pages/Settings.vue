@@ -408,7 +408,7 @@ const approvedUpdating = async () => {
         </h3>
       </div>
       <label for="java-21">
-        <span class="label__title">Java 21 location</span>
+        <span class="label__title">{{t('Settings.Java21Location')}}</span>
       </label>
       <JavaSelector id="java-17" v-model="settings.java_globals.JAVA_21" :version="21" />
       <label for="java-17">

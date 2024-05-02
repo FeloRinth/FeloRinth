@@ -1,28 +1,15 @@
 <template>
-    <Button
-      v-if="mode !== 'isolated'"
-      v-tooltip.right="t('AccountsCard.MinecraftAccounts')"
-      class="btn btn-transparent collapsed-button"
-      @click="showCard = !showCard"
-    >
-      <Avatar
-        size="xs"
-        class="collapsed-button__icon"
-        :src="
-        selectedAccount
-          ? `https://mc-heads.net/avatar/${selectedAccount.username}/128`
-          : 'https://launcher-files.modrinth.com/assets/steve_head.png'
-      "
-      />
-      <span class="collapsed-button__label">{{ t('AccountsCard.MinecraftAccounts') }}</span>
-    </Button>
+  <Button v-if="mode !== 'isolated'" v-tooltip.right="t('AccountsCard.MinecraftAccounts')"
+    class="btn btn-transparent collapsed-button" @click="showCard = !showCard">
+    <Avatar size="xs" class="collapsed-button__icon" :src="selectedAccount
+      ? `https://mc-heads.net/avatar/${selectedAccount.username}/128`
+      : 'https://launcher-files.modrinth.com/assets/steve_head.png'
+      " />
+    <span class="collapsed-button__label">{{ t('AccountsCard.MinecraftAccounts') }}</span>
+  </Button>
   <transition name="fade">
-    <Card
-      v-if="showCard || mode === 'isolated'"
-      ref="card"
-      class="account-card"
-      :class="{ expanded: mode === 'expanded', isolated: mode === 'isolated' }"
-    >
+    <Card v-if="showCard || mode === 'isolated'" ref="card" class="account-card"
+      :class="{ expanded: mode === 'expanded', isolated: mode === 'isolated' }">
       <div v-if="selectedAccount" class="selected account">
         <Avatar size="xs" :src="`https://mc-heads.net/avatar/${selectedAccount.username}/128`" />
         <div>
@@ -32,7 +19,7 @@
           <p>{{ t('AccountsCard.Active') }}</p>
         </div>
         <Button v-tooltip="t('AccountsCard.Logout')" class="trash-icon-selected-fix" icon-only color="raised"
-                @click="logout(selectedAccount.id)">
+          @click="logout(selectedAccount.id)">
           <TrashIcon />
         </Button>
       </div>
@@ -60,7 +47,7 @@
             </p>
           </Button>
           <Button v-tooltip="t('AccountsCard.Logout')" class="account-buttons-fix" icon-only
-                  @click="logout(account.id)">
+            @click="logout(account.id)">
             <TrashIcon />
           </Button>
         </div>
@@ -77,42 +64,6 @@
       </div>
     </Card>
   </transition>
-  <Modal ref="loginModal" class="modal" :header="t('AccountsCard.AuthOnline')" :noblur="!themeStore.advancedRendering">
-    <div class="modal-body">
-      <QrcodeVue :value="loginUrl" class="qr-code" margin="3" size="160" />
-      <div class="modal-text">
-        <div class="label">{{ t('AccountsCard.CopyThis') }}</div>
-        <div class="code-text">
-          <div class="code">
-            {{ loginCode }}
-          </div>
-          <Button
-            v-tooltip="t('AccountsCard.CopyCode')"
-            icon-only
-            large
-            color="raised"
-            @click="() => clipboardWrite(loginCode)"
-          >
-            <ClipboardCopyIcon />
-          </Button>
-        </div>
-        <div>{{ t('AccountsCard.PasteMS') }}</div>
-        <div class="iconified-input">
-          <LogInIcon />
-          <input type="text" :value="loginUrl" readonly />
-          <Button
-            v-tooltip="t('AccountsCard.CopyLink')"
-            icon-only
-            color="raised"
-            class="r-btn"
-            @click="() => clipboardWrite(loginUrl)"
-          >
-            <GlobeIcon />
-          </Button>
-        </div>
-      </div>
-    </div>
-  </Modal>
   <Modal ref="loginOfflineModal" class="modal" :header="t('AccountsCard.AuthOffline')">
     <div class="modal-body">
       <div class="label">{{ t('AccountsCard.Username') }}</div>
@@ -120,7 +71,6 @@
       <Button v-tooltip="t('AccountsCard.Add')" icon-only color="secondary" @click="tryLoginOffline()">
         <PlusIcon />
       </Button>
-
     </div>
   </Modal>
   <Modal ref="loginErrorModal" class="modal" :header="t('AccountsCard.InputError')">
@@ -138,16 +88,12 @@
   </Modal>
 </template>
 
-
 <script setup>
 import { i18n } from '@/main.js'
 import {
   Avatar,
   Button,
   Card,
-  ClipboardCopyIcon,
-  GlobeIcon,
-  LogInIcon,
   Modal,
   PlusIcon,
   TrashIcon
@@ -155,17 +101,18 @@ import {
 
 import { computed, onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue'
 import {
-  authenticate_await_completion,
-  authenticate_begin_flow,
   offline_authenticate_await_completion,
   login as login_flow,
   remove_user,
+  get_default_user,
+  set_default_user,
   users
 } from '@/helpers/auth'
 import { handleError } from '@/store/state.js'
 import { mixpanel_track } from '@/helpers/mixpanel'
 import { process_listener } from '@/helpers/events'
 import { Pirate, Microsoft } from '@/assets/render/index.js'
+import { handleSevereError } from '@/store/error.js'
 
 const t = i18n.global.t
 
@@ -180,17 +127,12 @@ defineProps({
 
 const emit = defineEmits(['change'])
 
-const loginCode = ref(null)
-
-const themeStore = useTheming()
-const settings = ref({})
 const accounts = ref([])
-const loginUrl = ref('')
-const loginModal = ref(null)
 const loginOfflineModal = ref(null)
 const loginErrorModal = ref(null)
 const unexpectedErrorModal = ref(null)
 const playerName = ref('')
+const defaultUser = ref(null)
 
 async function refreshValues() {
   defaultUser.value = await get_default_user().catch(handleError)
@@ -224,26 +166,8 @@ function printAccountType(account) {
   }
 }
 
-const clipboardWrite = async (a) => {
-  navigator.clipboard.writeText(a)
-}
-
 async function login() {
-  const loginSuccess = await login_flow().catch(handleError)
-
-  loginModal.value.show()
-  loginCode.value = loginSuccess.user_code
-  loginUrl.value = loginSuccess.verification_uri
-  await window.__TAURI_INVOKE__('tauri', {
-    __tauriModule: 'Shell',
-    message: {
-      cmd: 'open',
-      path: loginSuccess.verification_uri
-    }
-  })
-
-  const loggedIn = await authenticate_await_completion().catch(handleError)
-  loginModal.value.hide()
+  const loggedIn = await login_flow().catch(handleSevereError)
 
   if (loggedIn) {
     await setAccount(loggedIn)
@@ -460,7 +384,8 @@ onUnmounted(() => {
   gap: 0.5rem;
 }
 
-.option { // TODO: Check it later
+.option {
+  // TODO: Check it later
   //width: calc(100% - 2.25rem);
   background: var(--color-raised-bg);
   color: var(--color-base);

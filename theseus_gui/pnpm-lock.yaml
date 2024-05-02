@@ -32,9 +32,6 @@ importers:
       pinia:
         specifier: ^2.1.7
         version: 2.1.7(vue@3.4.26)
-      qrcode.vue:
-        specifier: ^3.4.1
-        version: 3.4.1(vue@3.4.26)
       tauri-plugin-window-state-api:
         specifier: github:tauri-apps/tauri-plugin-window-state#v1
         version: https://codeload.github.com/tauri-apps/tauri-plugin-window-state/tar.gz/002cf15f6a1e4969a678a4ade680cd60477a8a53
@@ -896,6 +893,7 @@ packages:
   floating-vue@2.0.0:
     resolution: {integrity: sha512-YSffLYOjoaaPPBZc7VQR2qMCQ7xeXuh7i8a2u8WOdSmkjTtKtZpj2aaJnLtZRHmehrMHyCgtSxLu8jFNNX2sVw==}
     peerDependencies:
+      '@nuxt/kit': ^3.2.0
       vue: ^3.2.0
     peerDependenciesMeta:
       '@nuxt/kit':

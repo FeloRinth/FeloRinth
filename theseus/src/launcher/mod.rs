@@ -22,18 +22,18 @@ use uuid::Uuid;
 
 use st::Profile;
 
-use crate::{
-    process,
-    state::{MinecraftChild, self as st},
-    State,
-};
-use crate::event::{LoadingBarId, LoadingBarType};
-use crate::event::emit::{emit_loading, init_or_edit_loading};
-use crate::jre::{self, JAVA_17_KEY, JAVA_18PLUS_KEY, JAVA_8_KEY};
-use crate::launcher::io::IOError;
-use crate::prelude::JavaVersion;
-use crate::state::{ACTIVE_PHRASES, ProfileInstallStage};
-use crate::util::io;
+// use crate::{
+//     process,
+//     state::{MinecraftChild, self as st},
+//     State,
+// };
+// use crate::event::{LoadingBarId, LoadingBarType};
+// use crate::event::emit::{emit_loading, init_or_edit_loading};
+// use crate::jre::{self, JAVA_17_KEY, JAVA_18PLUS_KEY, JAVA_8_KEY};
+// use crate::launcher::io::IOError;
+// use crate::prelude::JavaVersion;
+use crate::state::ACTIVE_PHRASES;
+// use crate::util::io;
 
 mod args;
 

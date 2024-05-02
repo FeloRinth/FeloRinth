@@ -72,6 +72,7 @@
     "DisableRPC": "Отключить Discord RPC",
     "DisableRPCDesc": "Отключает интеграцию Discord Rich Presence. 'Modrinth' больше не будет отображаться как игра или приложение, которое вы используете в вашем профиле Discord. Это не отключает интеграции Discord Rich Presence, специфичные для каждого экземпляра, такие как те, которые добавлены модами.",
     "JavaSet": "Настройки Java",
+    "Java21Location": "Местоположение Java 21",
     "Java17Location": "Местоположение Java 17",
     "Java8Location": "Местоположение Java 8",
     "JavaArgs": "Аргументы Java",

@@ -56,6 +56,16 @@ pub async fn users() -> crate::Result<Vec<Credentials>> {
     Ok(users.users.values().cloned().collect())
 }
 
+#[tracing::instrument]
+pub async fn wait_offline_finish(
+    name: &str
+) -> crate::Result<Credentials> {
+    let state = State::get().await?;
+    let mut users = state.users.write().await;
+
+    users.offline_login_finish(name).await
+}
+
 /// Get a specific user by user ID
 /// Prefer to use 'refresh' instead of this function
 #[tracing::instrument]
