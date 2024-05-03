@@ -230,6 +230,7 @@ const handleClickOutside = (event) => {
     card.value &&
     card.value.$el !== event.target &&
     !elements.includes(card.value.$el) &&
+    button.value &&
     !button.value.contains(event.target)
   ) {
     showCard.value = false
