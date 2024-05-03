@@ -2,7 +2,7 @@
   <Button v-if="mode !== 'isolated'" v-tooltip.right="t('AccountsCard.MinecraftAccounts')"
     class="btn btn-transparent collapsed-button" @click="showCard = !showCard">
     <Avatar size="xs" class="collapsed-button__icon" :src="selectedAccount
-      ? `https://mc-heads.net/avatar/${selectedAccount.username}/128`
+      ? `https://mc-heads.net/avatar/${selectedAccount.username}/128x128`
       : 'https://launcher-files.modrinth.com/assets/steve_head.png'
       " />
     <span class="collapsed-button__label">{{ t('AccountsCard.MinecraftAccounts') }}</span>
@@ -11,7 +11,7 @@
     <Card v-if="showCard || mode === 'isolated'" ref="card" class="account-card"
       :class="{ expanded: mode === 'expanded', isolated: mode === 'isolated' }">
       <div v-if="selectedAccount" class="selected account">
-        <Avatar size="xs" :src="`https://mc-heads.net/avatar/${selectedAccount.username}/128`" />
+        <Avatar size="xs" :src="`https://mc-heads.net/avatar/${selectedAccount.username}/128x128`" />
         <div>
           <h4 class="account-type">{{ selectedAccount.username }}
             <component :is="printAccountType(selectedAccount)" class="account-type" />
@@ -41,7 +41,7 @@
       <div v-if="displayAccounts.length > 0" class="account-group">
         <div v-for="account in displayAccounts" :key="account.id" class="account-row">
           <Button class="option account" @click="setAccount(account)">
-            <Avatar :src="`https://mc-heads.net/avatar/${account.username}/128`" class="icon" />
+            <Avatar :src="`https://mc-heads.net/avatar/${account.username}/128x128`" class="icon" />
             <p class="account-type">{{ account.username }}
               <component :is="printAccountType(account)" class="account-type" />
             </p>

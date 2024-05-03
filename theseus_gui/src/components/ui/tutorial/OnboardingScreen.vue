@@ -140,242 +140,17 @@ onMounted(async () => {
       v-if="page === 1"
       :gallery="[
         { // Main gallery
-          url: 'https://cdn.discordapp.com/attachments/1006329469428043846/1193557264049655878/ZbsJuMYb8Qc5gL8n.png',
+          url: 'https://i.imgur.com/1xhmQ7i.png',
           title: 'AstralRinth Contacts',
           subtitle: 'You can get support and help with our patches or just have a nice chat in our chat. Scan the QR-Code and follow the news!',
-        },
-        {
-          // url: 'https://cdn.discordapp.com/attachments/817413688771608587/1131109353928265809/Screenshot_2023-07-15_at_4.16.18_PM.png',
-          url: 'https://cdn.discordapp.com/attachments/1006329469428043846/1195897161158766612/3KESRodssnGmtdbZ.png',
-          title: 'Discovery',
-          subtitle: 'See the latest and greatest mods and modpacks to play with from Modrinth!',
-        },
-        {
-          url: 'https://cdn.discordapp.com/attachments/1006329469428043846/1195897164556140595/1tWbB1wfpjYgEMGr.png',
-          title: 'Discovery',
-          subtitle: 'Sort, filter and find your Minecraft modifications!',
-        },
-        {
-          // url: 'https://cdn.discordapp.com/attachments/817413688771608587/1131109354238640238/Screenshot_2023-07-15_at_4.17.43_PM.png',
-          url: 'https://cdn.discordapp.com/attachments/1006329469428043846/1195897165193683074/Fo5oJlIoOpxb11su.png',
-          title: 'Profile Management',
-          subtitle:
-            'Play, manage and search through all the amazing profiles downloaded on your computer at any time, even offline!',
-        },
-        {
-          url: 'https://cdn.discordapp.com/attachments/1006329469428043846/1195897165835415633/7HZnSmUdV9gQWblQ.png',
-          title: 'Profile Management',
-          subtitle:
-            'Play, manage and search through all the amazing profiles downloaded on your computer at any time, even offline!',
-        },
-        {
-          url: 'https://media.discordapp.net/attachments/1006329469428043846/1195897166439383090/KFbe8U9oF3RE3RtV.png',
-          title: 'Setting features',
-          subtitle:
-            'MultiLanguage support in the launcher! You can choose your language, international English or other languages',
-        },
-        {
-          url: 'https://media.discordapp.net/attachments/1006329469428043846/1195897167127257128/QA5Qz7vhQYKXcZJD.png',
-          title: 'Setting features',
-          subtitle:
-            'Check for updates right in the launcher!',
-        },
-        {
-          url: 'https://cdn.discordapp.com/attachments/1006329469428043846/1195900695367393390/q7v9L5201okpMxGs.png',
-          title: 'Account Management',
-          subtitle:
-            'Select the account type, pirated or licensed.',
-        },
-        { // Main gallery
-          url: 'https://cdn.discordapp.com/attachments/1006329469428043846/1193557264049655878/ZbsJuMYb8Qc5gL8n.png',
-          title: 'AstralRinth Contacts',
-          subtitle: 'You can get support and help with our patches or just have a nice chat in our chat. Scan the QR-Code and follow the news!',
-        },
+        }
       ]"
       logo
     >
-      <Button color="primary" @click="finishOnboarding">Start the journey</Button>
-<!--      <Button color="danger" @click="migrateModrinthData">Migrate your data from Modrinth to AstralRinth</Button>-->
+      <Button class="large" color="primary" @click="finishOnboarding">
+        <span class="h4">Log into the AstralRinth launcher and start playing</span>
+      </Button>
     </GalleryImage>
-<!--    <LoginCard v-else-if="page === 2" :next-page="nextPage" :prev-page="prevPage" />-->
-<!--    <ModrinthLoginScreen-->
-<!--      v-else-if="page === 3"-->
-<!--      :modal="false"-->
-<!--      :next-page="nextPage"-->
-<!--      :prev-page="prevPage"-->
-<!--      :flow="flow"-->
-<!--    />-->
-<!--    <PreImportScreen-->
-<!--      v-else-if="page === 4"-->
-<!--      :next-page="endOnboarding"-->
-<!--      :prev-page="prevPage"-->
-<!--      :import-page="nextPage"-->
-<!--    />-->
-<!--    <ImportingCard v-else-if="page === 5" :next-page="endOnboarding" :prev-page="prevPage" />-->
-<!--  </div>-->
-<!--  <div v-else class="container">-->
-<!--    <StickyTitleBar v-if="phase === 9" />-->
-<!--    <div v-if="phase < 9" class="nav-container">-->
-<!--      <div class="nav-section">-->
-<!--        <FakeAccountsCard :show-demo="phase === 3">-->
-<!--          <TutorialTip-->
-<!--            :progress-function="nextPhase"-->
-<!--            :previous-function="prevPhase"-->
-<!--            :progress="phase"-->
-<!--            title="Signing in"-->
-<!--            description="The AstralRinth App uses your Microsoft account to allow you to launch Minecraft. You can sign in with your Microsoft account here, and switch between multiple accounts."-->
-<!--          />-->
-<!--        </FakeAccountsCard>-->
-<!--        <div class="pages-list">-->
-<!--          <div class="btn icon-only" :class="{ active: phase < 4 }">-->
-<!--            <HomeIcon />-->
-<!--          </div>-->
-<!--          <div-->
-<!--            class="btn icon-only"-->
-<!--            :class="{ active: phase === 4 || phase === 5, highlighted: phase === 4 }"-->
-<!--          >-->
-<!--            <SearchIcon />-->
-<!--          </div>-->
-<!--          <div-->
-<!--            class="btn icon-only"-->
-<!--            :class="{-->
-<!--              active: phase === 6 || phase === 7,-->
-<!--              highlighted: phase === 6,-->
-<!--            }"-->
-<!--          >-->
-<!--            <LibraryIcon />-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--      <div class="settings pages-list">-->
-<!--        <Button class="sleek-primary" icon-only>-->
-<!--          <PlusIcon />-->
-<!--        </Button>-->
-<!--        <Button icon-only :class="{ active: phase === 8, highlighted: phase === 8 }">-->
-<!--          <SettingsIcon />-->
-<!--        </Button>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <div v-if="phase < 9" class="view">-->
-<!--      <div data-tauri-drag-region class="appbar">-->
-<!--        <section class="navigation-controls">-->
-<!--          <Breadcrumbs data-tauri-drag-region />-->
-<!--        </section>-->
-<!--        <section class="mod-stats">-->
-<!--          <FakeAppBar-->
-<!--            :show-running="phase === 7"-->
-<!--            :show-download="phase === 5"-->
-<!--            :exit="finishOnboarding"-->
-<!--          >-->
-<!--            <template #running>-->
-<!--              <TutorialTip-->
-<!--                :progress-function="nextPhase"-->
-<!--                :previous-function="prevPhase"-->
-<!--                :progress="phase"-->
-<!--                title="Playing modpacks"-->
-<!--                description="When you launch a modpack, you can manage it directly in the title bar here. You can stop the modpack, view the logs, and see all currently running packs."-->
-<!--              />-->
-<!--            </template>-->
-<!--            <template #download>-->
-<!--              <TutorialTip-->
-<!--                :progress-function="nextPhase"-->
-<!--                :previous-function="prevPhase"-->
-<!--                :progress="phase"-->
-<!--                title="Installing modpacks"-->
-<!--                description="When you download a modpack, AstralRinth App will automatically install it for you. You can view the progress of the installation here."-->
-<!--              />-->
-<!--            </template>-->
-<!--          </FakeAppBar>-->
-<!--        </section>-->
-<!--        <section class="window-controls">-->
-<!--          <Button class="titlebar-button" icon-only @click="() => appWindow.minimize()">-->
-<!--            <MinimizeIcon />-->
-<!--          </Button>-->
-<!--          <Button class="titlebar-button" icon-only @click="() => appWindow.toggleMaximize()">-->
-<!--            <MaximizeIcon />-->
-<!--          </Button>-->
-<!--          <Button-->
-<!--            class="titlebar-button close"-->
-<!--            icon-only-->
-<!--            @click="-->
-<!--              () => {-->
-<!--                saveWindowState(StateFlags.ALL)-->
-<!--                window.getCurrent().close()-->
-<!--              }-->
-<!--            "-->
-<!--          >-->
-<!--            <XIcon />-->
-<!--          </Button>-->
-<!--        </section>-->
-<!--      </div>-->
-<!--      <div class="router-view">-->
-<!--        <ModrinthLoadingIndicator-->
-<!--          offset-height="var(&#45;&#45;appbar-height)"-->
-<!--          offset-width="var(&#45;&#45;sidebar-width)"-->
-<!--        />-->
-<!--        <Notifications ref="notificationsWrapper" />-->
-<!--        <FakeRowDisplay v-if="phase < 4 || phase > 8" :show-instance="phase === 2" />-->
-<!--        <FakeGridDisplay v-if="phase === 6 || phase === 7" :show-instances="phase === 6" />-->
-<!--        <suspense>-->
-<!--          <FakeSearch v-if="phase === 4 || phase === 5" :show-search="phase === 4" />-->
-<!--        </suspense>-->
-<!--        <FakeSettings v-if="phase === 8" />-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <TutorialTip-->
-<!--      v-if="phase === 1"-->
-<!--      class="first-tip highlighted"-->
-<!--      :progress-function="nextPhase"-->
-<!--      :progress="phase"-->
-<!--      title="Enter the AstralRinth App!"-->
-<!--      description="This is the AstralRinth App guide. Key parts are marked with a green shadow. Click 'Next' to-->
-<!--      proceed. You can leave the tutorial anytime using the Exit button above the plus button on the bottom left."-->
-<!--    />-->
-<!--    <div v-if="phase === 1" class="whole-page-shadow" />-->
-<!--    <TutorialTip-->
-<!--      v-if="phase === 2"-->
-<!--      class="sticky-tip"-->
-<!--      :progress-function="nextPhase"-->
-<!--      :previous-function="prevPhase"-->
-<!--      :progress="phase"-->
-<!--      title="Home page"-->
-<!--      description="This is the home page. Here you can see all the latest modpacks, mods, and other content on Modrinth. You can also see a few of your installed modpacks here."-->
-<!--    />-->
-<!--    <TutorialTip-->
-<!--      v-if="phase === 4"-->
-<!--      class="sticky-tip"-->
-<!--      :progress-function="nextPhase"-->
-<!--      :previous-function="prevPhase"-->
-<!--      :progress="phase"-->
-<!--      title="Searching for content"-->
-<!--      description="You can search for content on Modrinth by navigating to the search page. You can search for mods, modpacks, and more, and install them directly from here."-->
-<!--    />-->
-<!--    <TutorialTip-->
-<!--      v-if="phase === 6"-->
-<!--      class="sticky-tip"-->
-<!--      :progress-function="nextPhase"-->
-<!--      :previous-function="prevPhase"-->
-<!--      :progress="phase"-->
-<!--      title="Modpack library"-->
-<!--      description="You can view all your installed modpacks in the library. You can launch any modpack from here, or click the card to view more information about it."-->
-<!--    />-->
-<!--    <TutorialTip-->
-<!--      v-if="phase === 8"-->
-<!--      class="sticky-tip"-->
-<!--      :progress-function="nextPhase"-->
-<!--      :previous-function="prevPhase"-->
-<!--      :progress="phase"-->
-<!--      title="Settings"-->
-<!--      description="You will be able to view and change the settings for the AstralRinth App here. You can change the appearance, set and download new Java versions, and more."-->
-<!--    />-->
-<!--    <TutorialTip-->
-<!--      v-if="phase === 9"-->
-<!--      class="final-tip highlighted"-->
-<!--      :progress-function="finishOnboarding"-->
-<!--      :progress="phase"-->
-<!--      title="Enter the AstralRinth App!"-->
-<!--      description="That's it! You're ready to use the AstralRinth App. If you need help, you can always join our discord server!"-->
-<!--    />-->
   </div>
 </template>
 
@@ -561,7 +336,7 @@ onMounted(async () => {
 
 .onboarding {
   background: top linear-gradient(0deg, #000000, rgba(0, 0, 0, 0.35)),
-  url(https://cdn.discordapp.com/attachments/1006329469428043846/1197377487315931166/AMluKVpJGqThFnTX.png);
+  url(https://i.imgur.com/GA3OPpg.png);
   background-size: cover;
   height: 100vh;
   min-height: 100vh;

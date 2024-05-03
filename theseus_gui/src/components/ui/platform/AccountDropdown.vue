@@ -68,7 +68,7 @@ const getAvatarImage = (auth) => {
   if (auth?.user) {
     accountImage.value = auth?.user?.avatar_url;
   } else {
-    accountImage.value = `https://cdn.discordapp.com/attachments/1006329469428043846/1200633903506018434/qzJ1vLioGvxrXAL8.png`
+    accountImage.value = `https://i.imgur.com/z0vz23s.png`
   }
 }
 </script>
