@@ -244,7 +244,7 @@
               <TrashIcon />
             </Button>
           </div>
-          <AnimatedLogo v-if="mod.updating" class="btn icon-only updating-indicator"></AnimatedLogo>
+          <AnimatedLogo v-if="mod.updating" class="btn icon-only loading-indicator" ></AnimatedLogo>
           <div
             v-else
             v-tooltip="isPackLocked ? t('Instance.Mods.UnlockThisInstanceUpdate') : t('Instance.Mods.UpdateProject')"

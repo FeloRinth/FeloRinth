@@ -2,15 +2,11 @@
   <div class="instance-container">
     <div class="side-cards">
       <Card class="instance-card" @contextmenu.prevent.stop="handleRightClick">
-        <Avatar
-          size="lg"
-          :src="
-            !instance.metadata.icon ||
-            (instance.metadata.icon && instance.metadata.icon.startsWith('http'))
-              ? instance.metadata.icon
-              : convertFileSrc(instance.metadata?.icon)
-          "
-        />
+        <Avatar size="lg" :src="!instance.metadata.icon ||
+          (instance.metadata.icon && instance.metadata.icon.startsWith('http'))
+          ? instance.metadata.icon
+          : convertFileSrc(instance.metadata?.icon)
+          " />
         <div class="instance-info">
           <h2 class="name">{{ instance.metadata.name }}</h2>
           <span class="metadata">
@@ -19,100 +15,109 @@
         </div>
         <span class="button-group">
           <Button v-if="instance.install_stage !== 'installed'" disabled class="instance-button">
-            {{t('Instance.Index.Installing')}}
+            {{ t('Instance.Index.Installing') }}
           </Button>
-          <Button
-            v-else-if="playing === true"
-            color="danger"
-            class="instance-button"
-            @click="stopInstance('InstancePage')"
-            @mouseover="checkProcess"
-          >
+          <Button v-else-if="playing === true" color="danger" class="instance-button"
+            @click="stopInstance('InstancePage')" @mouseover="checkProcess">
             <StopCircleIcon />
-            {{t('Instance.Index.Stop')}}
+            {{ t('Instance.Index.Stop') }}
           </Button>
-          <Button
-            v-else-if="playing === false && loading === false"
-            color="primary"
-            class="instance-button"
-            @click="startInstance('InstancePage')"
-            @mouseover="checkProcess"
-          >
+          <Button v-else-if="playing === false && loading === false" color="primary" class="instance-button"
+            @click="startInstance('InstancePage')" @mouseover="checkProcess">
             <PlayIcon />
-            {{t('Instance.Index.Play')}}
+            {{ t('Instance.Index.Play') }}
           </Button>
-          <Button
-            v-else-if="loading === true && playing === false"
-            disabled
-            class="instance-button"
-          >
-            {{t('Instance.Index.Loading')}}
+          <Button v-else-if="loading === true && playing === false" disabled class="instance-button">
+            {{ t('Instance.Index.Loading') }}
           </Button>
-          <Button
-            :v-tooltip="t('Instance.Index.OpenInstanceFolder')"
-            class="instance-button"
-            @click="showProfileInFolder(instance.path)"
-          >
+          <Button :v-tooltip="t('Instance.Index.OpenInstanceFolder')" class="instance-button"
+            @click="showProfileInFolder(instance.path)">
             <FolderOpenIcon />
-            {{t('Instance.Index.Folder')}}
+            {{ t('Instance.Index.Folder') }}
           </Button>
         </span>
         <hr class="card-divider" />
         <div class="pages-list">
           <RouterLink :to="`/instance/${encodeURIComponent($route.params.id)}/`" class="btn">
             <BoxIcon />
-            {{t('Instance.Index.Content')}}
+            {{ t('Instance.Index.Content') }}
           </RouterLink>
           <RouterLink :to="`/instance/${encodeURIComponent($route.params.id)}/logs`" class="btn">
             <FileIcon />
-            {{t('Instance.Index.Logs')}}
+            {{ t('Instance.Index.Logs') }}
           </RouterLink>
           <RouterLink :to="`/instance/${encodeURIComponent($route.params.id)}/options`" class="btn">
             <SettingsIcon />
-            {{t('Instance.Index.Options')}}
+            {{ t('Instance.Index.Options') }}
           </RouterLink>
         </div>
       </Card>
     </div>
     <div class="content">
-<!--      <Promotion :external="false" query-param="?r=launcher" />-->
+      <!--      <Promotion :external="false" query-param="?r=launcher" />-->
       <RouterView v-slot="{ Component }">
         <template v-if="Component">
           <Suspense @pending="loadingBar.startLoading()" @resolve="loadingBar.stopLoading()">
-            <component
-              :is="Component"
-              :instance="instance"
-              :options="options"
-              :offline="offline"
-              :playing="playing"
-              :versions="modrinthVersions"
-              :installed="instance.install_stage !== 'installed'"
-            ></component>
+            <component :is="Component" :instance="instance" :options="options" :offline="offline" :playing="playing"
+              :versions="modrinthVersions" :installed="instance.install_stage !== 'installed'"></component>
           </Suspense>
         </template>
       </RouterView>
     </div>
   </div>
   <ContextMenu ref="options" @option-clicked="handleOptionsClick">
-    <template #play> <PlayIcon /> {{t('Instance.Index.Play')}} </template>
-    <template #stop> <StopCircleIcon /> {{t('Instance.Index.Stop')}} </template>
-    <template #add_content> <PlusIcon /> {{t('Instance.Index.AddContent')}} </template>
-    <template #edit> <EditIcon /> {{t('Instance.Index.Edit')}} </template>
-    <template #copy_path> <ClipboardCopyIcon /> {{t('Instance.Index.CopyPath')}} </template>
-    <template #open_folder> <ClipboardCopyIcon /> {{t('Instance.Index.OpenFolder')}} </template>
-    <template #copy_link> <ClipboardCopyIcon /> {{t('Instance.Index.CopyLink')}} </template>
-    <template #open_link> <ClipboardCopyIcon /> {{t('Instance.Index.OpenInMR')}} <ExternalIcon /> </template>
-    <template #copy_names><EditIcon />{{t('Instance.Index.CopyNames')}}</template>
-    <template #copy_slugs><HashIcon />{{t('Instance.Index.CopySlugs')}}</template>
-    <template #copy_links><GlobeIcon />{{t('Instance.Index.CopyLinks')}}</template>
-    <template #toggle><EditIcon />{{t('Instance.Index.ToggleSelected')}}</template>
-    <template #disable><XIcon />{{t('Instance.Index.DisableSelected')}}</template>
-    <template #enable><CheckCircleIcon />{{t('Instance.Index.EnableSelected')}}</template>
-    <template #hide_show><EyeIcon />{{t('Instance.Index.ShowHideUnSelected')}}</template>
-    <template #update_all
-      ><UpdatedIcon />{{t('Instance.Index.Update')}} {{ selected.length > 0 ? 'selected' : 'all' }}</template
-    >
-    <template #filter_update><UpdatedIcon />{{t('Instance.Index.SelectUpdatable')}}</template>
+    <template #play>
+      <PlayIcon /> {{ t('Instance.Index.Play') }}
+    </template>
+    <template #stop>
+      <StopCircleIcon /> {{ t('Instance.Index.Stop') }}
+    </template>
+    <template #add_content>
+      <PlusIcon /> {{ t('Instance.Index.AddContent') }}
+    </template>
+    <template #edit>
+      <EditIcon /> {{ t('Instance.Index.Edit') }}
+    </template>
+    <template #copy_path>
+      <ClipboardCopyIcon /> {{ t('Instance.Index.CopyPath') }}
+    </template>
+    <template #open_folder>
+      <ClipboardCopyIcon /> {{ t('Instance.Index.OpenFolder') }}
+    </template>
+    <template #copy_link>
+      <ClipboardCopyIcon /> {{ t('Instance.Index.CopyLink') }}
+    </template>
+    <template #open_link>
+      <ClipboardCopyIcon /> {{ t('Instance.Index.OpenInMR') }}
+      <ExternalIcon />
+    </template>
+    <template #copy_names>
+      <EditIcon />{{ t('Instance.Index.CopyNames') }}
+    </template>
+    <template #copy_slugs>
+      <HashIcon />{{ t('Instance.Index.CopySlugs') }}
+    </template>
+    <template #copy_links>
+      <GlobeIcon />{{ t('Instance.Index.CopyLinks') }}
+    </template>
+    <template #toggle>
+      <EditIcon />{{ t('Instance.Index.ToggleSelected') }}
+    </template>
+    <template #disable>
+      <XIcon />{{ t('Instance.Index.DisableSelected') }}
+    </template>
+    <template #enable>
+      <CheckCircleIcon />{{ t('Instance.Index.EnableSelected') }}
+    </template>
+    <template #hide_show>
+      <EyeIcon />{{ t('Instance.Index.ShowHideUnSelected') }}
+    </template>
+    <template #update_all>
+      <UpdatedIcon />{{ t('Instance.Index.Update') }} {{ selected.length > 0 ? 'selected' : 'all' }}
+    </template>
+    <template #filter_update>
+      <UpdatedIcon />{{ t('Instance.Index.SelectUpdatable') }}
+    </template>
   </ContextMenu>
 </template>
 <script setup>
@@ -271,19 +276,19 @@ const handleRightClick = (event) => {
     instance.value,
     playing.value
       ? [
-          {
-            name: 'stop',
-            color: 'danger',
-          },
-          ...baseOptions,
-        ]
+        {
+          name: 'stop',
+          color: 'danger',
+        },
+        ...baseOptions,
+      ]
       : [
-          {
-            name: 'play',
-            color: 'primary',
-          },
-          ...baseOptions,
-        ],
+        {
+          name: 'play',
+          color: 'primary',
+        },
+        ...baseOptions,
+      ],
   )
 }
 
@@ -312,6 +317,20 @@ const handleOptionsClick = async (args) => {
     case 'copy_path':
       await navigator.clipboard.writeText(instance.value.path)
       break
+    case "open_link":
+      window.__TAURI_INVOKE__('tauri', {
+        __tauriModule: 'Shell',
+        message: {
+          cmd: 'open',
+          path: args.item.link
+        }
+      })
+      break;
+    case "copy_link":
+      navigator.clipboard.writeText(
+        args.item.link
+      )
+      break;
   }
 }
 
