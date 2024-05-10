@@ -40,7 +40,6 @@ mod settings;
 mod projects;
 
 mod children;
-pub use self::children::*;
 
 mod tags;
 
