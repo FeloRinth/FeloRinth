@@ -22,7 +22,7 @@ const windowsExtension = `.msi`
 const linuxExtension = `.deb`
 const blacklistDevBuilds = `DEV_BUILD`
 
-export async function forceRefreshRemote(disableElementId, installUpdate) {
+export async function getBranches() {
   fetch(branchesLink)
     .then(async (response) => {
       if (response.ok) {
@@ -61,11 +61,13 @@ export async function forceRefreshRemote(disableElementId, installUpdate) {
       latestMasterCommitLink.value = undefined
       console.error(failedFetchCommit, error)
     })
+}
 
+export async function forceRefreshRemote(disableElementId, autoUpdate) {
   fetch(releaseLink)
     .then((response) => {
       if (!response.ok) {
-        throw new Error(`Failed to fetch releases. Status: ${response.status}`)
+        throw new Error(response.status)
       }
       return response.json()
     })
@@ -97,51 +99,46 @@ export async function forceRefreshRemote(disableElementId, installUpdate) {
       }
       console.log('Update available state is', updateAvailable.value)
       console.log('Remote version is', remoteVersion)
-      console.log('Latest commit on remote is', latestMasterCommitTruncatedSha.value)
-      console.log('Direct link to latest commit on remote is', latestMasterCommitLink.value)
       console.log('Operating System is', os.value)
 
-      if (installUpdate) {
+      if (autoUpdate) {
         buildInstalling.value = true;
-        let downloadUrl = undefined
-        let fileName = undefined
+        let fileName = null
         const buildType = data.assets
-        if (os.value.toLowerCase() === 'MacOS'.toLowerCase()) {
+        if (os.value.toLowerCase() == 'MacOS'.toLowerCase()) {
           for (let i of buildType) {
             if (i.name.endsWith(macExtension) && !i.name.startsWith(blacklistDevBuilds)) {
-              downloadUrl = i.browser_download_url
               fileName = i.name
               console.log(i.browser_download_url)
+              await downloadBuild(i.browser_download_url, fileName, os.value, true)
+              break
             }
           }
 
-          await downloadBuild(downloadUrl, fileName, os.value, true)
-        } else if (os.value.toLowerCase() === 'Windows'.toLowerCase()) {
+          
+        } else if (os.value.toLowerCase() == 'Windows'.toLowerCase()) {
           for (let i of buildType) {
             if (i.name.endsWith(windowsExtension) && !i.name.startsWith(blacklistDevBuilds)) {
-              downloadUrl = i.browser_download_url
               fileName = i.name
               console.log(i.browser_download_url)
+              await downloadBuild(i.browser_download_url, fileName, os.value, true)
+              break
             }
           }
-
-          await downloadBuild(downloadUrl, fileName, os.value, true)
-        } else if (os.value.toLowerCase() === "Linux".toLowerCase()) {
+        } else if (os.value.toLowerCase() == "Linux".toLowerCase()) {
           console.warn(
             "[AR • Warning] • Due to some circumstances, we can't fully determine the structure and condition of your Linux OS," +
             " so we'll download the latest build for the latest ubuntu, that we've available. Installation is done manually")
           for (let i of buildType) {
             if (i.name.endsWith(linuxExtension) && !i.name.startsWith(blacklistDevBuilds)) {
-              downloadUrl = i.browser_download_url
               fileName = i.name
               console.log(i.browser_download_url)
+              await downloadBuild(i.browser_download_url, fileName, os.value, false)
+              break
             }
           }
-          await downloadBuild(downloadUrl, fileName, os.value, false)
         }
         buildInstalling.value = false;
-        console.log(fileName)
-        console.log(downloadUrl)
       }
     })
     .catch((error) => {
@@ -153,6 +150,7 @@ export async function forceRefreshRemote(disableElementId, installUpdate) {
         }
         updateAvailable.value = false
         blockDownload.value = true
+        buildInstalling.value = false;
       }
     })
 }

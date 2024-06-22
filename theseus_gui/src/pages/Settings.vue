@@ -29,7 +29,7 @@ import { version, patch_version, development_build } from '../../package.json'
 import { useLanguage } from '@/store/language.js'
 import { i18n } from '@/main.js';
 import { PirateShip } from '@/assets/render/index.js'
-import { blockDownload, buildInstalling, forceRefreshRemote, hrefAstralium, latestBetaCommitLink, latestBetaCommitTruncatedSha, latestMasterCommitLink, latestMasterCommitTruncatedSha } from '@/helpers/update.js'
+import { blockDownload, buildInstalling, forceRefreshRemote, getBranches, hrefAstralium, latestBetaCommitLink, latestBetaCommitTruncatedSha, latestMasterCommitLink, latestMasterCommitTruncatedSha } from '@/helpers/update.js'
 const t = i18n.global.t;
 import { storeToRefs } from 'pinia'
 
@@ -140,6 +140,7 @@ async function refreshDir() {
 const confirmUpdate = ref(null)
 
 await forceRefreshRemote(false, false)
+await getBranches()
 const confirmUpdating = async () => {
   confirmUpdate.value.show()
 }
@@ -472,7 +473,7 @@ const approvedUpdating = async () => {
           @click="confirmUpdating()">
           <DownloadIcon />{{ buildInstalling ? t('RunningAppBar.UpdateDownloading') : t('Settings.DownloadButton') }}
         </Button>
-        <Button class="icon-line-fix" icon-only @click="forceRefreshRemote(false, false)">
+        <Button class="icon-line-fix" icon-only @click="forceRefreshRemote(false, false), getBranches()">
           <UpdatedIcon />
         </Button>
       </div>
