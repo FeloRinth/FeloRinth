@@ -144,7 +144,7 @@ const confirmClose = async () => {
   const confirmed = await confirm(
     'An action is currently in progress. Are you sure you want to exit?',
     {
-      title: 'Modrinth',
+      title: 'AstralRinth',
       type: 'warning'
     }
   )

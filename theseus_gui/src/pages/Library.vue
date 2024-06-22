@@ -34,6 +34,17 @@ onUnmounted(() => {
   unlistenProfile()
   unlistenOffline()
 })
+
+// TODO: Marked Library exception (issue) from forum discussions.
+/*
+This can help fix a rare exception with the active AR launcher window hanging.
+
+Reproducing the problem personally comes out using different paths, but this will most likely solve the problem,
+since it always requests an update of the list of instances every time you enter the Library section,
+as if it were a Reload function in debug or just a Route module in normal use, or the Library start page in Settings after next launcher boot or reload.
+*/
+await instancesStore.refreshInstances() 
+
 </script>
 
 <template>
