@@ -151,7 +151,7 @@ impl DiscordGuard {
 
         let launcher = read_package_json()?;
 
-        let build_info = format!("AR • v{} patch v{}", launcher.version, launcher.patch_version);
+        let build_info = format!("AR • v{}{}", launcher.version, launcher.patch_version);
         let build_download = "https://astralium.su/get/ar";
 
         let time = SystemTime::now()
