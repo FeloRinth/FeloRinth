@@ -92,6 +92,7 @@ jobs:
 
       - name: Flatpak Builder
         uses: flatpak/flatpak-github-actions@v6.3
+        runs-on: ubuntu-latest
         id: build_os_ubuntu_flatpak
         if: startsWith(matrix.platform, 'flatpak')
         env:
