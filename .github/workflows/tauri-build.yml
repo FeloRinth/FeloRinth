@@ -117,7 +117,7 @@ jobs:
 
       - name: upload ${{ matrix.platform }}
         uses: actions/upload-artifact@v3
-        if: startsWith(matrix.platform, 'ubuntu')
+        if: startsWith(matrix.platform, 'flatpak')
         with:
           name: ${{ matrix.platform }}
           path: "${{ join(fromJSON(steps.build_os_ubuntu_flatpak.outputs.artifactPaths), '\n') }}"
