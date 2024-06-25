@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, windows-latest, ubuntu-20.04, ubuntu-22.04]
+        platform: [macos-latest, windows-latest, ubuntu-20.04, ubuntu-22.04, fedora-latest]
 
     runs-on: ${{ matrix.platform }}
     defaults:
@@ -90,6 +90,18 @@ jobs:
         with:
           includeDebug: true
 
+      - name: build app (fedora)
+        uses: tauri-apps/tauri-action@v0
+        id: build_os_fedora
+        if: startsWith(matrix.platform, 'fedora')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+          TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
+        with:
+          includeDebug: true
+          args: --target x86_64-unknown-linux-gnu
+
       - name: upload ${{ matrix.platform }}
         uses: actions/upload-artifact@v3
         if: startsWith(matrix.platform, 'macos')
@@ -103,3 +115,11 @@ jobs:
         with:
           name: ${{ matrix.platform }}
           path: "${{ join(fromJSON(steps.build_os.outputs.artifactPaths), '\n') }}"
+
+      - name: upload ${{ matrix.platform }}
+        uses: actions/upload-artifact@v3
+        if: startsWith(matrix.platform, 'fedora')
+        with:
+          name: ${{ matrix.platform }}
+          path: "${{ join(fromJSON(steps.build_os_fedora.outputs.artifactPaths), '\n') }}"
+
