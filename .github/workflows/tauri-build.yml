@@ -4,11 +4,11 @@ on:
     branches: [ beta ]
   pull_request:
 jobs:
-  test-tauri:
+  tauri_build:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, windows-latest, ubuntu-20.04, ubuntu-22.04, flatpak-ubuntu-latest]
+        platform: [macos-latest, windows-latest, ubuntu-20.04, ubuntu-22.04]
 
     runs-on: ${{ matrix.platform }}
     defaults:
@@ -90,17 +90,16 @@ jobs:
         with:
           includeDebug: true
 
-      - name: Flatpak Builder
-        uses: flatpak/flatpak-github-actions@v6.3
-        runs-on: ubuntu-latest
-        id: build_os_ubuntu_flatpak
-        if: startsWith(matrix.platform, 'flatpak')
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
-          TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
-        with:
-          includeDebug: true
+      # - name: Flatpak Builder
+      #   uses: flatpak/flatpak-github-actions@v6.3
+      #   id: build_os_ubuntu_flatpak
+      #   if: startsWith(matrix.platform, 'flatpak')
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+      #     TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
+      #   with:
+      #     includeDebug: true
 
       - name: upload ${{ matrix.platform }}
         uses: actions/upload-artifact@v3
@@ -116,10 +115,10 @@ jobs:
           name: ${{ matrix.platform }}
           path: "${{ join(fromJSON(steps.build_os.outputs.artifactPaths), '\n') }}"
 
-      - name: upload ${{ matrix.platform }}
-        uses: actions/upload-artifact@v3
-        if: startsWith(matrix.platform, 'flatpak')
-        with:
-          name: ${{ matrix.platform }}
-          path: "${{ join(fromJSON(steps.build_os_ubuntu_flatpak.outputs.artifactPaths), '\n') }}"
+      # - name: upload ${{ matrix.platform }}
+      #   uses: actions/upload-artifact@v3
+      #   if: startsWith(matrix.platform, 'flatpak')
+      #   with:
+      #     name: ${{ matrix.platform }}
+      #     path: "${{ join(fromJSON(steps.build_os_ubuntu_flatpak.outputs.artifactPaths), '\n') }}"
 
