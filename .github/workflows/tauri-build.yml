@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, windows-latest, ubuntu-20.04, ubuntu-22.04, fedora-latest]
+        platform: [macos-latest, windows-latest, ubuntu-20.04, ubuntu-22.04, flatpak-ubuntu-latest]
 
     runs-on: ${{ matrix.platform }}
     defaults:
@@ -92,8 +92,8 @@ jobs:
 
       - name: Flatpak Builder
         uses: flatpak/flatpak-github-actions@v6.3
-        id: build_os_flatpak
-        if: startsWith(matrix.platform, 'ubuntu')
+        id: build_os_ubuntu_flatpak
+        if: startsWith(matrix.platform, 'flatpak')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
@@ -120,5 +120,5 @@ jobs:
         if: startsWith(matrix.platform, 'ubuntu')
         with:
           name: ${{ matrix.platform }}
-          path: "${{ join(fromJSON(steps.build_os_flatpak.outputs.artifactPaths), '\n') }}"
+          path: "${{ join(fromJSON(steps.build_os_ubuntu_flatpak.outputs.artifactPaths), '\n') }}"
 
