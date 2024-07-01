@@ -108,7 +108,6 @@
     "Local": "Локальная установленная версия",
     "DownloadButton": "Скачать через Github",
     "DevelopmentBuild": "Вы используете сборку для разработки, может возникнуть непредвиденная ошибка!",
-    "LatestMasterCommit": "Последний master коммит на удаленном сервере",
     "LatestBetaCommit": "Последний beta коммит на удаленном сервере"
   },
   "RunningAppBar": {

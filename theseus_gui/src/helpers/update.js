@@ -5,8 +5,6 @@ import { downloadBuild, getOS } from '@/helpers/utils.js'
 export const blockDownload = ref(true)
 export const buildInstalling = ref(false)
 export const updateAvailable = ref(false)
-export const latestMasterCommitTruncatedSha = ref('')
-export const latestMasterCommitLink = ref('')
 export const latestBetaCommitTruncatedSha = ref('')
 export const latestBetaCommitLink = ref('')
 export const hrefAstralium = 'https://www.astralium.su/get/ar'
@@ -35,10 +33,7 @@ export async function getBranches() {
                   data.json().then((data) => {
                     const truncatedSha = data.sha.slice(0, 7)
                     const commitLink = data.html_url
-                    if (branch.name.toLowerCase() == "master".toLowerCase()) {
-                      latestMasterCommitTruncatedSha.value = truncatedSha
-                      latestMasterCommitLink.value = commitLink
-                    } else if (branch.name.toLowerCase() == "beta".toLowerCase()) {
+                    if (branch.name.toLowerCase() == "beta".toLowerCase()) {
                       latestBetaCommitTruncatedSha.value = truncatedSha
                       latestBetaCommitLink.value = commitLink
                     }
@@ -56,9 +51,7 @@ export async function getBranches() {
     })
     .catch((error) => {
       latestBetaCommitTruncatedSha.value = error.message
-      latestMasterCommitTruncatedSha.value = error.message
       latestBetaCommitLink.value = undefined
-      latestMasterCommitLink.value = undefined
       console.error(failedFetchCommit, error)
     })
 }
