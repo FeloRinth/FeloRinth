@@ -2,7 +2,7 @@
   "name": "theseus_gui",
   "private": true,
   "version": "0.7.2",
-  "patch_version": "08 • Beta",
+  "patch_version": "09 • Beta",
   "development_build": true,
   "type": "module",
   "scripts": {
