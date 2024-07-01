@@ -1,8 +1,7 @@
 name: 'Tauri GUI Build'
 on:
   push:
-    branches: [ beta ]
-  pull_request:
+    branches: [ beta, feature ]
 jobs:
   tauri_build:
     strategy:
