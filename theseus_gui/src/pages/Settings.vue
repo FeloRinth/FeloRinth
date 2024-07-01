@@ -29,7 +29,7 @@ import { version, patch_version, development_build } from '../../package.json'
 import { useLanguage } from '@/store/language.js'
 import { i18n } from '@/main.js';
 import { PirateShip } from '@/assets/render/index.js'
-import { blockDownload, buildInstalling, forceRefreshRemote, getBranches, hrefAstralium, latestBetaCommitLink, latestBetaCommitTruncatedSha, latestMasterCommitLink, latestMasterCommitTruncatedSha } from '@/helpers/update.js'
+import { blockDownload, buildInstalling, forceRefreshRemote, getBranches, hrefAstralium, latestBetaCommitLink, latestBetaCommitTruncatedSha} from '@/helpers/update.js'
 const t = i18n.global.t;
 import { storeToRefs } from 'pinia'
 
@@ -454,8 +454,6 @@ const approvedUpdating = async () => {
           </span>
           <span class="label__description">Modrinth/Theseus version: v{{ version }}. Patch version: v{{ patch_version }}
           </span>
-          <span class="label__description">{{ t('Settings.LatestMasterCommit') }} <a class="github" :href="latestMasterCommitLink">{{
-            latestMasterCommitTruncatedSha }}</a></span>
 
           <span class="label__description">{{ t('Settings.LatestBetaCommit') }} <a class="github" :href="latestBetaCommitLink">{{
             latestBetaCommitTruncatedSha }}</a></span>

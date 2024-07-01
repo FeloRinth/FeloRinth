@@ -1,6 +1,7 @@
 <script setup>
 import Instance from '@/components/ui/Instance.vue'
 import { computed, ref } from 'vue'
+import { sortBy, group, filters } from '@/helpers/library.js'
 import {
   ClipboardCopyIcon,
   FolderOpenIcon,
@@ -127,9 +128,6 @@ const handleOptionsClick = async (args) => {
 }
 
 const search = ref('')
-const group = ref('')
-const filters = ref('')
-const sortBy = ref('')
 
 const filteredResults = computed(() => {
   let instances = props.instances.filter((instance) => {
@@ -138,40 +136,47 @@ const filteredResults = computed(() => {
 
   if (sortBy.value === t('GridDisplay.Name')) {
     instances.sort((a, b) => {
+      sortBy.value = t('GridDisplay.Name')
       return a.metadata.name.localeCompare(b.metadata.name)
     })
   }
 
   if (sortBy.value === t('GridDisplay.GameVer')) {
     instances.sort((a, b) => {
+      sortBy.value = t('GridDisplay.GameVer')
       return a.metadata.game_version.localeCompare(b.metadata.game_version)
     })
   }
 
   if (sortBy.value === t('GridDisplay.LastPlayed')) {
     instances.sort((a, b) => {
+      sortBy.value = t('GridDisplay.LastPlayed')
       return dayjs(b.metadata.last_played ?? 0).diff(dayjs(a.metadata.last_played ?? 0))
     })
   }
 
   if (sortBy.value === t('GridDisplay.DateCreated')) {
     instances.sort((a, b) => {
+      sortBy.value = t('GridDisplay.DateCreated')
       return dayjs(b.metadata.date_created).diff(dayjs(a.metadata.date_created))
     })
   }
 
   if (sortBy.value === t('GridDisplay.DateModify')) {
     instances.sort((a, b) => {
+      sortBy.value = t('GridDisplay.DateModify')
       return dayjs(b.metadata.date_modified).diff(dayjs(a.metadata.date_modified))
     })
   }
 
   if (filters.value === t('GridDisplay.CustomInstances')) {
     instances = instances.filter((instance) => {
+      filters.value = t('GridDisplay.CustomInstances')
       return !instance.metadata?.linked_data
     })
   } else if (filters.value === t('GridDisplay.DownloadedModpacks')) {
     instances = instances.filter((instance) => {
+      filters.value = t('GridDisplay.DownloadedModpacks')
       return instance.metadata?.linked_data
     })
   }
@@ -180,6 +185,7 @@ const filteredResults = computed(() => {
 
   if (group.value === t('GridDisplay.Loader')) {
     instances.forEach((instance) => {
+      group.value = t('GridDisplay.Loader')
       const loader = formatCategoryHeader(instance.metadata.loader)
       if (!instanceMap.has(loader)) {
         instanceMap.set(loader, [])
@@ -189,6 +195,7 @@ const filteredResults = computed(() => {
     })
   } else if (group.value === t('GridDisplay.GameVer')) {
     instances.forEach((instance) => {
+      group.value = t('GridDisplay.GameVer')
       if (!instanceMap.has(instance.metadata.game_version)) {
         instanceMap.set(instance.metadata.game_version, [])
       }
@@ -197,6 +204,7 @@ const filteredResults = computed(() => {
     })
   } else if (group.value === t('GridDisplay.Category')) {
     instances.forEach((instance) => {
+      group.value = t('GridDisplay.Category')
       if (instance.metadata.groups.length === 0) {
         instance.metadata.groups.push(t('GridDisplay.None'))
       }
@@ -369,7 +377,6 @@ const filteredResults = computed(() => {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-between;
   gap: 1rem;
   align-items: inherit;
   margin: 1rem 1rem 0 !important;
