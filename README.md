@@ -1,4 +1,5 @@
 ![ar_logo](https://github.com/DIDIRUS4/AstralRinth/assets/77334306/43d4acb0-546c-4dff-834d-83fb2ba6ad6f)
+
 # AR • Theseus core Empowering Your Minecraft Adventure with AstralRinth • Fork of Modrinth
 Welcome to AR • Fork of Modrinth, the ultimate game launcher designed to enhance your Minecraft experience through the Modrinth platform and their API. Whether you're a command-line connoisseur, a graphical interface enthusiast, or a developer integrating Modrinth projects, Theseus core is your gateway to a new level of Minecraft gaming.
 
@@ -17,8 +18,8 @@ Dive into the extraordinary world of AstralRinth, a fork of the original project
 
 ### Available file extensions (Also used in Auto-updater)
 - `.msi` format for Windows OS system _(Supported popular latest versions of Microsoft Windows)_
-- `.dmg` format for MacOS system _(Works on Macos Sonoma, but it should be works on older OS builds)_
-- `.deb` format for Linux OS systems _(Since there are quite a few distributions, we do not guarantee full support for these systems, however, on Unix systems it should run normally)_
+- `.dmg` format for MacOS system _(Works on Macos Ventura / Sonoma, but it should be works on older OS builds)_
+- `.deb` format for Linux OS systems _(Since there are quite a few distributions, we do not guarantee 
 
 ### Additional information about installation subject
 - Builds in releases that are signed with the prefix `DEV_BUILD__{name when building the project}` means that this build is for development and may contain errors, we recommend downloading the archives. `zip`, as they are the final versions.
