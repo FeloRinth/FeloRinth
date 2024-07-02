@@ -1,9 +1,10 @@
-name: 'Tauri GUI Build'
+name: 'AstralRinth: Tauri Build'
 on:
   push:
-    branches: [ beta, feature ]
+    branches:
+      - feature*
 jobs:
-  tauri_build:
+  application_build:
     strategy:
       fail-fast: false
       matrix:
@@ -89,17 +90,6 @@ jobs:
         with:
           includeDebug: true
 
-      # - name: Flatpak Builder
-      #   uses: flatpak/flatpak-github-actions@v6.3
-      #   id: build_os_ubuntu_flatpak
-      #   if: startsWith(matrix.platform, 'flatpak')
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
-      #     TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
-      #   with:
-      #     includeDebug: true
-
       - name: upload ${{ matrix.platform }}
         uses: actions/upload-artifact@v3
         if: startsWith(matrix.platform, 'macos')
@@ -113,11 +103,3 @@ jobs:
         with:
           name: ${{ matrix.platform }}
           path: "${{ join(fromJSON(steps.build_os.outputs.artifactPaths), '\n') }}"
-
-      # - name: upload ${{ matrix.platform }}
-      #   uses: actions/upload-artifact@v3
-      #   if: startsWith(matrix.platform, 'flatpak')
-      #   with:
-      #     name: ${{ matrix.platform }}
-      #     path: "${{ join(fromJSON(steps.build_os_ubuntu_flatpak.outputs.artifactPaths), '\n') }}"
-
