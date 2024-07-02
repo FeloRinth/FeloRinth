@@ -17,7 +17,6 @@ const v = `v`
 const localVersion = `${v}${version}${patch_version}`
 const macExtension = `.dmg`
 const windowsExtension = `.msi`
-const linuxExtension = `.deb`
 const blacklistDevBuilds = `DEV_BUILD`
 
 export async function getBranches() {
@@ -80,12 +79,17 @@ export async function forceRefreshRemote(disableElementId, autoUpdate) {
       } else {
         remoteVersion = latestRelease
       }
-      if (remoteVersion && remoteVersion.startsWith(localVersion)) {
-        updateAvailable.value = false
-        blockDownload.value = true
-      } else if (remoteVersion && remoteVersion.startsWith(v)) {
-        updateAvailable.value = true
-        blockDownload.value = false
+      if (os.value.toLowerCase() == 'MacOS'.toLowerCase() || os.value.toLowerCase() == 'Windows'.toLowerCase()) {
+        if (remoteVersion && remoteVersion.startsWith(localVersion)) {
+          updateAvailable.value = false
+          blockDownload.value = true
+        } else if (remoteVersion && remoteVersion.startsWith(v)) {
+          updateAvailable.value = true
+          blockDownload.value = false
+        } else {
+          updateAvailable.value = false
+          blockDownload.value = true
+        }
       } else {
         updateAvailable.value = false
         blockDownload.value = true
@@ -108,7 +112,7 @@ export async function forceRefreshRemote(disableElementId, autoUpdate) {
             }
           }
 
-          
+
         } else if (os.value.toLowerCase() == 'Windows'.toLowerCase()) {
           for (let i of buildType) {
             if (i.name.endsWith(windowsExtension) && !i.name.startsWith(blacklistDevBuilds)) {
@@ -118,19 +122,20 @@ export async function forceRefreshRemote(disableElementId, autoUpdate) {
               break
             }
           }
-        } else if (os.value.toLowerCase() == "Linux".toLowerCase()) {
-          console.warn(
-            "[AR • Warning] • Due to some circumstances, we can't fully determine the structure and condition of your Linux OS," +
-            " so we'll download the latest build for the latest ubuntu, that we've available. Installation is done manually")
-          for (let i of buildType) {
-            if (i.name.endsWith(linuxExtension) && !i.name.startsWith(blacklistDevBuilds)) {
-              fileName = i.name
-              console.log(i.browser_download_url)
-              await downloadBuild(i.browser_download_url, fileName, os.value, false)
-              break
-            }
-          }
         }
+        // else if (os.value.toLowerCase() == "Linux".toLowerCase()) {
+        //   console.warn(
+        //     "[AR • Warning] • Due to some circumstances, we can't fully determine the structure and condition of your Linux OS," +
+        //     " so we'll download the latest build for the latest ubuntu, that we've available. Installation is done manually")
+        //   for (let i of buildType) {
+        //     if (i.name.endsWith(linuxExtension) && !i.name.startsWith(blacklistDevBuilds)) {
+        //       fileName = i.name
+        //       console.log(i.browser_download_url)
+        //       await downloadBuild(i.browser_download_url, fileName, os.value, false)
+        //       break
+        //     }
+        //   }
+        // }
         buildInstalling.value = false;
       }
     })
