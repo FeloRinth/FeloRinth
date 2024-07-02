@@ -12,7 +12,7 @@ use daedalus::{
 use reqwest::Method;
 use serde::{Deserialize, Serialize};
 
-const METADATA_URL: &str = "https:/launcher-meta.modrinth.com";
+const METADATA_URL: &str = "https://launcher-meta.modrinth.com";
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Metadata {

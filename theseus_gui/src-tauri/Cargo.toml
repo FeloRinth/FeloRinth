@@ -28,7 +28,7 @@ tokio = { version = "1.35.1", features = ["full"] }
 thiserror = "1.0.56"
 tokio-stream = { version = "0.1.14", features = ["fs"] }
 futures = "0.3.30"
-daedalus = {version = "0.2.0", features = ["bincode"] }
+daedalus = "0.2.0"
 chrono = "0.4.31"
 
 dirs = "5.0.1"

@@ -1,6 +1,8 @@
 //! Logic for launching Minecraft
 use std::collections::HashMap;
+use std::process::Stdio;
 use std::sync::Arc;
+use rand::prelude::SliceRandom;
 
 use crate::event::emit::{emit_loading, init_or_edit_loading};
 use crate::event::{LoadingBarId, LoadingBarType};
@@ -17,13 +19,8 @@ use chrono::Utc;
 use daedalus as d;
 use daedalus::minecraft::{RuleAction, VersionInfo};
 use st::Profile;
-use std::collections::HashMap;
-use std::process::Stdio;
-use std::sync::Arc;
 use tokio::process::Command;
 use uuid::Uuid;
-
-use st::Profile;
 
 // use crate::{
 //     process,
