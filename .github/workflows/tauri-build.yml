@@ -2,7 +2,7 @@ name: 'AstralRinth: Tauri Build'
 on:
   push:
     branches:
-      - feature-*
+      - feature*
 jobs:
   application_build:
     strategy:
