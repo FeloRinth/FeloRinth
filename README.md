@@ -5,6 +5,8 @@ This repository is archived and no longer maintained by its author due to lack o
 
 Please note that C/C++ applications are generally more stable and responsive compared to web applications.
 
+Thanks for using this product and its support, the experience proved to be productive and beneficial!
+
 ![ar_logo](https://github.com/DIDIRUS4/AstralRinth/assets/77334306/43d4acb0-546c-4dff-834d-83fb2ba6ad6f)
 
 # AR • Theseus core Empowering Your Minecraft Adventure with AstralRinth • Fork of Modrinth
