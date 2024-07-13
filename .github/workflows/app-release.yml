@@ -3,8 +3,8 @@ on:
   push:
     branches:
       - feature*
-    # tags:
-    #   - 'v*'
+    tags:
+      - 'build*'
     paths:
       - 'apps/app/**'
       - 'apps/app-frontend/**'
@@ -93,6 +93,7 @@ jobs:
         with:
           args: --target universal-apple-darwin
           working-directory: ./apps/app
+          includeDebug: true
 
       - name: build app
         uses: tauri-apps/tauri-action@v0
@@ -104,6 +105,7 @@ jobs:
           TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
         with:
           working-directory: ./apps/app
+          includeDebug: true
 
       - name: upload ${{ matrix.platform }}
         uses: actions/upload-artifact@v3
