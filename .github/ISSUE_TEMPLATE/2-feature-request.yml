@@ -1,5 +1,5 @@
 name: 💡 Feature Request
-description: Suggest an idea
+description: Suggest an idea (Note, AstralRinth doesn't support the Modrinth API or Web)
 labels: [enhancement]
 
 body:
@@ -18,8 +18,6 @@ body:
       multiple: true
       options:
         - App
-        - Website
-        - API
   - type: textarea
     attributes:
       label: Is your suggested feature related to a problem? Please describe.
