@@ -11,11 +11,11 @@ import {
   FileIcon,
   XIcon,
 } from '@modrinth/assets'
-import { Button, Notifications, Card } from '@modrinth/ui'
+import { Button, Notifications, Card, Avatar } from '@modrinth/ui'
 import { useLoading, useTheming } from '@/store/state'
 import { useInstances } from '@/store/instances'
-import AccountsCard from './components/ui/AccountsCard.vue'
-import AccountDropdown from '@/components/ui/platform/AccountDropdown.vue'
+import AccountsCard from '@/components/ui/AccountsCard.vue'
+import AccountDropdown from '@/components/ui/AccountDropdown.vue'
 import InstanceCreationModal from '@/components/ui/InstanceCreationModal.vue'
 import { get } from '@/helpers/settings'
 import Breadcrumbs from '@/components/ui/Breadcrumbs.vue'
@@ -186,7 +186,6 @@ router.afterEach((to, from, failure) => {
 })
 const route = useRoute()
 const isOnBrowse = computed(() => route.path.startsWith('/browse'))
-
 const loading = useLoading()
 
 const notifications = useNotifications()
@@ -274,22 +273,12 @@ const toggleSidebar = () => {
   <SplashScreen v-else-if="!videoPlaying && isLoading" app-loading />
   <OnboardingScreen v-else-if="showOnboarding" :finish="() => (showOnboarding = false)" />
   <div v-else class="container">
-    <div
-      class="nav-container"
-      data-tauri-drag-region
-      :class="`${sidebarOpen ? 'nav-container__open' : ''}`"
-      :style="{
-        '--sidebar-label-opacity': sidebarOpen ? '1' : '0',
-      }"
-    >
+    <div class="nav-container" data-tauri-drag-region :class="`${sidebarOpen ? 'nav-container__open' : ''}`" :style="{
+      '--sidebar-label-opacity': sidebarOpen ? '1' : '0',
+    }">
       <div class="pages-list">
         <div class="square-collapsed-space">
-          <Button
-            transparent
-            icon-only
-            class="collapsed-button non-collapse"
-            @click="toggleSidebar"
-          >
+          <Button transparent icon-only class="collapsed-button non-collapse" @click="toggleSidebar">
             <ArrowRightFromLineIcon v-if="!sidebarOpen" />
             <ArrowLeftFromLineIcon v-else />
           </Button>
@@ -300,22 +289,17 @@ const toggleSidebar = () => {
           <AccountsCard ref="accounts" mode="small" />
         </suspense>
         <div class="pages-list">
-          <RouterLink v-tooltip.right="t('Application.Home')" to="/" class="btn icon-only collapsed-button">
+          <RouterLink to="/" class="btn icon-only collapsed-button">
             <HomeIcon />
             <span class="collapsed-button__label">{{ t('Application.Home') }}</span>
           </RouterLink>
-          <RouterLink
-            v-tooltip.right="t('Application.Browse')"
-            to="/browse/modpack"
-            class="btn icon-only collapsed-button"
-            :class="{
-              'router-link-active': isOnBrowse,
-            }"
-          >
+          <RouterLink to="/browse/modpack" class="btn icon-only collapsed-button" :class="{
+            'router-link-active': isOnBrowse,
+          }">
             <SearchIcon />
             <span class="collapsed-button__label">{{ t('Application.Browse') }}</span>
           </RouterLink>
-          <RouterLink v-tooltip.right="t('Application.Library')" to="/library" class="btn icon-only collapsed-button">
+          <RouterLink to="/library" class="btn icon-only collapsed-button">
             <LibraryIcon />
             <span class="collapsed-button__label">{{ t('Application.Library') }}</span>
           </RouterLink>
@@ -328,18 +312,10 @@ const toggleSidebar = () => {
         <hr />
       </div>
       <div class="instances pages-list">
-        <RouterLink
-          v-for="instance in instancesByPlayed"
-          :key="instance.id"
-          v-tooltip.right="instance.metadata.name"
-          :to="`/instance/${encodeURIComponent(instance.path)}`"
-          class="btn icon-only collapsed-button"
-        >
-          <Avatar
-            class="collapsed-button__icon"
-            :src="iconPathAsUrl(instance.metadata?.icon)"
-            size="xs"
-          />
+        <!-- TODO: Fix visual issuesin future... maybe :D -->
+        <RouterLink v-for="instance in instancesByPlayed" :key="instance.id"
+          :to="`/instance/${encodeURIComponent(instance.path)}`" class="btn icon-only collapsed-button">
+          <Avatar class="collapsed-avatar__icon" :src="iconPathAsUrl(instance.metadata?.icon)" size="xl" />
           <span class="collapsed-button__label">{{ instance.metadata.name }}</span>
         </RouterLink>
       </div>
@@ -347,31 +323,20 @@ const toggleSidebar = () => {
         <hr />
       </div>
       <div class="settings pages-list">
-        <Button
-          v-tooltip.right="t('Application.Support')"
-          transparent
-          icon-only
-          class="page-item collapsed-button"
-          @click="openSupport"
-        >
+        <Button icon-only class="page-item collapsed-button" @click="openSupport">
           <ChatIcon />
           <span class="collapsed-button__label">{{ t('Application.Support') }}</span>
         </Button>
-        <RouterLink v-tooltip.right="t('Application.Settings')" to="/settings" class="btn icon-only collapsed-button">
+        <RouterLink to="/settings" class="btn icon-only collapsed-button">
           <SettingsIcon />
           <span class="collapsed-button__label">{{ t('Application.Settings') }}</span>
         </RouterLink>
-        <Button
-          v-tooltip.right="t('Application.CreateProfile')"
-          class="page-item collapsed-button"
-          icon-only
-          :disabled="offline"
-          @click="() => $refs.installationModal.show()"
-        >
+        <Button class="page-item collapsed-button" icon-only :disabled="offline"
+          @click="() => $refs.installationModal.show()">
           <PlusIcon />
           <span class="collapsed-button__label">{{ t('Application.CreateProfile') }}</span>
         </Button>
-        <AccountDropdown v-tooltip.right="t('Application.ModrinthAccount')" />
+        <AccountDropdown />
       </div>
     </div>
     <div class="view">
@@ -380,10 +345,7 @@ const toggleSidebar = () => {
         <div data-tauri-drag-region class="appbar">
           <section class="navigation-controls">
             <router-link :to="'/'">
-              <img
-                src="../src-tauri/icons/icon.png"
-                class="logo"
-              />
+              <img src="../../app/icons/icon.png" class="logo" />
             </router-link>
             <Breadcrumbs after-logo data-tauri-drag-region />
           </section>
@@ -400,25 +362,18 @@ const toggleSidebar = () => {
           <Button class="titlebar-button" icon-only @click="() => appWindow.toggleMaximize()">
             <MaximizeIcon />
           </Button>
-          <Button
-            class="titlebar-button close"
-            icon-only
-            @click="
-              () => {
-                saveWindowState(StateFlags.ALL)
-                handleClose()
-              }
-            "
-          >
+          <Button class="titlebar-button close" icon-only @click="() => {
+            saveWindowState(StateFlags.ALL)
+            handleClose()
+          }
+            ">
             <XIcon />
           </Button>
         </section>
       </div>
       <div class="router-view">
-        <ModrinthLoadingIndicator
-          offset-height="var(--appbar-height)"
-          :offset-width="sidebarOpen ? 'var(--sidebar-open-width)' : 'var(--sidebar-width)'"
-        />
+        <ModrinthLoadingIndicator offset-height="var(--appbar-height)"
+          :offset-width="sidebarOpen ? 'var(--sidebar-open-width)' : 'var(--sidebar-width)'" />
         <RouterView v-slot="{ Component }">
           <template v-if="Component">
             <Suspense @pending="loading.startLoading()" @resolve="loading.stopLoading()">
@@ -476,6 +431,7 @@ const toggleSidebar = () => {
     height: var(--appbar-height);
 
     &.close {
+
       &:hover,
       &:active {
         background-color: var(--color-red);
@@ -548,8 +504,10 @@ const toggleSidebar = () => {
   background-color: var(--color-bg);
 
   .appbar-failure {
-    display: flex; /* Change to flex to align items horizontally */
-    justify-content: flex-end; /* Align items to the right */
+    display: flex;
+    /* Change to flex to align items horizontally */
+    justify-content: flex-end;
+    /* Align items to the right */
     height: var(--appbar-height);
     //no select
     user-select: none;
@@ -557,7 +515,8 @@ const toggleSidebar = () => {
   }
 
   .error-view {
-    display: flex; /* Change to flex to align items horizontally */
+    display: flex;
+    /* Change to flex to align items horizontally */
     justify-content: center;
     width: 100%;
     background-color: var(--color-bg);
@@ -736,6 +695,15 @@ const toggleSidebar = () => {
       border-radius: var(--radius-xs);
     }
 
+    .collapsed-avatar__icon {
+      width: var(--sidebar-icon-size) !important;
+      height: var(--sidebar-icon-size) !important;
+
+      flex-shrink: 0;
+
+      border-radius: var(--radius-xl);
+    }
+
     .collapsed-button__label {
       word-spacing: normal; // Why is this even needed?
       opacity: var(--sidebar-label-opacity);
@@ -762,5 +730,4 @@ const toggleSidebar = () => {
     padding: var(--gap-sm) 0;
   }
 }
-
 </style>

@@ -8,7 +8,7 @@
       <ModrinthLoginScreen :modal="true" :prev-page="signInAfter" :next-page="signInAfter" />
     </Modal>
     <PopoutMenu class="btn btn-transparent collapsed-button" direction="up" position="right">
-      <Avatar class="collapsed-button__icon" circle size="sm" :src="accountImage" />
+      <Avatar class="collapsed-avatar__icon" circle size="xl" :src="accountImage" />
       <span class="collapsed-button__label">
         <template v-if="auth?.user">
           {{ getAvatarImage(auth) }}
@@ -43,7 +43,10 @@
 
 <script setup>
 import { ref } from 'vue'
-import { Avatar, Button, PopoutMenu, LogOutIcon, LogInIcon, Modal } from 'omorphia'
+
+import { Avatar, Button, PopoutMenu, Modal} from '@modrinth/ui'
+
+import { LogInIcon, LogOutIcon } from '@modrinth/assets'
 
 import { useTheming } from '@/store/state'
 import { useModrinthAuth } from '@/store/mr_auth.js'

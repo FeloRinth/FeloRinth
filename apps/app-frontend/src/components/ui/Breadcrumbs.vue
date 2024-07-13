@@ -36,7 +36,7 @@
 <script setup>
 import { ChevronRightIcon, ChevronLeftIcon } from '@modrinth/assets'
 import { Button } from '@modrinth/ui'
-import { useBreadcrumbs } from '@/store/breadcrumbs'
+import { useBreadcrumbs, useBreadcrumbContext } from '@/store/breadcrumbs'
 import { useRoute } from 'vue-router'
 
 const props = defineProps({

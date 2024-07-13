@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import router from '@/routes'
 import App from '@/App.vue'
 import { createPinia } from 'pinia'
+import { createPlugin } from '@vintl/vintl/plugin'
 import '@modrinth/assets/omorphia.scss'
 import '@/assets/stylesheets/global.scss'
 import '@/assets/stylesheets/components.scss'
@@ -25,7 +26,7 @@ const i18n = createI18n({
 
 const pinia = createPinia()
 
-const vintl = createVintl({
+const vintl = createPlugin({
   controllerOpts: {
     defaultLocale: 'en-US',
     locale: 'en-US',
@@ -47,7 +48,7 @@ app.use(pinia)
 app.use(vintl)
 app.use(FloatingVue)
 app.mixin(loadCssMixin)
-app.use(VIntlPlugin)
+app.use(vintl)
 
 const mountedApp = app.mount('#app')
 

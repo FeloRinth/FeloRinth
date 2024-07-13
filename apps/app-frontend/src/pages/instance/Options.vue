@@ -1,5 +1,6 @@
 <template>
-  <Modal ref="modal_confirm" :has-to-type="false" :noblur="!themeStore.advancedRendering" :header="t('Instance.Options.DeleteQuestion')">
+  <Modal ref="modal_confirm" :has-to-type="false" :noblur="!themeStore.advancedRendering"
+    :header="t('Instance.Options.DeleteQuestion')">
     <div class="modal-body">
       <div class="markdown-body">
         <p>
@@ -15,43 +16,28 @@
       </div>
     </div>
   </Modal>
-  <Modal
-    ref="modalConfirmUnlock"
-    :header="t('Instance.Options.UnlockQuestion')"
-    :noblur="!themeStore.advancedRendering"
-  >
+  <Modal ref="modalConfirmUnlock" :header="t('Instance.Options.UnlockQuestion')"
+    :noblur="!themeStore.advancedRendering">
     <div class="modal-delete">
-      <div
-        class="markdown-body"
-        :v-html="
-          t('Instance.Options.UnlockProceed')
-        "
-      />
+      <div class="markdown-body" :v-html="t('Instance.Options.UnlockProceed')" />
       <div class="input-group push-right">
         <button class="btn" @click="$refs.modalConfirmUnlock.hide()">
           <XIcon />
-          {{t('Instance.Options.UnlockCancel')}}
+          {{ t('Instance.Options.UnlockCancel') }}
         </button>
         <button class="btn btn-danger" :disabled="action_disabled" @click="unlockProfile">
           <LockIcon />
-          {{t('Instance.Options.UnlockReact')}}
+          {{ t('Instance.Options.UnlockReact') }}
         </button>
       </div>
     </div>
   </Modal>
 
-  <Modal
-    ref="modalConfirmUnpair"
-    :header="t('Instance.Options.UnpairQuestion')"
-    :noblur="!themeStore.advancedRendering"
-  >
+  <Modal ref="modalConfirmUnpair" :header="t('Instance.Options.UnpairQuestion')"
+    :noblur="!themeStore.advancedRendering">
     <div class="modal-delete">
-      <div
-        class="markdown-body"
-        :v-html="
-          t('Instance.Options.UnpairProceed')
-        "
-      />
+      <div class="markdown-body" :v-html="t('Instance.Options.UnpairProceed')
+        " />
       <div class="input-group push-right">
         <button class="btn" @click="$refs.modalConfirmUnpair.hide()">
           <XIcon />
@@ -65,49 +51,33 @@
     </div>
   </Modal>
 
-  <Modal
-    ref="changeVersionsModal"
-    :header="t('Instance.Options.ChangeVersions')"
-    :noblur="!themeStore.advancedRendering"
-  >
+  <Modal ref="changeVersionsModal" :header="t('Instance.Options.ChangeVersions')"
+    :noblur="!themeStore.advancedRendering">
     <div class="change-versions-modal universal-body">
       <div class="input-row">
-        <p class="input-label">{{t('Instance.Options.Loader')}}</p>
+        <p class="input-label">{{ t('Instance.Options.Loader') }}</p>
         <Chips v-model="loader" :items="loaders" :never-empty="false" />
       </div>
       <div class="input-row">
-        <p class="input-label">{{t('Instance.Options.GameVersion')}}</p>
+        <p class="input-label">{{ t('Instance.Options.GameVersion') }}</p>
         <div class="versions">
-          <DropdownSelect
-            v-model="gameVersion"
-            :options="selectableGameVersions"
-            name="Game Version Dropdown"
-            render-up
-          />
+          <DropdownSelect v-model="gameVersion" :options="selectableGameVersions" name="Game Version Dropdown"
+            render-up />
           <Checkbox v-model="showSnapshots" class="filter-checkbox" label="Include snapshots" />
         </div>
       </div>
       <div v-if="loader !== 'vanilla'" class="input-row">
-        <p class="input-label">{{t('Instance.Options.LoaderVersion')}}</p>
-        <DropdownSelect
-          :model-value="selectableLoaderVersions[loaderVersionIndex]"
-          :options="selectableLoaderVersions"
-          :display-name="(option) => option?.id"
-          name="Version selector"
-          render-up
-          @change="(value) => (loaderVersionIndex = value.index)"
-        />
+        <p class="input-label">{{ t('Instance.Options.LoaderVersion') }}</p>
+        <DropdownSelect :model-value="selectableLoaderVersions[loaderVersionIndex]" :options="selectableLoaderVersions"
+          :display-name="(option) => option?.id" name="Version selector" render-up
+          @change="(value) => (loaderVersionIndex = value.index)" />
       </div>
       <div class="push-right input-group">
         <button class="btn" @click="$refs.changeVersionsModal.hide()">
           <XIcon />
-          {{t('Instance.Options.BtnCancel')}}
+          {{ t('Instance.Options.BtnCancel') }}
         </button>
-        <button
-          class="btn btn-primary"
-          :disabled="!isValid || !isChanged || editing"
-          @click="saveGvLoaderEdits()"
-        >
+        <button class="btn btn-primary" :disabled="!isValid || !isChanged || editing" @click="saveGvLoaderEdits()">
           <SaveIcon />
           {{ editing ? t('Instance.Options.Saving') : t('Instance.Options.SaveChanges') }}
         </button>
@@ -117,59 +87,42 @@
   <section class="card">
     <div class="label">
       <h3>
-        <span class="label__title size-card-header">{{t('Instance.Options.Instance')}}</span>
+        <span class="label__title size-card-header">{{ t('Instance.Options.Instance') }}</span>
       </h3>
     </div>
     <label for="instance-icon">
-      <span class="label__title">{{t('Instance.Options.Icon')}}</span>
+      <span class="label__title">{{ t('Instance.Options.Icon') }}</span>
     </label>
     <div class="input-group">
-      <Avatar
-        :src="!icon || (icon && icon.startsWith('http')) ? icon : convertFileSrc(icon)"
-        size="md"
-        class="project__icon"
-      />
+      <Avatar :src="!icon || (icon && icon.startsWith('http')) ? icon : convertFileSrc(icon)" size="md"
+        class="project__icon" />
       <div class="input-stack">
         <button id="instance-icon" class="btn" @click="setIcon">
           <UploadIcon />
-          {{t('Instance.Options.SelectIcon')}}
+          {{ t('Instance.Options.SelectIcon') }}
         </button>
-        <button
-          :disabled="!(!icon || (icon && icon.startsWith('http')) ? icon : convertFileSrc(icon))"
-          class="btn"
-          @click="resetIcon"
-        >
+        <button :disabled="!(!icon || (icon && icon.startsWith('http')) ? icon : convertFileSrc(icon))" class="btn"
+          @click="resetIcon">
           <TrashIcon />
-          {{t('Instance.Options.RemoveIcon')}}
+          {{ t('Instance.Options.RemoveIcon') }}
         </button>
       </div>
     </div>
 
     <label for="project-name">
-      <span class="label__title">{{t('Instance.Options.Name')}}</span>
+      <span class="label__title">{{ t('Instance.Options.Name') }}</span>
     </label>
-    <input
-      id="profile-name"
-      v-model="title"
-      autocomplete="off"
-      maxlength="80"
-      type="text"
-      :disabled="instance.metadata.linked_data"
-    />
+    <input id="profile-name" v-model="title" autocomplete="off" maxlength="80" type="text"
+      :disabled="instance.metadata.linked_data" />
 
     <div class="adjacent-input">
       <label for="edit-versions">
-        <span class="label__title">{{t('Instance.Options.EditMLGV')}}</span>
+        <span class="label__title">{{ t('Instance.Options.EditMLGV') }}</span>
         <span class="label__description">
-          {{t('Instance.Options.EditMLGVDesc')}}
+          {{ t('Instance.Options.EditMLGVDesc') }}
         </span>
       </label>
-      <button
-        id="edit-versions"
-        class="btn"
-        :disabled="offline"
-        @click="$refs.changeVersionsModal.show()"
-      >
+      <button id="edit-versions" class="btn" :disabled="offline" @click="$refs.changeVersionsModal.show()">
         <EditIcon />
         {{ t('Instance.Options.EditVersions') }}
       </button>
@@ -177,87 +130,57 @@
 
     <div class="adjacent-input">
       <label>
-        <span class="label__title">{{t('Instance.Options.Categories')}}</span>
+        <span class="label__title">{{ t('Instance.Options.Categories') }}</span>
         <span class="label__description">
-          {{t('Instance.Options.CategoriesDesc')}}
+          {{ t('Instance.Options.CategoriesDesc') }}
         </span>
       </label>
-      <multiselect
-        v-model="groups"
-        :options="availableGroups"
-        :multiple="true"
-        :searchable="true"
-        :show-no-results="false"
-        :close-on-select="false"
-        :clear-search-on-select="false"
-        :show-labels="false"
-        :taggable="true"
-        :tag-placeholder="t('Instance.Options.CategoriesAdd')"
-        :placeholder="t('Instance.Options.CategoriesSelect')"
-        @tag="
-          (newTag) => {
-            groups.push(newTag.trim().substring(0, 32))
-            availableGroups.push(newTag.trim().substring(0, 32))
-          }
-        "
-      />
+      <multiselect v-model="groups" :options="availableGroups" :multiple="true" :searchable="true"
+        :show-no-results="false" :close-on-select="false" :clear-search-on-select="false" :show-labels="false"
+        :taggable="true" :tag-placeholder="t('Instance.Options.CategoriesAdd')"
+        :placeholder="t('Instance.Options.CategoriesSelect')" @tag="(newTag) => {
+          groups.push(newTag.trim().substring(0, 32))
+          availableGroups.push(newTag.trim().substring(0, 32))
+        }
+          " />
     </div>
   </section>
   <Card>
     <div class="label">
       <h3>
-        <span class="label__title size-card-header">{{t('Instance.Options.Java')}}</span>
+        <span class="label__title size-card-header">{{ t('Instance.Options.Java') }}</span>
       </h3>
     </div>
     <div class="settings-group">
-      <h3>{{t('Instance.Options.Installation')}}</h3>
+      <h3>{{ t('Instance.Options.Installation') }}</h3>
       <Checkbox v-model="overrideJavaInstall" :label="t('Instance.Options.OverrideJavaInstallation')" />
       <JavaSelector v-model="javaInstall" :disabled="!overrideJavaInstall" />
     </div>
     <hr class="card-divider" />
     <div class="settings-group">
-      <h3>{{t('Instance.Options.JavaArgs')}}</h3>
+      <h3>{{ t('Instance.Options.JavaArgs') }}</h3>
       <Checkbox v-model="overrideJavaArgs" :label="t('Instance.Options.OverrideJavaArgs')" />
-      <input
-        id="java-args"
-        v-model="javaArgs"
-        autocomplete="off"
-        :disabled="!overrideJavaArgs"
-        type="text"
-        class="installation-input"
-        :placeholder="t('Instance.Options.EnterJavaArgs')"
-      />
+      <input id="java-args" v-model="javaArgs" autocomplete="off" :disabled="!overrideJavaArgs" type="text"
+        class="installation-input" :placeholder="t('Instance.Options.EnterJavaArgs')" />
     </div>
     <div class="settings-group">
-      <h3>{{t('Instance.Options.EnvVars')}}</h3>
+      <h3>{{ t('Instance.Options.EnvVars') }}</h3>
       <Checkbox v-model="overrideEnvVars" :label="t('Instance.Options.OverrideEnvVars')" />
-      <input
-        v-model="envVars"
-        autocomplete="off"
-        :disabled="!overrideEnvVars"
-        type="text"
-        class="installation-input"
-        :placeholder="t('Instance.Options.EnterEnvVars')"
-      />
+      <input v-model="envVars" autocomplete="off" :disabled="!overrideEnvVars" type="text" class="installation-input"
+        :placeholder="t('Instance.Options.EnterEnvVars')" />
     </div>
     <hr class="card-divider" />
     <div class="settings-group">
-      <h3>{{t('Instance.Options.JavaMem')}}</h3>
+      <h3>{{ t('Instance.Options.JavaMem') }}</h3>
       <Checkbox v-model="overrideMemorySettings" :label="t('Instance.Options.OverrideJavaMem')" />
-      <Slider
-        v-model="memory.maximum"
-        :disabled="!overrideMemorySettings"
-        :min="8"
-        :max="maxMemory"
-        :step="64"
-        unit="mb"
-      />
+      <Slider v-model="memory.maximum" :disabled="!overrideMemorySettings" :min="8" :max="maxMemory" :step="64"
+        unit="mb" />
     </div>
   </Card>
   <Card>
     <div class="label">
       <h3>
-        <span class="label__title size-card-header">{{t('Instance.Options.Window')}}</span>
+        <span class="label__title size-card-header">{{ t('Instance.Options.Window') }}</span>
       </h3>
     </div>
     <div class="adjacent-input">
@@ -265,57 +188,40 @@
     </div>
     <div class="adjacent-input">
       <label for="fullscreen">
-        <span class="label__title">{{t('Instance.Options.FullScreen')}}</span>
+        <span class="label__title">{{ t('Instance.Options.FullScreen') }}</span>
         <span class="label__description">
-          {{t('Instance.Options.FullScreenDesc')}}
+          {{ t('Instance.Options.FullScreenDesc') }}
         </span>
       </label>
-      <Toggle
-        id="fullscreen"
-        :model-value="fullscreenSetting"
-        :checked="fullscreenSetting"
-        :disabled="!overrideWindowSettings"
-        @update:model-value="
-          (e) => {
-            fullscreenSetting = e
-          }
-        "
-      />
+      <Toggle id="fullscreen" :model-value="fullscreenSetting" :checked="fullscreenSetting"
+        :disabled="!overrideWindowSettings" @update:model-value="(e) => {
+          fullscreenSetting = e
+        }
+          " />
     </div>
     <div class="adjacent-input">
       <label for="width">
-        <span class="label__title">{{t('Instance.Options.Width')}}</span>
-        <span class="label__description"> {{t('Instance.Options.WidthDesc')}} </span>
+        <span class="label__title">{{ t('Instance.Options.Width') }}</span>
+        <span class="label__description"> {{ t('Instance.Options.WidthDesc') }} </span>
       </label>
-      <input
-        id="width"
-        v-model="resolution[0]"
-        autocomplete="off"
-        :disabled="!overrideWindowSettings || fullscreenSetting"
-        type="number"
-        :placeholder="t('Instance.Options.EnterWidth')"
-      />
+      <input id="width" v-model="resolution[0]" autocomplete="off"
+        :disabled="!overrideWindowSettings || fullscreenSetting" type="number"
+        :placeholder="t('Instance.Options.EnterWidth')" />
     </div>
     <div class="adjacent-input">
       <label for="height">
-        <span class="label__title">{{t('Instance.Options.Height')}}</span>
-        <span class="label__description"> {{t('Instance.Options.HeightDesc')}} </span>
+        <span class="label__title">{{ t('Instance.Options.Height') }}</span>
+        <span class="label__description"> {{ t('Instance.Options.HeightDesc') }} </span>
       </label>
-      <input
-        id="height"
-        v-model="resolution[1]"
-        autocomplete="off"
-        :disabled="!overrideWindowSettings || fullscreenSetting"
-        type="number"
-        class="input"
-        :placeholder="t('Instance.Options.EnterHeight')"
-      />
+      <input id="height" v-model="resolution[1]" autocomplete="off"
+        :disabled="!overrideWindowSettings || fullscreenSetting" type="number" class="input"
+        :placeholder="t('Instance.Options.EnterHeight')" />
     </div>
   </Card>
   <Card>
     <div class="label">
       <h3>
-        <span class="label__title size-card-header">{{t('Instance.Options.Hooks')}}</span>
+        <span class="label__title size-card-header">{{ t('Instance.Options.Hooks') }}</span>
       </h3>
     </div>
     <div class="adjacent-input">
@@ -323,64 +229,46 @@
     </div>
     <div class="adjacent-input">
       <label for="pre-launch">
-        <span class="label__title">{{t('Instance.Options.PreLaunch')}}</span>
-        <span class="label__description">{{t('Instance.Options.PreLaunchDesc')}}</span>
+        <span class="label__title">{{ t('Instance.Options.PreLaunch') }}</span>
+        <span class="label__description">{{ t('Instance.Options.PreLaunchDesc') }}</span>
       </label>
-      <input
-        id="pre-launch"
-        v-model="hooks.pre_launch"
-        autocomplete="off"
-        :disabled="!overrideHooks"
-        type="text"
-        :placeholder="t('Instance.Options.EnterPreLaunch')"
-      />
+      <input id="pre-launch" v-model="hooks.pre_launch" autocomplete="off" :disabled="!overrideHooks" type="text"
+        :placeholder="t('Instance.Options.EnterPreLaunch')" />
     </div>
     <div class="adjacent-input">
       <label for="wrapper">
-        <span class="label__title">{{t('Instance.Options.Wrapper')}}</span>
-        <span class="label__description"> {{t('Instance.Options.WrapperDesc')}} </span>
+        <span class="label__title">{{ t('Instance.Options.Wrapper') }}</span>
+        <span class="label__description"> {{ t('Instance.Options.WrapperDesc') }} </span>
       </label>
-      <input
-        id="wrapper"
-        v-model="hooks.wrapper"
-        autocomplete="off"
-        :disabled="!overrideHooks"
-        type="text"
-        :placeholder="t('Instance.Options.EnterWrapper')"
-      />
+      <input id="wrapper" v-model="hooks.wrapper" autocomplete="off" :disabled="!overrideHooks" type="text"
+        :placeholder="t('Instance.Options.EnterWrapper')" />
     </div>
     <div class="adjacent-input">
       <label for="post-exit">
-        <span class="label__title">{{t('Instance.Options.PostExit')}}</span>
-        <span class="label__description"> {{t('Instance.Options.PostExitDesc')}} </span>
+        <span class="label__title">{{ t('Instance.Options.PostExit') }}</span>
+        <span class="label__description"> {{ t('Instance.Options.PostExitDesc') }} </span>
       </label>
-      <input
-        id="post-exit"
-        v-model="hooks.post_exit"
-        autocomplete="off"
-        :disabled="!overrideHooks"
-        type="text"
-        :placeholder="t('Instance.Options.EnterPostExit')"
-      />
+      <input id="post-exit" v-model="hooks.post_exit" autocomplete="off" :disabled="!overrideHooks" type="text"
+        :placeholder="t('Instance.Options.EnterPostExit')" />
     </div>
   </Card>
   <Card v-if="instance.metadata.linked_data">
     <div class="label">
       <h3>
-        <span class="label__title size-card-header">{{t('Instance.Options.Modpack')}}</span>
+        <span class="label__title size-card-header">{{ t('Instance.Options.Modpack') }}</span>
       </h3>
     </div>
     <div class="adjacent-input">
       <label for="general-modpack-info">
         <span class="label__description">
-          <strong>{{t('Instance.Options.Modpack')}}: </strong> {{ instance.metadata.name }}
+          <strong>{{ t('Instance.Options.Modpack') }}: </strong> {{ instance.metadata.name }}
         </span>
         <span class="label__description">
-          <strong>{{t('Instance.Options.Version')}}: </strong>
+          <strong>{{ t('Instance.Options.Version') }}: </strong>
           {{
             installedVersionData?.name != null
               ? installedVersionData.name.charAt(0).toUpperCase() +
-                installedVersionData.name.slice(1)
+              installedVersionData.name.slice(1)
               : getLocalVersion(props.instance.path)
           }}
         </span>
@@ -388,122 +276,101 @@
     </div>
     <div v-if="!isPackLocked" class="adjacent-input">
       <Card class="unlocked-instance">
-        {{t('Instance.Options.Unlocked')}}
+        {{ t('Instance.Options.Unlocked') }}
       </Card>
     </div>
     <div v-else class="adjacent-input">
       <label for="unlock-profile">
-        <span class="label__title">{{t('Instance.Options.UnlockedInstance')}}</span>
+        <span class="label__title">{{ t('Instance.Options.UnlockedInstance') }}</span>
         <span class="label__description">
-          {{t('Instance.Options.UnlockedInstanceDesc')}}
+          {{ t('Instance.Options.UnlockedInstanceDesc') }}
         </span>
       </label>
       <Button id="unlock-profile" @click="$refs.modalConfirmUnlock.show()">
-        <LockIcon /> {{t('Instance.Options.Unlock')}}
+        <LockIcon /> {{ t('Instance.Options.Unlock') }}
       </Button>
     </div>
 
     <div class="adjacent-input">
       <label for="unpair-profile">
-        <span class="label__title">{{t('Instance.Options.UnpairInstance')}}</span>
+        <span class="label__title">{{ t('Instance.Options.UnpairInstance') }}</span>
         <span class="label__description">
-          {{t('Instance.Options.UnpairInstanceDesc')}}
+          {{ t('Instance.Options.UnpairInstanceDesc') }}
         </span>
       </label>
       <Button id="unpair-profile" @click="$refs.modalConfirmUnpair.show()">
-        <XIcon /> {{t('Instance.Options.Unpair')}}
+        <XIcon /> {{ t('Instance.Options.Unpair') }}
       </Button>
     </div>
 
     <div v-if="props.instance.metadata.linked_data.project_id" class="adjacent-input">
       <label for="change-modpack-version">
-        <span class="label__title">{{t('Instance.Options.ChangeMV')}}</span>
+        <span class="label__title">{{ t('Instance.Options.ChangeMV') }}</span>
         <span class="label__description">
-          {{t('Instance.Options.ChangeMVDesc')}}
+          {{ t('Instance.Options.ChangeMVDesc') }}
         </span>
       </label>
 
-      <Button
-        id="change-modpack-version"
-        :disabled="inProgress || installing"
-        @click="modpackVersionModal.show()"
-      >
+      <Button id="change-modpack-version" :disabled="inProgress || installing" @click="modpackVersionModal.show()">
         <SwapIcon />
-        {{t('Instance.Options.ChangeMV')}}
+        {{ t('Instance.Options.ChangeMV') }}
       </Button>
     </div>
     <div class="adjacent-input">
       <label for="repair-modpack">
-        <span class="label__title">{{t('Instance.Options.ReinstallModpack')}}</span>
+        <span class="label__title">{{ t('Instance.Options.ReinstallModpack') }}</span>
         <span class="label__description">
-          {{t('Instance.Options.ReinstallModpackDesc')}}
+          {{ t('Instance.Options.ReinstallModpackDesc') }}
         </span>
       </label>
       <Button id="repair-modpack" color="highlight" :disabled="offline" @click="repairModpack">
-        <DownloadIcon /> {{t('Instance.Options.Reinstall')}}
+        <DownloadIcon /> {{ t('Instance.Options.Reinstall') }}
       </Button>
     </div>
   </Card>
   <Card>
     <div class="label">
       <h3>
-        <span class="label__title size-card-header">{{t('Instance.Options.InstanceManagement')}}</span>
+        <span class="label__title size-card-header">{{ t('Instance.Options.InstanceManagement') }}</span>
       </h3>
     </div>
     <div v-if="instance.install_stage == 'installed'" class="adjacent-input">
       <label for="duplicate-profile">
-        <span class="label__title">{{t('Instance.Options.DuplicateInstance')}}</span>
+        <span class="label__title">{{ t('Instance.Options.DuplicateInstance') }}</span>
         <span class="label__description">
-          {{t('Instance.Options.DuplicateInstanceDesc')}}
+          {{ t('Instance.Options.DuplicateInstanceDesc') }}
         </span>
       </label>
-      <Button
-        id="repair-profile"
-        :disabled:="installing || inProgress || offline"
-        @click="duplicateProfile"
-      >
-        <ClipboardCopyIcon /> {{t('Instance.Options.Duplicate')}}
+      <Button id="repair-profile" :disabled:="installing || inProgress || offline" @click="duplicateProfile">
+        <ClipboardCopyIcon /> {{ t('Instance.Options.Duplicate') }}
       </Button>
     </div>
     <div class="adjacent-input">
       <label for="repair-profile">
-        <span class="label__title">{{t('Instance.Options.RepairInstance')}}</span>
+        <span class="label__title">{{ t('Instance.Options.RepairInstance') }}</span>
         <span class="label__description">
-          {{t('Instance.Options.RepairInstanceDesc')}}
+          {{ t('Instance.Options.RepairInstanceDesc') }}
         </span>
       </label>
-      <Button
-        id="repair-profile"
-        color="highlight"
-        :disabled="installing || inProgress || repairing || offline"
-        @click="repairProfile(true)"
-      >
-        <HammerIcon /> {{t('Instance.Options.Repair')}}
+      <Button id="repair-profile" color="highlight" :disabled="installing || inProgress || repairing || offline"
+        @click="repairProfile(true)">
+        <HammerIcon /> {{ t('Instance.Options.Repair') }}
       </Button>
     </div>
     <div class="adjacent-input">
       <label for="delete-profile">
-        <span class="label__title">{{t('Instance.Options.DeleteInstance')}}</span>
+        <span class="label__title">{{ t('Instance.Options.DeleteInstance') }}</span>
         <span class="label__description">
-          {{t('Instance.Options.DeleteInstanceDesc')}}
+          {{ t('Instance.Options.DeleteInstanceDesc') }}
         </span>
       </label>
-      <Button
-        id="delete-profile"
-        color="danger"
-        :disabled="removing"
-        @click="modal_confirm.show()"
-      >
-        <TrashIcon /> {{t('Instance.Options.Delete')}}
+      <Button id="delete-profile" color="danger" :disabled="removing" @click="modal_confirm.show()">
+        <TrashIcon /> {{ t('Instance.Options.Delete') }}
       </Button>
     </div>
   </Card>
-  <ModpackVersionModal
-    v-if="instance.metadata.linked_data"
-    ref="modpackVersionModal"
-    :instance="instance"
-    :versions="props.versions"
-  />
+  <ModpackVersionModal v-if="instance.metadata.linked_data" ref="modpackVersionModal" :instance="instance"
+    :versions="props.versions" />
 </template>
 
 <script setup>
@@ -521,7 +388,6 @@ import {
 import {
   Button,
   Toggle,
-  ConfirmModal,
   Card,
   Slider,
   Checkbox,
@@ -912,7 +778,7 @@ const isChanged = computed(() => {
     loader.value != props.instance.metadata.loader ||
     gameVersion.value != props.instance.metadata.game_version ||
     JSON.stringify(selectableLoaderVersions.value[loaderVersionIndex.value]) !==
-      JSON.stringify(props.instance.metadata.loader_version)
+    JSON.stringify(props.instance.metadata.loader_version)
   )
 })
 
@@ -1015,6 +881,7 @@ async function saveGvLoaderEdits() {
     margin-top: 1.5rem;
   }
 }
+
 .modal-body {
   display: flex;
   flex-direction: column;

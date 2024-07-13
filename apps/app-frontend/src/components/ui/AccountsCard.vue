@@ -1,7 +1,7 @@
 <template>
   <Button v-if="mode !== 'isolated'" v-tooltip.right="t('AccountsCard.MinecraftAccounts')"
     class="btn btn-transparent collapsed-button" @click="showCard = !showCard">
-    <Avatar size="xs" class="collapsed-button__icon" :src="selectedAccount
+    <Avatar size="xl" class="collapsed-button__icon" :src="selectedAccount
       ? `https://mc-heads.net/avatar/${selectedAccount.username}/128x128`
       : 'https://launcher-files.modrinth.com/assets/steve_head.png'
       " />
@@ -90,18 +90,9 @@
 
 <script setup>
 import { PlusIcon, TrashIcon, LogInIcon } from '@modrinth/assets'
-import { Avatar, Button, Card } from '@modrinth/ui'
+import { Avatar, Button, Card, Modal } from '@modrinth/ui'
 import { ref, computed, onMounted, onBeforeUnmount, onUnmounted } from 'vue'
-import {
-  Avatar,
-  Button,
-  Card,
-  Modal,
-  PlusIcon,
-  TrashIcon
-} from 'omorphia'
 
-import { computed, onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue'
 import {
   offline_authenticate_await_completion,
   login as login_flow,
@@ -110,6 +101,7 @@ import {
   set_default_user,
   users
 } from '@/helpers/auth'
+import { i18n } from '@/main.js'
 import { handleError } from '@/store/state.js'
 import { mixpanel_track } from '@/helpers/mixpanel'
 import { process_listener } from '@/helpers/events'

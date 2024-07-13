@@ -18,7 +18,7 @@ pub struct DiscordGuard {
     connected: Arc<AtomicBool>,
 }
 
-const PACKAGE_JSON_CONTENT: &str = include_str!("../../../theseus_gui/package.json");
+const PACKAGE_JSON_CONTENT: &str = include_str!("../../../../apps/app-frontend/package.json");
 pub(crate) const ACTIVE_PHRASES: [&str; 6] = [
     "Explores",
     "Travels with",

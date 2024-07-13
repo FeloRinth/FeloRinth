@@ -13,7 +13,7 @@ import {
   Card,
   SearchFilter,
 } from '@modrinth/ui'
-import formatCategory from '@modrinth/utils'
+import { formatCategory } from '@modrinth/utils'
 import Multiselect from 'vue-multiselect'
 import { handleError } from '@/store/state'
 import { useBreadcrumbs } from '@/store/breadcrumbs'

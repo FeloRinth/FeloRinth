@@ -13,7 +13,7 @@ import {
   SearchIcon,
   XIcon,
 } from '@modrinth/assets'
-import { ConfirmModal, Button, Card, DropdownSelect } from '@modrinth/ui'
+import { Modal, Button, Card, DropdownSelect } from '@modrinth/ui'
 import { formatCategoryHeader } from '@modrinth/utils'
 import ContextMenu from '@/components/ui/ContextMenu.vue'
 import dayjs from 'dayjs'
@@ -351,14 +351,13 @@ const filteredResults = computed(() => {
 }
 
 .header {
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.35rem;
   align-items: inherit;
   justify-content: space-between;
   margin: 1rem 1rem 0 !important;
-  padding: 1rem;
   width: calc(100% - 2rem);
 
   .iconified-input {

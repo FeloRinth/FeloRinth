@@ -128,7 +128,7 @@
 
 <script setup>
 import { DownloadIcon, StopCircleIcon, TerminalSquareIcon, DropdownIcon } from '@modrinth/assets'
-import { Button, Card } from '@modrinth/ui'
+import { Button, Card, Modal } from '@modrinth/ui'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import {
   get_all_running_profiles as getRunningProfiles,
@@ -144,6 +144,7 @@ import { handleError } from '@/store/notifications.js'
 import { mixpanel_track } from '@/helpers/mixpanel'
 import { ChatIcon } from '@/assets/icons'
 import { buildInstalling, forceRefreshRemote, updateAvailable } from '@/helpers/update.js'
+import { i18n } from '@/main.js'
 
 const t = i18n.global.t
 

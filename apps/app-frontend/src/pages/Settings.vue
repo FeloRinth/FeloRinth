@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue'
-import { LogOutIcon, LogInIcon, BoxIcon, FolderSearchIcon, UpdatedIcon } from '@modrinth/assets'
+import { DownloadIcon, LogOutIcon, LogInIcon, BoxIcon, FolderSearchIcon, UpdatedIcon } from '@modrinth/assets'
 import { Card, Slider, DropdownSelect, Toggle, Modal, Button } from '@modrinth/ui'
 import { handleError, useTheming } from '@/store/state'
 import { is_dir_writeable, change_config_dir, get, set } from '@/helpers/settings'
@@ -17,7 +17,7 @@ import { version, patch_version, development_build } from '../../package.json'
 import { useLanguage } from '@/store/language.js'
 import { i18n } from '@/main.js';
 import { PirateShip } from '@/assets/render/index.js'
-import { blockDownload, buildInstalling, forceRefreshRemote, getBranches, hrefAstralium, latestBetaCommitLink, latestBetaCommitTruncatedSha} from '@/helpers/update.js'
+import { blockDownload, buildInstalling, forceRefreshRemote, getBranches, hrefAstralium, latestBetaCommitLink, latestBetaCommitTruncatedSha } from '@/helpers/update.js'
 const t = i18n.global.t;
 import { storeToRefs } from 'pinia'
 
@@ -25,8 +25,6 @@ const pageOptions = ['Home', 'Library']
 
 const themeStore = useTheming()
 const languageStore = useLanguage()
-
-const version = await getVersion()
 
 const accessSettings = async () => {
   const settings = await get()
@@ -440,13 +438,14 @@ const approvedUpdating = async () => {
       <div>
         <label>
           <span class="label__title inl">AstralRinth
-            <PirateShip class="icon-line-fix" /> Version
+            <PirateShip /> Version
           </span>
           <span class="label__description">Modrinth/Theseus version: v{{ version }}. Patch version: v{{ patch_version }}
           </span>
 
-          <span class="label__description">{{ t('Settings.LatestBetaCommit') }} <a class="github" :href="latestBetaCommitLink">{{
-            latestBetaCommitTruncatedSha }}</a></span>
+          <span class="label__description">{{ t('Settings.LatestBetaCommit') }} <a class="github"
+              :href="latestBetaCommitLink">{{
+                latestBetaCommitTruncatedSha }}</a></span>
           <span class="label__description">{{ t('Settings.LatestAvailable') }} <a class="github"
               :href="hrefAstralium">{{ t('Settings.OurGithub') }}</a></span>
 
@@ -457,13 +456,15 @@ const approvedUpdating = async () => {
           <span class="label__description">{{ t('Settings.Local') }} <p class="cosmic inline-fix">v{{ version }}{{
             patch_version }}</p></span>
         </label>
-        <Button :disabled="blockDownload || buildInstalling" class="remote-update-fix download"
-          @click="confirmUpdating()">
-          <DownloadIcon />{{ buildInstalling ? t('RunningAppBar.UpdateDownloading') : t('Settings.DownloadButton') }}
-        </Button>
-        <Button class="icon-line-fix" icon-only @click="forceRefreshRemote(false, false), getBranches()">
-          <UpdatedIcon />
-        </Button>
+        <div class="inline-item-group">
+          <Button :disabled="blockDownload || buildInstalling" class="download"
+            @click="confirmUpdating()">
+            <DownloadIcon />{{ buildInstalling ? t('RunningAppBar.UpdateDownloading') : t('Settings.DownloadButton') }}
+          </Button>
+          <Button icon-only @click="forceRefreshRemote(false, false), getBranches()">
+            <UpdatedIcon />
+          </Button>
+        </div>
       </div>
       <Modal ref="confirmUpdate" :has-to-type="false" :header="t('RunningAppBar.UpdatingHeader')">
         <div class="modal-body">
@@ -617,9 +618,9 @@ a.github:active {
   text-shadow: #26065e;
 }
 
-.icon-line-fix {
+.inline-item-group {
   display: inline-flex;
-  margin-left: 0.3rem;
+  gap: 0.25rem;
 }
 
 .inline-fix {
@@ -629,19 +630,19 @@ a.github:active {
   //margin-left: 0.3rem;
 }
 
-.remote-update-fix {
-  display: inline-flex;
+// .remote-update-fix {
+//   display: inline-flex;
 
-  //width: ;
-  //margin-left: -0.2rem;
-  .iconified-input {
-    flex-grow: 1;
+//   //width: ;
+//   //margin-left: -0.2rem;
+//   .iconified-input {
+//     flex-grow: 1;
 
-    input {
-      flex-basis: auto;
-    }
-  }
-}
+//     input {
+//       flex-basis: auto;
+//     }
+//   }
+// }
 
 .settings-page {
   margin: 1rem;

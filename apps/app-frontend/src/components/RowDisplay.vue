@@ -12,7 +12,7 @@ import {
   EyeIcon,
   ChevronRightIcon,
 } from '@modrinth/assets'
-import { ConfirmModal } from '@modrinth/ui'
+import { Modal, Button } from '@modrinth/ui'
 import Instance from '@/components/ui/Instance.vue'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import ContextMenu from '@/components/ui/ContextMenu.vue'
