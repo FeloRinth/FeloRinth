@@ -88,10 +88,10 @@
             {{ t('RunningAppBar.UpdatingDesc') }}
           </p>
         </div>
-        <span>{{ t('Settings.Remote') }} <a id="releaseData" class="cosmic inline-fix"></a></span>
+        <span>{{ t('Settings.Remote') }} <p id="releaseData" class="cosmic inline-fix"></p></span>
         <span
           >{{ t('Settings.Local') }}
-          <a class="cosmic inline-fix">v{{ version }}{{ patch_version }}</a></span
+          <p class="cosmic inline-fix">v{{ version }}{{ patch_version }}</p></span
         >
         <div class="button-group push-right">
           <Button class="download-modal" @click="confirmUpdate.hide()">

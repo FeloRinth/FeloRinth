@@ -119,7 +119,9 @@ export async function getRemote(elementIdBool, downloadArtifactBool) {
         buildInstalling.value = true
         const builds = data.assets
         const fileName = getInstaller(getExtension(), builds)
-        await getArtifact(fileName[1], fileName[0], os.value, true)
+        if (fileName != null) {
+          await getArtifact(fileName[1], fileName[0], os.value, true)
+        }
         buildInstalling.value = false
       }
     })
