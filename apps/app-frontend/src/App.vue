@@ -62,8 +62,6 @@ const nativeDecorations = ref(false)
 
 const sidebarOpen = ref(false)
 
-const onboardingVideo = ref()
-
 const failureText = ref(null)
 const os = ref('')
 
@@ -85,7 +83,7 @@ defineExpose({
       await get()
     // video should play if the user is not on linux, and has not onboarded
     os.value = await getOS()
-    videoPlaying.value = !fully_onboarded && os.value !== 'Linux'
+    // videoPlaying.value = !fully_onboarded && os.value !== 'Linux'
     const dev = await isDev()
     const version = await getVersion()
     showOnboarding.value = !fully_onboarded
@@ -126,9 +124,9 @@ defineExpose({
       })
     )
 
-    if (showOnboarding.value) {
-      onboardingVideo.value.play()
-    }
+    // if (showOnboarding.value) {
+    //   onboardingVideo.value.play()
+    // }
   },
   failure: async (e) => {
     isLoading.value = false
@@ -312,7 +310,7 @@ const toggleSidebar = () => {
         <hr />
       </div>
       <div class="instances pages-list">
-        <!-- TODO: Fix visual issuesin future... maybe :D -->
+        <!-- FIXME: Fix visual issuesin future... maybe :D -->
         <RouterLink v-for="instance in instancesByPlayed" :key="instance.id"
           :to="`/instance/${encodeURIComponent(instance.path)}`" class="btn icon-only collapsed-button">
           <Avatar class="collapsed-avatar__icon" :src="iconPathAsUrl(instance.metadata?.icon)" size="xl" />
