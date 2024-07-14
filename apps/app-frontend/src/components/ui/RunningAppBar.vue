@@ -35,10 +35,20 @@
           <DropdownIcon />
         </div>
       </div>
-      <Button v-tooltip="t('RunningAppBar.StopInstance')" icon-only class="stop icon-button" @click="stop()">
+      <Button
+        v-tooltip="t('RunningAppBar.StopInstance')"
+        icon-only
+        class="stop icon-button"
+        @click="stop()"
+      >
         <StopCircleIcon />
       </Button>
-      <Button v-tooltip="t('RunningAppBar.Logs')" icon-only class="utility icon-button" @click="goToTerminal()">
+      <Button
+        v-tooltip="t('RunningAppBar.Logs')"
+        icon-only
+        class="utility icon-button"
+        @click="goToTerminal()"
+      >
         <TerminalSquareIcon />
       </Button>
       <Button
@@ -57,9 +67,17 @@
     </div>
     <div v-if="updateAvailable">
       <a>
-        <Button class="download" :disabled="buildInstalling" @click="confirmUpdating()">
+        <Button
+          class="download"
+          :disabled="buildInstalling"
+          @click="confirmUpdating(), getRemote(false, false)"
+        >
           <DownloadIcon />
-          {{ buildInstalling ? t('RunningAppBar.UpdateDownloading') : t('RunningAppBar.UpdateAvailable') }}
+          {{
+            buildInstalling
+              ? t('RunningAppBar.UpdateDownloading')
+              : t('RunningAppBar.UpdateAvailable')
+          }}
         </Button>
       </a>
     </div>
@@ -70,8 +88,15 @@
             {{ t('RunningAppBar.UpdatingDesc') }}
           </p>
         </div>
+        <span>{{ t('Settings.Remote') }} <a id="releaseData" class="cosmic inline-fix"></a></span>
+        <span
+          >{{ t('Settings.Local') }}
+          <a class="cosmic inline-fix">v{{ version }}{{ patch_version }}</a></span
+        >
         <div class="button-group push-right">
-          <Button class="download-modal" @click="confirmUpdate.hide()"> {{ t('RunningAppBar.RejectUpdating') }}</Button>
+          <Button class="download-modal" @click="confirmUpdate.hide()">
+            {{ t('RunningAppBar.RejectUpdating') }}</Button
+          >
           <Button class="download-modal" @click="approvedUpdating()">
             {{ t('RunningAppBar.AcceptUpdating') }}
           </Button>
@@ -128,12 +153,13 @@
 
 <script setup>
 import { DownloadIcon, StopCircleIcon, TerminalSquareIcon, DropdownIcon } from '@modrinth/assets'
+import { version, patch_version } from '../../../package.json'
 import { Button, Card, Modal } from '@modrinth/ui'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import {
   get_all_running_profiles as getRunningProfiles,
   get_uuids_by_profile_path as getProfileProcesses,
-  kill_by_uuid as killProfile
+  kill_by_uuid as killProfile,
 } from '@/helpers/process'
 import { loading_listener, offline_listener, process_listener } from '@/helpers/events'
 import { useRouter } from 'vue-router'
@@ -143,7 +169,7 @@ import ProgressBar from '@/components/ui/ProgressBar.vue'
 import { handleError } from '@/store/notifications.js'
 import { mixpanel_track } from '@/helpers/mixpanel'
 import { ChatIcon } from '@/assets/icons'
-import { buildInstalling, forceRefreshRemote, updateAvailable } from '@/helpers/update.js'
+import { buildInstalling, getRemote, updateAvailable } from '@/helpers/update.js'
 import { i18n } from '@/main.js'
 
 const t = i18n.global.t
@@ -189,7 +215,7 @@ const stop = async (path) => {
     mixpanel_track('InstanceStop', {
       loader: currentProcesses.value[0].metadata.loader,
       game_version: currentProcesses.value[0].metadata.game_version,
-      source: 'AppBar'
+      source: 'AppBar',
     })
   } catch (e) {
     console.error(e)
@@ -306,11 +332,30 @@ const confirmUpdating = async () => {
 
 const approvedUpdating = async () => {
   confirmUpdate.value.hide()
-  await forceRefreshRemote(true, true)
+  await getRemote(true, true)
 }
+
+await getRemote(true, false)
 </script>
 
 <style scoped lang="scss">
+.inline-fix {
+  display: inline-flex;
+  margin-top: -2rem;
+  margin-bottom: -2rem;
+  //margin-left: 0.3rem;
+}
+
+.cosmic {
+  color: #3e8cde;
+  text-decoration: none;
+  text-shadow:
+    0 0 4px rgba(79, 173, 255, 0.5),
+    0 0 8px rgba(14, 98, 204, 0.5),
+    0 0 12px rgba(122, 31, 199, 0.5);
+  transition: color 0.35s ease;
+}
+
 .markdown-body {
   :deep(table) {
     width: auto;
@@ -351,11 +396,12 @@ const approvedUpdating = async () => {
   border-radius: var(--radius-md);
   border: 1px solid var(--color-button-bg);
   padding: var(--gap-sm) var(--gap-lg);
-  background-color: rgba(0, 0, 0, 0.0);
+  background-color: rgba(0, 0, 0, 0);
   text-decoration: none;
-  text-shadow: 0 0 4px rgba(79, 173, 255, 0.5),
-  0 0 8px rgba(14, 98, 204, 0.5),
-  0 0 12px rgba(122, 31, 199, 0.5);
+  text-shadow:
+    0 0 4px rgba(79, 173, 255, 0.5),
+    0 0 8px rgba(14, 98, 204, 0.5),
+    0 0 12px rgba(122, 31, 199, 0.5);
   transition: color 0.35s ease;
   display: flex;
   flex-direction: row;
@@ -369,13 +415,15 @@ const approvedUpdating = async () => {
   color: #10fae5;
   text-shadow: #26065e;
 }
+
 .download-modal {
   color: #3e8cde;
   padding: var(--gap-sm) var(--gap-lg);
   text-decoration: none;
-  text-shadow: 0 0 4px rgba(79, 173, 255, 0.5),
-  0 0 8px rgba(14, 98, 204, 0.5),
-  0 0 12px rgba(122, 31, 199, 0.5);
+  text-shadow:
+    0 0 4px rgba(79, 173, 255, 0.5),
+    0 0 8px rgba(14, 98, 204, 0.5),
+    0 0 12px rgba(122, 31, 199, 0.5);
   transition: color 0.35s ease;
 }
 
@@ -419,8 +467,10 @@ const approvedUpdating = async () => {
   gap: var(--gap-xs);
   white-space: nowrap;
   overflow: hidden;
-  -webkit-user-select: none; /* Safari */
-  -ms-user-select: none; /* IE 10 and IE 11 */
+  -webkit-user-select: none;
+  /* Safari */
+  -ms-user-select: none;
+  /* IE 10 and IE 11 */
   user-select: none;
 
   &.clickable:hover {

@@ -1,6 +1,13 @@
 <script setup>
 import { ref, watch } from 'vue'
-import { DownloadIcon, LogOutIcon, LogInIcon, BoxIcon, FolderSearchIcon, UpdatedIcon } from '@modrinth/assets'
+import {
+  DownloadIcon,
+  LogOutIcon,
+  LogInIcon,
+  BoxIcon,
+  FolderSearchIcon,
+  UpdatedIcon,
+} from '@modrinth/assets'
 import { Card, Slider, DropdownSelect, Toggle, Modal, Button } from '@modrinth/ui'
 import { handleError, useTheming } from '@/store/state'
 import { is_dir_writeable, change_config_dir, get, set } from '@/helpers/settings'
@@ -15,10 +22,16 @@ import { open } from '@tauri-apps/api/dialog'
 import { getOS } from '@/helpers/utils.js'
 import { version, patch_version, development_build } from '../../package.json'
 import { useLanguage } from '@/store/language.js'
-import { i18n } from '@/main.js';
+import { i18n } from '@/main.js'
 import { PirateShip } from '@/assets/render/index.js'
-import { blockDownload, buildInstalling, forceRefreshRemote, getBranches, hrefAstralium, latestBetaCommitLink, latestBetaCommitTruncatedSha } from '@/helpers/update.js'
-const t = i18n.global.t;
+import {
+  getRemote,
+  getBranches,
+  hrefAstralium,
+  latestBetaCommitLink,
+  latestBetaCommitTruncatedSha,
+} from '@/helpers/update.js'
+const t = i18n.global.t
 import { storeToRefs } from 'pinia'
 
 const pageOptions = ['Home', 'Library']
@@ -127,15 +140,8 @@ async function refreshDir() {
 
 const confirmUpdate = ref(null)
 
-await forceRefreshRemote(false, false)
+await getRemote(false, false)
 await getBranches()
-const confirmUpdating = async () => {
-  confirmUpdate.value.show()
-}
-const approvedUpdating = async () => {
-  confirmUpdate.value.hide()
-  await forceRefreshRemote(true, true)
-}
 </script>
 
 <template>
@@ -146,7 +152,11 @@ const approvedUpdating = async () => {
           <span class="label__title size-card-header">{{ t('Settings.GeneralSettings') }}</span>
         </h3>
       </div>
-      <Modal ref="loginScreenModal" class="login-screen-modal" :noblur="!themeStore.advancedRendering">
+      <Modal
+        ref="loginScreenModal"
+        class="login-screen-modal"
+        :noblur="!themeStore.advancedRendering"
+      >
         <ModrinthLoginScreen :modal="true" :prev-page="signInAfter" :next-page="signInAfter" />
       </Modal>
       <div class="adjacent-input">
@@ -170,7 +180,6 @@ const approvedUpdating = async () => {
         <span class="label__title">{{ t('Settings.AppDirectory') }}</span>
         <span class="label__description">
           {{ t('Settings.TheDirectoryWhereTheLauncherStoresAllOfItsFiles') }}
-
         </span>
       </label>
       <div class="app-directory">
@@ -198,25 +207,43 @@ const approvedUpdating = async () => {
           <span class="label__title">{{ t('Settings.ColorTheme') }}</span>
           <span class="label__description">{{ t('Settings.ChangeColor') }}</span>
         </label>
-        <DropdownSelect id="theme" name="Theme dropdown" :options="themeStore.themeOptions"
-          :default-value="settings.theme" :model-value="settings.theme" class="theme-dropdown" @change="(e) => {
-            themeStore.setThemeState(e.option.toLowerCase())
-            settings.theme = themeStore.selectedTheme
-          }
-            " />
+        <DropdownSelect
+          id="theme"
+          name="Theme dropdown"
+          :options="themeStore.themeOptions"
+          :default-value="settings.theme"
+          :model-value="settings.theme"
+          class="theme-dropdown"
+          @change="
+            (e) => {
+              themeStore.setThemeState(e.option.toLowerCase())
+              settings.theme = themeStore.selectedTheme
+            }
+          "
+        />
       </div>
 
       <div class="adjacent-input">
         <label for="language">
           <span class="label__title">{{ t('Settings.Language') }}</span>
-          <span class="label__description">{{ t('Settings.ChangeTheGlobalLauncherLanguages') }}</span>
+          <span class="label__description">{{
+            t('Settings.ChangeTheGlobalLauncherLanguages')
+          }}</span>
         </label>
-        <DropdownSelect id="language" name="Language dropdown" :options="languageStore.languageOptions"
-          :default-value="settings.language" :model-value="settings.language" class="language-dropdown" @change="(e) => {
-            languageStore.setLanguageState(e.option.toLowerCase())
-            settings.language = languageStore.selectedLanguage
-          }
-            " />
+        <DropdownSelect
+          id="language"
+          name="Language dropdown"
+          :options="languageStore.languageOptions"
+          :default-value="settings.language"
+          :model-value="settings.language"
+          class="language-dropdown"
+          @change="
+            (e) => {
+              languageStore.setLanguageState(e.option.toLowerCase())
+              settings.language = languageStore.selectedLanguage
+            }
+          "
+        />
       </div>
 
       <div class="adjacent-input">
@@ -226,45 +253,70 @@ const approvedUpdating = async () => {
             {{ t('Settings.EnablesAdvancedRendering') }}
           </span>
         </label>
-        <Toggle id="advanced-rendering" :model-value="themeStore.advancedRendering"
-          :checked="themeStore.advancedRendering" @update:model-value="(e) => {
-            themeStore.advancedRendering = e
-            settings.advanced_rendering = themeStore.advancedRendering
-          }
-            " />
+        <Toggle
+          id="advanced-rendering"
+          :model-value="themeStore.advancedRendering"
+          :checked="themeStore.advancedRendering"
+          @update:model-value="
+            (e) => {
+              themeStore.advancedRendering = e
+              settings.advanced_rendering = themeStore.advancedRendering
+            }
+          "
+        />
       </div>
       <div class="adjacent-input">
         <label for="minimize-launcher">
           <span class="label__title">{{ t('Settings.MinimizeLauncher') }}</span>
           <span class="label__description">{{ t('Settings.MinimizeTheLauncher') }}</span>
         </label>
-        <Toggle id="minimize-launcher" :model-value="settings.hide_on_process" :checked="settings.hide_on_process"
-          @update:model-value="(e) => {
-            settings.hide_on_process = e
-          }
-            " />
+        <Toggle
+          id="minimize-launcher"
+          :model-value="settings.hide_on_process"
+          :checked="settings.hide_on_process"
+          @update:model-value="
+            (e) => {
+              settings.hide_on_process = e
+            }
+          "
+        />
       </div>
       <div v-if="getOS() != 'MacOS'" class="adjacent-input">
         <label for="native-decorations">
           <span class="label__title">{{ t('Settings.NativeDecorations') }}</span>
           <span class="label__description">{{ t('Settings.UseSystemWindowFrame') }}</span>
         </label>
-        <Toggle id="native-decorations" :model-value="settings.native_decorations"
-          :checked="settings.native_decorations" @update:model-value="(e) => {
-            settings.native_decorations = e
-          }
-            " />
+        <Toggle
+          id="native-decorations"
+          :model-value="settings.native_decorations"
+          :checked="settings.native_decorations"
+          @update:model-value="
+            (e) => {
+              settings.native_decorations = e
+            }
+          "
+        />
       </div>
       <div class="adjacent-input">
         <label for="opening-page">
           <span class="label__title">{{ t('Settings.DefaultLandingPage') }}</span>
-          <span class="label__description">{{ t('Settings.ChangeThePageToWhichTheLauncherOpensOn') }}</span>
+          <span class="label__description">{{
+            t('Settings.ChangeThePageToWhichTheLauncherOpensOn')
+          }}</span>
         </label>
-        <DropdownSelect id="opening-page" name="Opening page dropdown" :options="pageOptions"
-          :default-value="settings.default_page" :model-value="settings.default_page" class="opening-page" @change="(e) => {
-            settings.default_page = e.option
-          }
-            " />
+        <DropdownSelect
+          id="opening-page"
+          name="Opening page dropdown"
+          :options="pageOptions"
+          :default-value="settings.default_page"
+          :model-value="settings.default_page"
+          class="opening-page"
+          @change="
+            (e) => {
+              settings.default_page = e.option
+            }
+          "
+        />
       </div>
     </Card>
     <Card>
@@ -279,7 +331,13 @@ const approvedUpdating = async () => {
           <span class="label__title">{{ t('Settings.Mcd') }}</span>
           <span class="label__description">{{ t('Settings.McdDesc') }}</span>
         </label>
-        <Slider id="max-downloads" v-model="settings.max_concurrent_downloads" :min="1" :max="10" :step="1" />
+        <Slider
+          id="max-downloads"
+          v-model="settings.max_concurrent_downloads"
+          :min="1"
+          :max="10"
+          :step="1"
+        />
       </div>
 
       <div class="adjacent-input">
@@ -287,7 +345,13 @@ const approvedUpdating = async () => {
           <span class="label__title">{{ t('Settings.Mcw') }}</span>
           <span class="label__description">{{ t('Settings.McwDesc') }}</span>
         </label>
-        <Slider id="max-writes" v-model="settings.max_concurrent_writes" :min="1" :max="50" :step="1" />
+        <Slider
+          id="max-writes"
+          v-model="settings.max_concurrent_writes"
+          :min="1"
+          :max="50"
+          :step="1"
+        />
       </div>
     </Card>
     <Card>
@@ -303,11 +367,17 @@ const approvedUpdating = async () => {
             {{ t('Settings.AnalyticsDesc') }}
           </span>
         </label>
-        <Toggle id="opt-out-analytics" :disabled="settings.opt_out_analytics" :model-value="settings.opt_out_analytics"
-          :checked="settings.opt_out_analytics" @update:model-value="(e) => {
-            settings.opt_out_analytics = e
-          }
-            " />
+        <Toggle
+          id="opt-out-analytics"
+          :disabled="settings.opt_out_analytics"
+          :model-value="settings.opt_out_analytics"
+          :checked="settings.opt_out_analytics"
+          @update:model-value="
+            (e) => {
+              settings.opt_out_analytics = e
+            }
+          "
+        />
       </div>
       <div class="adjacent-input">
         <label for="disable-discord-rpc">
@@ -316,8 +386,11 @@ const approvedUpdating = async () => {
             {{ t('Settings.DisableRPCDesc') }}
           </span>
         </label>
-        <Toggle id="disable-discord-rpc" v-model="settings.disable_discord_rpc"
-          :checked="settings.disable_discord_rpc" />
+        <Toggle
+          id="disable-discord-rpc"
+          v-model="settings.disable_discord_rpc"
+          :checked="settings.disable_discord_rpc"
+        />
       </div>
     </Card>
     <Card>
@@ -342,13 +415,25 @@ const approvedUpdating = async () => {
       <label for="java-args">
         <span class="label__title">{{ t('Settings.JavaArgs') }}</span>
       </label>
-      <input id="java-args" v-model="settings.javaArgs" autocomplete="off" type="text" class="installation-input"
-        :placeholder="t('Settings.EnterJavaArgs')" />
+      <input
+        id="java-args"
+        v-model="settings.javaArgs"
+        autocomplete="off"
+        type="text"
+        class="installation-input"
+        :placeholder="t('Settings.EnterJavaArgs')"
+      />
       <label for="env-vars">
         <span class="label__title">{{ t('Settings.EnvVars') }}</span>
       </label>
-      <input id="env-vars" v-model="settings.envArgs" autocomplete="off" type="text" class="installation-input"
-        :placeholder="t('Settings.EnterEnvVars')" />
+      <input
+        id="env-vars"
+        v-model="settings.envArgs"
+        autocomplete="off"
+        type="text"
+        class="installation-input"
+        :placeholder="t('Settings.EnterEnvVars')"
+      />
       <hr class="card-divider" />
       <div class="adjacent-input">
         <label for="max-memory">
@@ -357,7 +442,14 @@ const approvedUpdating = async () => {
             {{ t('Settings.JavaMemDesc') }}
           </span>
         </label>
-        <Slider id="max-memory" v-model="settings.memory.maximum" :min="8" :max="maxMemory" :step="64" unit="mb" />
+        <Slider
+          id="max-memory"
+          v-model="settings.memory.maximum"
+          :min="8"
+          :max="maxMemory"
+          :step="64"
+          unit="mb"
+        />
       </div>
     </Card>
     <Card>
@@ -371,24 +463,39 @@ const approvedUpdating = async () => {
           <span class="label__title">{{ t('Settings.PreLaunch') }}</span>
           <span class="label__description">{{ t('Settings.PreLaunchDesc') }}</span>
         </label>
-        <input id="pre-launch" v-model="settings.hooks.pre_launch" autocomplete="off" type="text"
-          :placeholder="t('Settings.EnterPreLaunch')" />
+        <input
+          id="pre-launch"
+          v-model="settings.hooks.pre_launch"
+          autocomplete="off"
+          type="text"
+          :placeholder="t('Settings.EnterPreLaunch')"
+        />
       </div>
       <div class="adjacent-input">
         <label for="wrapper">
           <span class="label__title">{{ t('Settings.Wrapper') }}</span>
           <span class="label__description">{{ t('Settings.WrapperDesc') }}</span>
         </label>
-        <input id="wrapper" v-model="settings.hooks.wrapper" autocomplete="off" type="text"
-          :placeholder="t('Settings.EnterWrapper')" />
+        <input
+          id="wrapper"
+          v-model="settings.hooks.wrapper"
+          autocomplete="off"
+          type="text"
+          :placeholder="t('Settings.EnterWrapper')"
+        />
       </div>
       <div class="adjacent-input">
         <label for="post-exit">
           <span class="label__title">{{ t('Settings.PostExit') }}</span>
           <span class="label__description">{{ t('Settings.PostExitDesc') }}</span>
         </label>
-        <input id="post-exit" v-model="settings.hooks.post_exit" autocomplete="off" type="text"
-          :placeholder="t('Settings.EnterPostExit')" />
+        <input
+          id="post-exit"
+          v-model="settings.hooks.post_exit"
+          autocomplete="off"
+          type="text"
+          :placeholder="t('Settings.EnterPostExit')"
+        />
       </div>
     </Card>
     <Card>
@@ -404,84 +511,94 @@ const approvedUpdating = async () => {
             {{ t('Settings.FullScreenDesc') }}
           </span>
         </label>
-        <Toggle id="fullscreen" :model-value="settings.force_fullscreen" :checked="settings.force_fullscreen"
-          @update:model-value="(e) => {
-            settings.force_fullscreen = e
-          }
-            " />
+        <Toggle
+          id="fullscreen"
+          :model-value="settings.force_fullscreen"
+          :checked="settings.force_fullscreen"
+          @update:model-value="
+            (e) => {
+              settings.force_fullscreen = e
+            }
+          "
+        />
       </div>
       <div class="adjacent-input">
         <label for="width">
           <span class="label__title">{{ t('Settings.Width') }}</span>
           <span class="label__description">{{ t('Settings.WidthDesc') }}</span>
         </label>
-        <input id="width" v-model="settings.game_resolution[0]" :disabled="settings.force_fullscreen" autocomplete="off"
-          type="number" :placeholder="t('Settings.EnterWidth')" />
+        <input
+          id="width"
+          v-model="settings.game_resolution[0]"
+          :disabled="settings.force_fullscreen"
+          autocomplete="off"
+          type="number"
+          :placeholder="t('Settings.EnterWidth')"
+        />
       </div>
       <div class="adjacent-input">
         <label for="height">
           <span class="label__title">{{ t('Settings.Height') }}</span>
           <span class="label__description">{{ t('Settings.HeightDesc') }}</span>
         </label>
-        <input id="height" v-model="settings.game_resolution[1]" :disabled="settings.force_fullscreen"
-          autocomplete="off" type="number" class="input" :placeholder="t('Settings.EnterHeight')" />
+        <input
+          id="height"
+          v-model="settings.game_resolution[1]"
+          :disabled="settings.force_fullscreen"
+          autocomplete="off"
+          type="number"
+          class="input"
+          :placeholder="t('Settings.EnterHeight')"
+        />
       </div>
     </Card>
     <Card>
       <div class="label inline-fix">
         <h3>
-          <span class="label__title size-card-header in">{{ t('Settings.About') }}
-            <p v-if="development_build" class="development option">{{ t('Settings.DevelopmentBuild') }}</p>
+          <span class="label__title size-card-header in"
+            >{{ t('Settings.About') }}
+            <p v-if="development_build" class="development option">
+              {{ t('Settings.DevelopmentBuild') }}
+            </p>
           </span>
         </h3>
       </div>
       <div>
         <label>
-          <span class="label__title inl">AstralRinth
-            <PirateShip /> Version
-          </span>
-          <span class="label__description">Modrinth/Theseus version: v{{ version }}. Patch version: v{{ patch_version }}
+          <span class="label__title inl">AstralRinth <PirateShip /> Version </span>
+          <span class="label__description"
+            >Modrinth/Theseus version: v{{ version }}. Patch version: v{{ patch_version }}
           </span>
 
-          <span class="label__description">{{ t('Settings.LatestBetaCommit') }} <a class="github"
-              :href="latestBetaCommitLink">{{
-                latestBetaCommitTruncatedSha }}</a></span>
-          <span class="label__description">{{ t('Settings.LatestAvailable') }} <a class="github"
-              :href="hrefAstralium">{{ t('Settings.OurGithub') }}</a></span>
+          <span class="label__description"
+            >{{ t('Settings.LatestBetaCommit') }}
+            <a class="github" :href="latestBetaCommitLink">{{
+              latestBetaCommitTruncatedSha
+            }}</a></span
+          >
+          <span class="label__description"
+            >{{ t('Settings.LatestAvailable') }}
+            <a class="github" :href="hrefAstralium">{{ t('Settings.OurGithub') }}</a></span
+          >
 
           <span class="label__title">Update Checker</span>
 
-          <span class="label__description">{{ t('Settings.Remote') }} <p id="releaseData" class="cosmic inline-fix"></p>
+          <span class="label__description"
+            >{{ t('Settings.Remote') }}
+            <p id="releaseData" class="cosmic inline-fix"></p>
           </span>
-          <span class="label__description">{{ t('Settings.Local') }} <p class="cosmic inline-fix">v{{ version }}{{
-            patch_version }}</p></span>
+          <span class="label__description"
+            >{{ t('Settings.Local') }}
+            <p class="cosmic inline-fix">v{{ version }}{{ patch_version }}</p></span
+          >
         </label>
         <div class="inline-item-group">
-          <Button :disabled="blockDownload || buildInstalling" class="download"
-            @click="confirmUpdating()">
-            <DownloadIcon />{{ buildInstalling ? t('RunningAppBar.UpdateDownloading') : t('Settings.DownloadButton') }}
-          </Button>
-          <Button icon-only @click="forceRefreshRemote(false, false), getBranches()">
-            <UpdatedIcon />
+          <Button icon-only @click="getRemote(false, false), getBranches()">
+            <UpdatedIcon /> {{ t('Settings.CheckForUpdates') }}
           </Button>
         </div>
       </div>
-      <Modal ref="confirmUpdate" :has-to-type="false" :header="t('RunningAppBar.UpdatingHeader')">
-        <div class="modal-body">
-          <div class="markdown-body">
-            <p>
-              {{ t('RunningAppBar.UpdatingDesc') }}
-            </p>
-          </div>
-          <div class="button-group push-right">
-            <Button class="download-modal" @click="confirmUpdate.hide()"> {{ t('RunningAppBar.RejectUpdating')
-              }}</Button>
-            <Button class="download-modal" @click="approvedUpdating()">
-              {{ t('RunningAppBar.AcceptUpdating') }}
-            </Button>
-          </div>
-        </div>
-      </Modal>
+      <UpdateModal ref="confirmUpdate" />
     </Card>
   </div>
 </template>
@@ -526,7 +643,8 @@ const approvedUpdating = async () => {
   color: #3e8cde;
   padding: var(--gap-sm) var(--gap-lg);
   text-decoration: none;
-  text-shadow: 0 0 4px rgba(79, 173, 255, 0.5),
+  text-shadow:
+    0 0 4px rgba(79, 173, 255, 0.5),
     0 0 8px rgba(14, 98, 204, 0.5),
     0 0 12px rgba(122, 31, 199, 0.5);
   transition: color 0.35s ease;
@@ -554,7 +672,8 @@ const approvedUpdating = async () => {
 .development {
   color: #ff6a00;
   text-decoration: none;
-  text-shadow: 0 0 4px rgba(79, 173, 255, 0.5),
+  text-shadow:
+    0 0 4px rgba(79, 173, 255, 0.5),
     0 0 8px rgba(14, 98, 204, 0.5),
     0 0 12px rgba(122, 31, 199, 0.5);
   transition: color 1.5s ease;
@@ -570,7 +689,8 @@ const approvedUpdating = async () => {
 .cosmic {
   color: #3e8cde;
   text-decoration: none;
-  text-shadow: 0 0 4px rgba(79, 173, 255, 0.5),
+  text-shadow:
+    0 0 4px rgba(79, 173, 255, 0.5),
     0 0 8px rgba(14, 98, 204, 0.5),
     0 0 12px rgba(122, 31, 199, 0.5);
   transition: color 0.35s ease;
@@ -589,7 +709,8 @@ const approvedUpdating = async () => {
   padding: var(--gap-sm) var(--gap-lg);
   //background-color: rgba(0, 0, 0, 0.0);
   text-decoration: none;
-  text-shadow: 0 0 4px rgba(79, 173, 255, 0.5),
+  text-shadow:
+    0 0 4px rgba(79, 173, 255, 0.5),
     0 0 8px rgba(14, 98, 204, 0.5),
     0 0 12px rgba(122, 31, 199, 0.5);
   transition: color 0.35s ease;
@@ -605,7 +726,8 @@ const approvedUpdating = async () => {
 a.github {
   color: #3e8cde;
   text-decoration: none;
-  text-shadow: 0 0 4px rgba(79, 173, 255, 0.5),
+  text-shadow:
+    0 0 4px rgba(79, 173, 255, 0.5),
     0 0 8px rgba(14, 98, 204, 0.5),
     0 0 12px rgba(122, 31, 199, 0.5);
   transition: color 0.35s ease;

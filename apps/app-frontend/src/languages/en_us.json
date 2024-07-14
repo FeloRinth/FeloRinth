@@ -108,7 +108,8 @@
     "Local": "Local installed version is",
     "DownloadButton": "Download via github",
     "DevelopmentBuild": "You are using an assembly for development, an unexpected error may occur!",
-    "LatestBetaCommit": "Latest beta commit on remote is"
+    "LatestBetaCommit": "Latest beta commit on remote is",
+    "CheckForUpdates": "Check for updates"
   },
   "RunningAppBar": {
     "GetSupport": "Support",

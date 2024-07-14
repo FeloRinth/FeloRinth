@@ -12,9 +12,9 @@ export async function isDev() {
   return await invoke('is_dev')
 }
 
-export async function downloadBuild(downloadurl, filename, ostype, autoupdatesupported) {
+export async function getArtifact(downloadurl, filename, ostype, autoupdatesupported) {
   console.log('Downloading build', downloadurl, filename, ostype, autoupdatesupported)
-  return await invoke('plugin:utils|download_build', { downloadurl, filename, ostype, autoupdatesupported })
+  return await invoke('plugin:utils|get_artifact', { downloadurl, filename, ostype, autoupdatesupported })
 }
 
 // One of 'Windows', 'Linux', 'MacOS'
