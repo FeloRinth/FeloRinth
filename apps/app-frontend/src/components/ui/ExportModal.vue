@@ -7,8 +7,8 @@ import { export_profile_mrpack, get_pack_export_candidates } from '@/helpers/pro
 import { open } from '@tauri-apps/api/dialog'
 import { handleError } from '@/store/notifications.js'
 import { useTheming } from '@/store/theme'
-import { i18n } from '@/main.js';
-const t = i18n.global.t;
+import { i18n } from '@/main.js'
+const t = i18n.global.t
 const props = defineProps({
   instance: {
     type: Object,
@@ -110,17 +110,22 @@ const exportPack = async () => {
   <Modal ref="exportModal" header="Export modpack" :noblur="!themeStore.advancedRendering">
     <div class="modal-body">
       <div class="labeled_input">
-        <p>{{ t('ExportModal.ModpackName')}}</p>
+        <p>{{ t('ExportModal.ModpackName') }}</p>
         <div class="iconified-input">
           <PackageIcon />
-          <input v-model="nameInput" type="text" :placeholder="t('ExportModal.ModpackName')" class="input" />
+          <input
+            v-model="nameInput"
+            type="text"
+            :placeholder="t('ExportModal.ModpackName')"
+            class="input"
+          />
           <Button class="r-btn" @click="nameInput = ''">
             <XIcon />
           </Button>
         </div>
       </div>
       <div class="labeled_input">
-        <p>{{ t('ExportModal.Version')}}</p>
+        <p>{{ t('ExportModal.Version') }}</p>
         <div class="iconified-input">
           <VersionIcon />
           <input v-model="versionInput" type="text" placeholder="1.0.0" class="input" />
@@ -131,7 +136,7 @@ const exportPack = async () => {
       </div>
       <div class="adjacent-input">
         <div class="labeled_input">
-          <p>{{ t('ExportModal.Description')}}</p>
+          <p>{{ t('ExportModal.Description') }}</p>
 
           <div class="textarea-wrapper">
             <textarea v-model="exportDescription" :placeholder="t('ExportModal.DescriptionPl')" />
@@ -142,12 +147,8 @@ const exportPack = async () => {
       <div class="table">
         <div class="table-head">
           <div class="table-cell row-wise">
-            {{ t('ExportModal.SelectFiles')}}
-            <Button
-              class="sleek-primary collapsed-button"
-              icon-only
-              @click="() => (showingFiles = !showingFiles)"
-            >
+            {{ t('ExportModal.SelectFiles') }}
+            <Button icon-only @click="() => (showingFiles = !showingFiles)">
               <PlusIcon v-if="!showingFiles" />
               <XIcon v-else />
             </Button>
@@ -201,11 +202,11 @@ const exportPack = async () => {
       <div class="button-row push-right">
         <Button @click="exportModal.hide">
           <XIcon />
-          {{ t('ExportModal.Cancel')}}
+          {{ t('ExportModal.Cancel') }}
         </Button>
         <Button color="primary" @click="exportPack">
           <PackageIcon />
-          {{ t('ExportModal.Export')}}
+          {{ t('ExportModal.Export') }}
         </Button>
       </div>
     </div>
