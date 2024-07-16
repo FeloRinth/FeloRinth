@@ -46,7 +46,6 @@ since it always requests an update of the list of instances every time you enter
 as if it were a Reload function in debug or just a Route module in normal use, or the Library start page in Settings after next launcher boot or reload.
 */
 await instancesStore.refreshInstances() 
-
 </script>
 
 <template>

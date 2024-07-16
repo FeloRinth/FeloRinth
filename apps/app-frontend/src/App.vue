@@ -24,9 +24,20 @@ import SplashScreen from '@/components/ui/SplashScreen.vue'
 import ModrinthLoadingIndicator from '@/components/modrinth-loading-indicator'
 import { handleError, useNotifications } from '@/store/notifications.js'
 import { command_listener, offline_listener, warning_listener } from '@/helpers/events.js'
-import { ArrowLeftFromLineIcon, ArrowRightFromLineIcon, ChatIcon, MaximizeIcon, MinimizeIcon } from '@/assets/icons'
+import {
+  ArrowLeftFromLineIcon,
+  ArrowRightFromLineIcon,
+  ChatIcon,
+  MaximizeIcon,
+  MinimizeIcon,
+} from '@/assets/icons'
 import { getOS, isDev, isOffline, showLauncherLogsFolder } from '@/helpers/utils.js'
-import { mixpanel_init, mixpanel_is_loaded, mixpanel_opt_out_tracking, mixpanel_track } from '@/helpers/mixpanel.js'
+import {
+  mixpanel_init,
+  mixpanel_is_loaded,
+  mixpanel_opt_out_tracking,
+  mixpanel_track,
+} from '@/helpers/mixpanel.js'
 import { useDisableClicks } from '@/composables/click.js'
 import { openExternal } from '@/helpers/external.js'
 import { await_sync, check_safe_loading_bars_complete } from '@/helpers/state.js'
@@ -62,13 +73,12 @@ const nativeDecorations = ref(false)
 
 const sidebarOpen = ref(false)
 
-const onboardingVideo = ref()
-
 const failureText = ref(null)
 const os = ref('')
 
 const instances = useInstances()
 const { instancesByPlayed } = storeToRefs(instances)
+watch(() => instances)
 
 defineExpose({
   initialize: async () => {
@@ -80,12 +90,11 @@ defineExpose({
       opt_out_analytics,
       collapsed_navigation,
       advanced_rendering,
-      fully_onboarded
-    } =
-      await get()
+      fully_onboarded,
+    } = await get()
     // video should play if the user is not on linux, and has not onboarded
     os.value = await getOS()
-    videoPlaying.value = !fully_onboarded && os.value !== 'Linux'
+    // videoPlaying.value = !fully_onboarded && os.value !== 'Linux'
     const dev = await isDev()
     const version = await getVersion()
     showOnboarding.value = !fully_onboarded
@@ -100,7 +109,10 @@ defineExpose({
 
     mixpanel_init('014c7d6a336d0efaefe3aca91063748d', { debug: dev, persistence: 'localStorage' })
     if (opt_out_analytics) {
-      console.info('[AR • Hard Disable Patch] • OPT_OUT_ANALYTICS (DISABLED) status is ', opt_out_analytics)
+      console.info(
+        '[AR • Hard Disable Patch] • OPT_OUT_ANALYTICS (DISABLED) status is ',
+        opt_out_analytics,
+      )
       mixpanel_opt_out_tracking()
     }
     mixpanel_track('Launched', { version, dev, fully_onboarded })
@@ -122,19 +134,19 @@ defineExpose({
       notificationsWrapper.value.addNotification({
         title: 'Warning',
         text: e.message,
-        type: 'warn'
-      })
+        type: 'warn',
+      }),
     )
 
-    if (showOnboarding.value) {
-      onboardingVideo.value.play()
-    }
+    // if (showOnboarding.value) {
+    //   onboardingVideo.value.play()
+    // }
   },
   failure: async (e) => {
     isLoading.value = false
     failureText.value = e
     os.value = await getOS()
-  }
+  },
 })
 
 const confirmClose = async () => {
@@ -142,8 +154,8 @@ const confirmClose = async () => {
     'An action is currently in progress. Are you sure you want to exit?',
     {
       title: 'AstralRinth',
-      type: 'warning'
-    }
+      type: 'warning',
+    },
   )
   return confirmed
 }
@@ -158,7 +170,7 @@ const handleClose = async () => {
   // (Exception: if the user is changing config directory, which takes control of the state, and it's taking a significant amount of time for some reason)
   const isSafe = await Promise.race([
     check_safe_loading_bars_complete(),
-    new Promise((r) => setTimeout(r, 2000))
+    new Promise((r) => setTimeout(r, 2000)),
   ])
   if (!isSafe) {
     const response = await confirmClose()
@@ -205,7 +217,7 @@ command_listener(async (e) => {
     if (e.path.endsWith('.mrpack')) {
       await install_from_file(e.path).catch(handleError)
       mixpanel_track('InstanceCreate', {
-        source: 'CreationModalFileDrop'
+        source: 'CreationModalFileDrop',
       })
     }
   } else {
@@ -216,6 +228,19 @@ command_listener(async (e) => {
 
 const toggleSidebar = () => {
   sidebarOpen.value = !sidebarOpen.value
+}
+
+async function openInstance(instance) {
+  const instancePath = `/instance/${encodeURIComponent(instance.path)}/`
+  if (route.path.startsWith('/instance')) {
+    await router.replace({ path: `/library` }).then(() => {
+      setTimeout(() => {
+        router.replace({ path: instancePath }).catch(() => { })
+      }, 128)
+    })
+  } else {
+    router.push({ path: instancePath })
+  }
 }
 </script>
 
@@ -243,8 +268,8 @@ const toggleSidebar = () => {
           </h3>
         </div>
         <div class="error-div">
-          AstralRinth App failed to load correctly. This may be because of a corrupted file, or because
-          the app is missing crucial files.
+          AstralRinth App failed to load correctly. This may be because of a corrupted file, or
+          because the app is missing crucial files.
         </div>
         <div class="error-div">You may be able to fix it one of the following ways:</div>
         <ul class="error-div">
@@ -312,12 +337,11 @@ const toggleSidebar = () => {
         <hr />
       </div>
       <div class="instances pages-list">
-        <!-- TODO: Fix visual issuesin future... maybe :D -->
-        <RouterLink v-for="instance in instancesByPlayed" :key="instance.id"
-          :to="`/instance/${encodeURIComponent(instance.path)}`" class="btn icon-only collapsed-button">
+        <Button v-for="instance in instancesByPlayed" :key="instance.id" @click="openInstance(instance)"
+          style="display: inline-flex; background-color: transparent" class="collapsed-button">
           <Avatar class="collapsed-avatar__icon" :src="iconPathAsUrl(instance.metadata?.icon)" size="xl" />
           <span class="collapsed-button__label">{{ instance.metadata.name }}</span>
-        </RouterLink>
+        </Button>
       </div>
       <div class="divider">
         <hr />

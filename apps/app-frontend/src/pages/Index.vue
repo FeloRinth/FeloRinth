@@ -7,7 +7,6 @@ import { useBreadcrumbs } from '@/store/breadcrumbs'
 import { useFetch } from '@/helpers/fetch.js'
 import { isOffline } from '@/helpers/utils'
 import { i18n } from '@/main.js';
-import { forceRefreshRemote } from '@/helpers/update.js'
 const t = i18n.global.t;
 import { useInstances } from '@/store/instances'
 import { storeToRefs } from 'pinia'
@@ -95,8 +94,6 @@ onUnmounted(() => {
   unlistenProfile()
   unlistenOffline()
 })
-
-await forceRefreshRemote(true)
 </script>
 
 <template>

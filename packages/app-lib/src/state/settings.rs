@@ -102,7 +102,7 @@ impl Settings {
                 developer_mode: false,
                 opt_out_analytics: true, // Disabled by default in AstralRinth
                 advanced_rendering: true,
-                fully_onboarded: rescued, // If we rescued the settings file, we should consider the user fully onboarded
+                fully_onboarded: false, // If we rescued the settings file, we should consider the user fully onboarded
 
                 // By default, the config directory is the same as the settings directory
                 loaded_config_dir: DirectoryInfo::get_initial_settings_dir(),

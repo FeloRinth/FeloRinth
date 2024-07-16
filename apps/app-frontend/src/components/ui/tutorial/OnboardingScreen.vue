@@ -1,6 +1,6 @@
 <script setup>
 import { Button } from '@modrinth/ui'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { get, set } from '@/helpers/settings.js'
 import mixpanel from 'mixpanel-browser'
 import GalleryImage from '@/components/ui/tutorial/GalleryImage.vue'
