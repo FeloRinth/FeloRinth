@@ -42,32 +42,7 @@
       <UpdatedIcon />
       {{t('Instance.Mods.UpdateAll')}}
     </Button>
-
-
-    <!-- TODO: Check later... -->
-    <div v-if="!isPackLocked" class="joined-buttons">
-      <Button color="primary" @click="onSearchContent">
-        <SearchIcon />
-        {{t('Instance.Mods.AddContent')}}
-      </Button>
-      <OverflowMenu
-        :options="[
-          {
-            id: 'file',
-            action: onFileContent,
-          },
-        ]"
-        class="btn btn-primary btn-dropdown-animation icon-only"
-      >
-        <DropdownIcon />
-        <template #file>
-          <FolderOpenIcon />
-          {{t('Instance.Mods.AddFile')}}
-        </template>
-      </OverflowMenu>
-    </div>
-
-
+    <AddContentButton v-if="!isPackLocked" :instance="instance" />
   </Card>
   <Pagination
     v-if="projects.length > 0"
@@ -249,7 +224,7 @@
               <TrashIcon />
             </Button>
           </div>
-          <AnimatedLogo v-if="mod.updating" class="btn icon-only loading-indicator" ></AnimatedLogo>
+          <AnimatedLogo v-if="mod.updating" class="btn icon-only updating-indicator" />
           <div
             v-else
             v-tooltip="isPackLocked ? t('Instance.Mods.UnlockThisInstanceUpdate') : t('Instance.Mods.UpdateProject')"
@@ -289,29 +264,9 @@
     <div class="empty-icon">
       <AddProjectImage />
     </div>
-    <h3>{{t('Instance.Mods.NoProjectsFound')}}</h3>
-    <p class="empty-subtitle">{{t('Instance.Mods.NoProjectFoundDesc')}}</p>
-    <div v-if="!isPackLocked" class="joined-buttons">
-      <Button color="primary" @click="onSearchContent">
-        <SearchIcon />
-        {{t('Instance.Mods.AddContent')}}
-      </Button>
-      <OverflowMenu
-        :options="[
-          {
-            id: 'file',
-            action: onFileContent,
-          },
-        ]"
-        class="btn btn-primary btn-dropdown-animation icon-only"
-      >
-        <DropdownIcon />
-        <template #file>
-          <FolderOpenIcon />
-          {{t('Instance.Mods.AddFile')}}
-        </template>
-      </OverflowMenu>
-    </div>
+    <h3>No projects found</h3>
+    <p class="empty-subtitle">Add a project to get started</p>
+    <AddContentButton :instance="instance" />
   </div>
   <Pagination
     v-if="projects.length > 0"
@@ -405,7 +360,6 @@ import {
 } from '@modrinth/ui'
 import { formatProjectType } from '@modrinth/utils'
 import { computed, onUnmounted, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
 import {
   add_project_from_path,
   get,
@@ -416,16 +370,15 @@ import {
 } from '@/helpers/profile.js'
 import { handleError } from '@/store/notifications.js'
 import { mixpanel_track } from '@/helpers/mixpanel'
-import { open } from '@tauri-apps/api/dialog'
 import { listen } from '@tauri-apps/api/event'
 import { convertFileSrc } from '@tauri-apps/api/tauri'
 import { highlightModInProfile } from '@/helpers/utils.js'
 import { MenuIcon, ToggleIcon, TextInputIcon, AddProjectImage, PackageIcon } from '@/assets/icons'
 import ExportModal from '@/components/ui/ExportModal.vue'
 import ModpackVersionModal from '@/components/ui/ModpackVersionModal.vue'
+import AddContentButton from '@/components/ui/AddContentButton.vue'
 import { i18n } from '@/main.js';
 const t = i18n.global.t;
-const router = useRouter()
 
 const props = defineProps({
   instance: {
@@ -869,23 +822,6 @@ const handleRightClick = (event, mod) => {
   }
 }
 
-const onSearchContent = async () => {
-  await router.push({
-    path: `/browse/${props.instance.metadata.loader === 'vanilla' ? 'datapack' : 'mod'}`,
-    query: { i: props.instance.path },
-  })
-}
-
-const onFileContent = async () => {
-  const newProject = await open({ multiple: true })
-  if (!newProject) return
-
-  for (const project of newProject) {
-    await add_project_from_path(props.instance.path, project, 'mod').catch(handleError)
-  }
-  initProjects(await get(props.instance.path).catch(handleError))
-}
-
 watch(selectAll, () => {
   for (const [key, value] of Array.from(selectionMap.value)) {
     if (value !== selectAll.value) {
@@ -984,17 +920,9 @@ onUnmounted(() => {
   white-space: nowrap;
   align-items: center;
 
-  :deep {
-    .popup-container {
-      .btn {
-        height: 2.5rem !important;
-      }
-    }
-
-    .dropdown-row {
-      .btn {
-        height: 2.5rem !important;
-      }
+  :deep(.dropdown-row) {
+    .btn {
+      height: 2.5rem !important;
     }
   }
 
@@ -1004,6 +932,14 @@ onUnmounted(() => {
 
   .dropdown-input {
     flex-grow: 1;
+
+    .animated-dropdown {
+      width: unset;
+
+      :deep(.selected) {
+        border-radius: var(--radius-md) 0 0 var(--radius-md);
+      }
+    }
 
     .iconified-input {
       width: 100%;
@@ -1190,8 +1126,12 @@ onUnmounted(() => {
 </style>
 <style lang="scss">
 .updating-indicator {
+  height: 2.25rem !important;
+  width: 2.25rem !important;
+
   svg {
-    margin-left: 0.5rem !important;
+    height: 1.25rem !important;
+    width: 1.25rem !important;
   }
 }
 
