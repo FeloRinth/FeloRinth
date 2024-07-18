@@ -6,6 +6,10 @@ import { add_project_from_path, get } from '@/helpers/profile.js'
 import { handleError } from '@/store/notifications.js'
 import { useRouter } from 'vue-router'
 
+import { i18n } from '@/main.js'
+
+const t = i18n.global.t
+
 const props = defineProps({
   instance: {
     type: Object,
@@ -35,7 +39,9 @@ const handleSearchContent = async () => {
 
 <template>
   <div class="joined-buttons">
-    <Button color="primary" @click="handleSearchContent"><SearchIcon /> Add content </Button>
+    <Button color="primary" @click="handleSearchContent"
+      ><SearchIcon /> {{ t('Instance.Mods.AddContent') }}
+    </Button>
 
     <OverflowMenu
       :options="[
@@ -53,11 +59,11 @@ const handleSearchContent = async () => {
       <DropdownIcon />
       <template #search>
         <SearchIcon />
-        <span class="no-wrap"> Search </span>
+        <span class="no-wrap"> {{t('Instance.Mods.Search')}} </span>
       </template>
       <template #from_file>
         <FolderOpenIcon />
-        <span class="no-wrap"> Add from file </span>
+        <span class="no-wrap"> {{ t('Instance.Mods.AddFile') }} </span>
       </template>
     </OverflowMenu>
   </div>
