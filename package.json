@@ -3,18 +3,19 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "web:build": "turbo run build --filter=@modrinth/frontend",
-    "pages:build": "NITRO_PRESET=cloudflare-pages pnpm --filter frontend run build",
     "web:dev": "turbo run dev --filter=@modrinth/frontend",
+    "web:build": "turbo run build --filter=@modrinth/frontend",
     "app:dev": "turbo run dev --filter=@modrinth/app",
+    "app:build": "turbo run build --filter=@modrinth/app",
+    "pages:build": "NITRO_PRESET=cloudflare-pages pnpm --filter frontend run build",
     "build": "turbo run build --continue",
     "lint": "turbo run lint --continue",
     "test": "turbo run test --continue"
   },
   "devDependencies": {
-    "prettier": "^3.3.2",
-    "turbo": "^2.0.6",
-    "vue": "^3.4.31"
+    "prettier": "^3.3.3",
+    "turbo": "^2.0.7",
+    "vue": "^3.4.32"
   },
   "packageManager": "pnpm@9.4.0",
   "pnpm": {

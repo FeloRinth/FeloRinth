@@ -497,16 +497,16 @@ await getRemote(true, false)
 .icon-button {
   background-color: rgba(0, 0, 0, 0);
   box-shadow: none;
+  width: 1.25rem !important;
+  height: 1.25rem !important;
 
-  padding: 0 !important;
-}
+  svg {
+    min-width: 1.25rem;
+  }
 
-.stop {
-  color: var(--color-red);
-}
-
-.utility {
-  color: var(--color-contrast);
+  &.stop {
+    color: var(--color-red);
+  }
 }
 
 .info-card {
