@@ -56,5 +56,4 @@ generated
 # app testing dir
 app-playground-data/*
 
-Cargo.lock
-pnpm-lock.yaml
+.astro
