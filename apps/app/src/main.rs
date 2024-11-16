@@ -188,7 +188,20 @@ fn main() {
         .plugin(tauri_plugin_shell::init())
         .plugin(
             tauri_plugin_window_state::Builder::default()
-                .with_filename("app-window-state.json")
+                .with_filename(
+                    if std::env::current_dir()
+                        .ok()
+                        .map(|dir| dir.join("portable.txt").exists())
+                        .unwrap_or(false)
+                    {
+                        std::env::current_dir()
+                            .ok()
+                            .map(|dir| dir.join("UserData/app-window-state.json").to_string_lossy().into_owned())
+                            .unwrap()
+                    } else {
+                        "app-window-state.json".to_string()
+                    },
+                )
                 .build(),
         )
         .setup(|app| {
