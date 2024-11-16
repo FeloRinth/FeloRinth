@@ -8,7 +8,7 @@ import { globIterate } from "glob";
 import { match as matchLocale } from "@formatjs/intl-localematcher";
 import { consola } from "consola";
 
-const STAGING_API_URL = "https://staging-api.modrinth.com/v2/";
+const API_URL = "https://api.modrinth.com/v2/";
 
 const preloadedFonts = [
   "inter/Inter-Regular.woff2",
@@ -433,7 +433,7 @@ export default defineNuxtConfig({
 
 function getApiUrl() {
   // @ts-ignore
-  return process.env.BROWSER_BASE_URL ?? globalThis.BROWSER_BASE_URL ?? STAGING_API_URL;
+  return process.env.BROWSER_BASE_URL ?? globalThis.BROWSER_BASE_URL ?? API_URL;
 }
 
 function isProduction() {
@@ -457,7 +457,7 @@ function getDomain() {
       return `https://${process.env.HEROKU_APP_NAME}.herokuapp.com`;
     } else if (process.env.VERCEL_URL) {
       return `https://${process.env.VERCEL_URL}`;
-    } else if (getApiUrl() === STAGING_API_URL) {
+    } else if (getApiUrl() === API_URL) {
       return "https://staging.modrinth.com";
     } else {
       return "https://modrinth.com";
