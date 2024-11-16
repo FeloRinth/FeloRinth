@@ -23,8 +23,13 @@ impl DirectoryInfo {
     // Get the settings directory
     // init() is not needed for this function
     pub fn get_initial_settings_dir() -> Option<PathBuf> {
-        Self::env_path("THESEUS_CONFIG_DIR")
-            .or_else(|| Some(dirs::data_dir()?.join("AstralRinthApp")))
+        Self::env_path("THESEUS_CONFIG_DIR").or_else(|| {
+            if std::env::current_dir().ok()?.join("portable.txt").exists() {
+                Some(std::path::Path::new("UserData").to_path_buf())
+            } else {
+                Some(dirs::data_dir()?.join("AstralRinthApp"))
+            }
+        })
     }
 
     /// Get all paths needed for Theseus to operate properly
