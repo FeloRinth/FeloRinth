@@ -402,7 +402,14 @@ await getBranches()
             The memory allocated to each instance when it is ran.
           </span>
         </label>
-        <Slider id="max-memory" v-model="settings.memory.maximum" :min="8" :max="maxMemory" :step="64" unit="mb" />
+        <Slider
+          id="max-memory"
+          v-model="settings.memory.maximum"
+          :min="8"
+          :max="maxMemory"
+          :step="64"
+          unit="MB"
+        />
       </div>
     </Card>
     <Card>
