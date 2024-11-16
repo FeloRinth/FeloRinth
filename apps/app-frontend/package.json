@@ -1,7 +1,7 @@
 {
   "name": "@modrinth/app-frontend",
   "private": true,
-  "version": "0.8.902",
+  "version": "0.8.903",
   "development_build": true,
   "type": "module",
   "scripts": {
