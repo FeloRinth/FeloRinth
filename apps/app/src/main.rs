@@ -188,7 +188,20 @@ fn main() {
         .plugin(tauri_plugin_shell::init())
         .plugin(
             tauri_plugin_window_state::Builder::default()
-                .with_filename("app-window-state.json")
+                .with_filename(
+                    if std::env::current_dir()
+                        .ok()
+                        .map(|dir| dir.join("portable.txt").exists())
+                        .unwrap_or(false)
+                    {
+                        std::env::current_dir()
+                            .ok()
+                            .map(|dir| dir.join("UserData/app-window-state.json").to_string_lossy().into_owned())
+                            .unwrap()
+                    } else {
+                        "app-window-state.json".to_string()
+                    },
+                )
                 .build(),
         )
         .setup(|app| {
@@ -263,7 +276,6 @@ fn main() {
             initialize_state,
             is_dev,
             toggle_decorations,
-            api::mr_auth::modrinth_auth_login,
             show_window,
             restart_app,
         ]);
@@ -316,7 +328,7 @@ fn main() {
                     MessageDialog::new()
                         .set_type(MessageType::Error)
                         .set_title("Initialization error")
-                        .set_text("Your Microsoft Edge WebView2 installation is corrupt.\n\nMicrosoft Edge WebView2 is required to run Modrinth App.\n\nLearn how to repair it at https://docs.modrinth.com/faq/app/webview2")
+                        .set_text("Your Microsoft Edge WebView2 installation is corrupt.\n\nMicrosoft Edge WebView2 is required to run Modrinth App.\n\nLearn how to repair it at https://support.modrinth.com/en/articles/8797765-corrupted-microsoft-edge-webview2-installation")
                         .show_alert()
                         .unwrap();
 

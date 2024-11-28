@@ -8,7 +8,7 @@ import { globIterate } from "glob";
 import { match as matchLocale } from "@formatjs/intl-localematcher";
 import { consola } from "consola";
 
-const STAGING_API_URL = "https://staging-api.modrinth.com/v2/";
+const API_URL = "https://staging-api.modrinth.com/v2/";
 
 const preloadedFonts = [
   "inter/Inter-Regular.woff2",
@@ -176,7 +176,6 @@ export default defineNuxtConfig({
         $fetch(`${API_URL}projects_random?count=60`, headers),
         $fetch(`${API_URL}search?limit=3&query=leave&index=relevance`, headers),
         $fetch(`${API_URL}search?limit=3&query=&index=updated`, headers),
-        // TODO: dehardcode
         $fetch(`${API_URL.replace("/v2/", "/_internal/")}billing/products`, headers),
       ]);
 
@@ -321,8 +320,10 @@ export default defineNuxtConfig({
     apiBaseUrl: process.env.BASE_URL ?? globalThis.BASE_URL ?? getApiUrl(),
     // @ts-ignore
     rateLimitKey: process.env.RATE_LIMIT_IGNORE_KEY ?? globalThis.RATE_LIMIT_IGNORE_KEY,
+    pyroBaseUrl: process.env.PYRO_BASE_URL,
     public: {
       apiBaseUrl: getApiUrl(),
+      pyroBaseUrl: process.env.PYRO_BASE_URL,
       siteUrl: getDomain(),
       production: isProduction(),
       featureFlagOverrides: getFeatureFlagOverrides(),
@@ -342,8 +343,6 @@ export default defineNuxtConfig({
         globalThis.CF_PAGES_COMMIT_SHA ||
         "unknown",
 
-      turnstile: { siteKey: "0x4AAAAAAAW3guHM6Eunbgwu" },
-
       stripePublishableKey:
         process.env.STRIPE_PUBLISHABLE_KEY ||
         globalThis.STRIPE_PUBLISHABLE_KEY ||
@@ -361,7 +360,7 @@ export default defineNuxtConfig({
       },
     },
   },
-  modules: ["@vintl/nuxt", "@nuxtjs/turnstile"],
+  modules: ["@vintl/nuxt", "@pinia/nuxt"],
   vintl: {
     defaultLocale: "en-US",
     locales: [
@@ -432,7 +431,7 @@ export default defineNuxtConfig({
 
 function getApiUrl() {
   // @ts-ignore
-  return process.env.BROWSER_BASE_URL ?? globalThis.BROWSER_BASE_URL ?? STAGING_API_URL;
+  return process.env.BROWSER_BASE_URL ?? globalThis.BROWSER_BASE_URL ?? API_URL;
 }
 
 function isProduction() {
@@ -456,12 +455,13 @@ function getDomain() {
       return `https://${process.env.HEROKU_APP_NAME}.herokuapp.com`;
     } else if (process.env.VERCEL_URL) {
       return `https://${process.env.VERCEL_URL}`;
-    } else if (getApiUrl() === STAGING_API_URL) {
+    } else if (getApiUrl() === API_URL) {
       return "https://staging.modrinth.com";
     } else {
       return "https://modrinth.com";
     }
   } else {
-    return "http://localhost:3000";
+    const port = process.env.PORT || 3000;
+    return `http://localhost:${port}`;
   }
 }
