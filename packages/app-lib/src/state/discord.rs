@@ -108,9 +108,8 @@ impl DiscordGuard {
         let launcher =
             utils::read_package_json().expect("Failed to read package.json");
 
-        let build_info = format!("AR • v{}", launcher.version);
-        let build_download = "https://astralium.su/get/ar";
-
+        let build_info = format!("FR • v{}", launcher.version);
+        let build_download = "https://rinth.felo.gg";
         let time = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .expect("Failed to get system time")

@@ -7,7 +7,7 @@ export const installState = ref(false)
 export const updateState = ref(false)
 export const latestBetaCommitTruncatedSha = ref('')
 export const latestBetaCommitLink = ref('')
-export const launcherUrl = 'https://www.astralium.su/get/ar'
+export const launcherUrl = 'https://www.rinth.felo.gg'
 
 const os = ref('')
 const releaseLink = `https://api.github.com/repos/FeloRinth/FeloRinth/releases/latest`

@@ -1,14 +1,14 @@
-![ar_logo](https://github.com/FeloRinth/FeloRinth/assets/77334306/43d4acb0-546c-4dff-834d-83fb2ba6ad6f)
+![fr_logo](https://github.com/FeloRinth/FeloRinth/assets/77334306/43d4acb0-546c-4dff-834d-83fb2ba6ad6f)
 
-# AR • Theseus core Empowering Your Minecraft Adventure with FeloRinth • Fork of Modrinth
-Welcome to AR • Fork of Modrinth, the ultimate game launcher designed to enhance your Minecraft experience through the Modrinth platform and their API. Whether you're a command-line connoisseur, a graphical interface enthusiast, or a developer integrating Modrinth projects, Theseus core is your gateway to a new level of Minecraft gaming.
+# FR • Theseus core Empowering Your Minecraft Adventure with FeloRinth • Fork of Modrinth
+Welcome to FR • Fork of Modrinth, the ultimate game launcher designed to enhance your Minecraft experience through the Modrinth platform and their API. Whether you're a command-line connoisseur, a graphical interface enthusiast, or a developer integrating Modrinth projects, Theseus core is your gateway to a new level of Minecraft gaming.
 
-# AR • About software 🌌
+# FR • About software 🌌
 Introducing FeloRinth, a specialized variant of Theseus dedicated to implementing offline authorization for an even more flexible and user-centric Minecraft Modrinth experience. Roam the Minecraft realms without the constraints of online authentication, thanks to FeloRinth.
 
 For seekers of a visually intuitive experience, Theseus-GUI delivers a sleek and user-friendly interface to explore, manage, and play Minecraft with Modrinth projects. Uncover the full potential of Modrinth effortlessly with Theseus-GUI.
 
-# AR • Unlocking Minecraft's Boundless Horizon
+# FR • Unlocking Minecraft's Boundless Horizon
 
 Dive into the extraordinary world of FeloRinth, a fork of the original project with a unique focus on providing a free trial experience for Minecraft, all without the need for a license. Currently boasting:
 
@@ -26,13 +26,13 @@ Dive into the extraordinary world of FeloRinth, a fork of the original project w
 - Auto-updating takes place through parsing special versions from releases, so we also distribute clean types of `.msi, .dmg and .deb`
 
 ## Features
-### Featured enhancement in AR
+### Featured enhancement in FR
 - FeloRinth offers a range of authorization options, giving users the flexibility to log in with valid licenses or even a pirate account without auth credentials breaks (_Unlike MultiMC Cracked and similar software_). Experience Minecraft on your terms, breaking free from traditional licensing constraints (_Popular in Russian Federation_).
 ### Easy to use
 - Using the launcher is intuitive, any user can figure it out.
 ### Update notifies
 - We have implemented notifications about the release of new updates on our Github. The launcher can also download them for you and try to install them.
-### Additional Enhancements in AR:
+### Additional Enhancements in FR:
 - Custom .SVG vectors for a personalized touch.
 - Improved compatibility for both pirate and licensed accounts.
 - Beautiful Discord RPC with random messages while playing, along with an in-game timer and AFK counter.
