@@ -48,10 +48,10 @@
       }
     ]
   },
-  "productName": "AstralRinth App",
+  "productName": "FeloRinth App",
   "version": "0.8.9",
-  "mainBinaryName": "AstralRinth App",
-  "identifier": "AstralRinthApp",
+  "mainBinaryName": "FeloRinth App",
+  "identifier": "FeloRinthApp",
   "plugins": {
     "deep-link": {
       "desktop": {
@@ -70,7 +70,7 @@
         "fullscreen": false,
         "height": 800,
         "resizable": true,
-        "title": "AstralRinth",
+        "title": "FeloRinth",
         "width": 1280,
         "minHeight": 750,
         "minWidth": 1100,

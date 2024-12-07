@@ -27,7 +27,7 @@ impl DirectoryInfo {
             if std::env::current_dir().ok()?.join("portable.txt").exists() {
                 Some(std::path::Path::new("UserData").to_path_buf())
             } else {
-                Some(dirs::data_dir()?.join("AstralRinthApp"))
+                Some(dirs::data_dir()?.join("FeloRinthApp"))
             }
         })
     }

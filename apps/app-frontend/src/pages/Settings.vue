@@ -342,7 +342,7 @@ await getBranches()
         <label for="opt-out-analytics">
           <span class="label__title">Telemetry</span>
           <span class="label__description">
-            (Always disabled by AstralRinth) • Modrinth collects anonymized analytics and usage data to improve our user experience and
+            (Always disabled by FeloRinth) ??? Modrinth collects anonymized analytics and usage data to improve our user experience and
             customize your experience. By disabling this option, you opt out and your data will no
             longer be collected. 
           </span>
@@ -492,10 +492,10 @@ await getBranches()
       </div>
       <div>
         <label>
-          <span class="label__title inl">AstralRinth <PirateShipIcon /> Version • {{ version }}</span>
+          <span class="label__title inl">FeloRinth <PirateShipIcon /> Version ??? {{ version }}</span>
 
           <span class="label__description"
-            >Latest beta commit • 
+            >Latest beta commit ??? 
             <a class="github" :href="latestBetaCommitLink">{{
               latestBetaCommitTruncatedSha
             }}</a></span
@@ -508,11 +508,11 @@ await getBranches()
           <span class="label__title">Update Checker</span>
 
           <span class="label__description"
-            >Version on remote server • 
+            >Version on remote server ??? 
             <p id="releaseData" class="cosmic inline-fix"></p>
           </span>
           <span class="label__description"
-            >Version on local device • 
+            >Version on local device ??? 
             <p class="cosmic inline-fix">v{{ version }}</p></span
           >
         </label>

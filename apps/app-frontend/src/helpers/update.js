@@ -10,8 +10,8 @@ export const latestBetaCommitLink = ref('')
 export const launcherUrl = 'https://www.astralium.su/get/ar'
 
 const os = ref('')
-const releaseLink = `https://api.github.com/repos/DIDIRUS4/AstralRinth/releases/latest`
-const branchesLink = `https://api.github.com/repos/DIDIRUS4/AstralRinth/branches`
+const releaseLink = `https://api.github.com/repos/FeloRinth/FeloRinth/releases/latest`
+const branchesLink = `https://api.github.com/repos/FeloRinth/FeloRinth/branches`
 const failedFetch = [`Failed to fetch remote releases:`, `Failed to fetch remote commits:`]
 const localVersion = `v${version}`
 const betaBranch = `beta` // Github repository beta branch

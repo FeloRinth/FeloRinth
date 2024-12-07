@@ -33,12 +33,12 @@ index 96148a91..038313d6 100644
      // init() is not needed for this function
      pub fn get_initial_settings_dir() -> Option<PathBuf> {
 -        Self::env_path("THESEUS_CONFIG_DIR")
--            .or_else(|| Some(dirs::data_dir()?.join("AstralRinthApp")))
+-            .or_else(|| Some(dirs::data_dir()?.join("FeloRinthApp")))
 +        Self::env_path("THESEUS_CONFIG_DIR").or_else(|| {
 +            if std::env::current_dir().ok()?.join("portable.txt").exists() {
 +                Some(std::path::Path::new("UserData").to_path_buf())
 +            } else {
-+                Some(dirs::data_dir()?.join("AstralRinthApp"))
++                Some(dirs::data_dir()?.join("FeloRinthApp"))
 +            }
 +        })
      }

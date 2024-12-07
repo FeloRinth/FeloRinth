@@ -185,13 +185,13 @@ import _Heading3Icon from './icons/heading-3.svg?component'
 
 import './omorphia.scss'
 
-// AstralRinth Icons
+// FeloRinth Icons
 
 import _PirateIcon from './icons/pirate.svg?component'
 import _MicrosoftIcon from './icons/microsoft.svg?component'
 import _PirateShipIcon from './icons/pirate-ship.svg?component'
 
-// AstralRinth Exports
+// FeloRinth Exports
 
 export const PirateIcon = _PirateIcon
 export const MicrosoftIcon = _MicrosoftIcon

@@ -99,7 +99,7 @@ async function setupApp() {
 
   initAnalytics()
   if (!telemetry) {
-    console.info("[AstralRinth] Telemetry disabled by default (Hard patched in code).")
+    console.info("[FeloRinth] Telemetry disabled by default (Hard patched in code).")
     optOutAnalytics()
   }
   if (dev) debugAnalytics()

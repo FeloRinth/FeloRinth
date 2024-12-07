@@ -6,11 +6,11 @@
         <array>
             <dict>
                 <key>CFBundleURLName</key>
-                <string>AstralRinthApp</string>
+                <string>FeloRinthApp</string>
                 <key>CFBundleURLSchemes</key>
                 <array>
-                    <string>astralrinth</string>
-                    <string>astralrinthscheme</string>
+                    <string>felorinth</string>
+                    <string>felorinthscheme</string>
                 </array>
             </dict>
         </array>

@@ -119,9 +119,9 @@ impl DiscordGuard {
             .state(msg)
             .assets(
                 Assets::new()
-                    .large_image("astralrinth_logo")
+                    .large_image("felorinth_logo")
                     .large_text(&build_info)
-                    .small_image("astralrinth_logo")
+                    .small_image("felorinth_logo")
                     .small_text(&build_download),
             )
             .timestamps(Timestamps::new().start(time));

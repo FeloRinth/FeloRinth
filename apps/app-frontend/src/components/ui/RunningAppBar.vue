@@ -52,7 +52,7 @@
         </Button>
       </a>
     </div>
-    <ModalWrapper ref="confirmUpdate" :has-to-type="false" header="Request to update the AstralRinth launcher">
+    <ModalWrapper ref="confirmUpdate" :has-to-type="false" header="Request to update the FeloRinth launcher">
       <div class="modal-body">
         <div class="markdown-body">
           <p>
